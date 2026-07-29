@@ -13,12 +13,15 @@ import { swaggerSpec } from "./docs/swagger";
 import userRoutes from "./routes/user.routes";
 
 
+
 const app = express();
 
 app.use(express.json());
 
 // Rutas
 app.use("/api/users", userRoutes);
+
+// app.use("/api/login", authRoutes);
 
 // Swagger
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

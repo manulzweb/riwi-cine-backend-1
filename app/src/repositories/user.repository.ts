@@ -13,25 +13,26 @@ import { IUserRepository } from "./interfaces/user.repository.interface";
  */
 
 class UserRepository implements IUserRepository {
+  /**
+   * Crea un nuevo usuario.
+   */
+  async create(data: UserCreationAttributes): Promise<User> {
+    return await User.create(data);
+  }
 
-    /**
-     * Crea un nuevo usuario.
-     */
-    async create(data: UserCreationAttributes): Promise<User> {
+  /**
+   * Obtiene todos los usuarios.
+   */
+  async findAll(): Promise<User[]> {
+    return await User.findAll();
+  }
 
-        return await User.create(data);
-
-    }
-
-    /**
-     * Obtiene todos los usuarios.
-     */
-    async findAll(): Promise<User[]> {
-
-        return await User.findAll();
-
-    }
-
+  /**
+   * Busca un usuario por su correo.
+   */
+  async findByEmail(email: string): Promise<User | null> {
+    return await User.findOne({ where: { email } });
+  }
 }
 
 export default new UserRepository();

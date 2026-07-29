@@ -23,6 +23,7 @@ export interface UserAttributes {
   id: number;
   name: string;
   email: string;
+  password?: string;
 }
 
 /**
@@ -55,6 +56,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
  * - `id`: Entero autoincremental, clave primaria.
  * - `name`: Nombre obligatorio con máximo 100 caracteres.
  * - `email`: Correo electrónico único y obligatorio con máximo 100 caracteres.
+ * - `password`: Contraseña opcional con máximo 100 caracteres.
  */
 User.init(
   {
@@ -71,6 +73,10 @@ User.init(
       type: DataTypes.STRING(100),
       unique: true,
       allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
     },
   },
   {
