@@ -10,6 +10,8 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "pg": "^8.22.0",
     "sequelize": "^6.37.3",
