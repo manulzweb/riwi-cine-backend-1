@@ -9,14 +9,17 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger";
+import cors from "cors";
+import { corsOptions } from "./config/cors";
 
 import userRoutes from "./routes/user.routes";
-
-
 
 const app = express();
 
 app.use(express.json());
+
+// Configuración de CORS
+app.use(cors(corsOptions));
 
 // Rutas
 app.use("/api/users", userRoutes);
