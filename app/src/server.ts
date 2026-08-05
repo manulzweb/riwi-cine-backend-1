@@ -13,10 +13,17 @@ import cors from "cors";
 import { corsOptions } from "./config/cors";
 
 import userRoutes from "./routes/user.routes";
+import { rateLimit } from "express-rate-limit";
 
 const app = express();
 
 app.use(express.json());
+
+app.use(rateLimit({
+    windowMs: 10*60*1000, // 10 minutos
+    max: 100, // Limite de 100 peticiones por IP
+}))
+
 
 // Configuración de CORS
 app.use(cors(corsOptions));
