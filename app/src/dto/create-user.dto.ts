@@ -30,17 +30,38 @@
 
 export interface CreateUserDto {
   /**
-   * Nombre completo del usuario.
+   * Personal Information.
    */
-  name: string;
+  firstName: string;
+  lastName: string;
+  documentType: string;
+  documentNumber: string;
+  birthDate: Date;
+  gender?: string;
 
   /**
-   * Correo electrónico del usuario.
+   * Contact Information.
    */
   email: string;
+  confirmEmail: string;
+  phone: string;
 
   /**
-   * Contraseña del usuario.
+   * Security.
    */
   password: string;
+  confirmPassword: string;
+
+  /**
+   * Security.
+   */
+  mainCity: string;
+  favoriteComplex?: string;
+
+  /**
+   * Consents.
+   */
+  acceptDataPolicy: boolean;
+  acceptTerms: boolean;
+  acceptMarketing?: boolean;
 }
