@@ -19,10 +19,14 @@ const app = express();
 
 app.use(express.json());
 
-app.use(rateLimit({
-    windowMs: 10*60*1000, // 10 minutos
-    max: 100, // Limite de 100 peticiones por IP
-}))
+app.use(
+  rateLimit({
+    // 10 minutos
+    windowMs: 10 * 60 * 1000,
+    // Limite de 100 peticiones por IP
+    max: 100,
+  }),
+);
 
 
 // Configuración de CORS
