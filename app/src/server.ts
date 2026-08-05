@@ -13,6 +13,9 @@ import cors from 'cors';
 import { corsOptions } from './config/cors';
 
 import userRoutes from './routes/user.routes';
+import countryRoutes from './routes/country.routes';
+import departmentRoutes from './routes/department.routes';
+import cityRoutes from './routes/city.routes';
 import { rateLimit } from 'express-rate-limit';
 
 const app = express();
@@ -31,6 +34,9 @@ app.use(cors(corsOptions));
 
 // Rutas
 app.use('/api/users', userRoutes);
+app.use('/api/countries', countryRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/cities', cityRoutes);
 
 // app.use("/api/login", authRoutes);
 
