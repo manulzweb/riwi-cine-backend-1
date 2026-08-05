@@ -8,9 +8,7 @@ import { CreateUserDto } from "../../dto/create-user.dto";
  */
 
 export interface IUserService {
+  create(dto: CreateUserDto): Promise<User>;
 
-    create(dto: CreateUserDto): Promise<User>;
-
-    findAll(): Promise<User[]>;
-
+  findAll(): Promise<User[]>;
 }

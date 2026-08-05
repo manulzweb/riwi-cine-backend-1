@@ -11,15 +11,13 @@ import User, { UserCreationAttributes } from "../../models/user.model";
  */
 
 export interface IUserRepository {
+  /**
+   * Crea un usuario.
+   */
+  create(data: UserCreationAttributes): Promise<User>;
 
-    /**
-     * Crea un usuario.
-     */
-    create(data: UserCreationAttributes): Promise<User>;
-
-    /**
-     * Obtiene todos los usuarios.
-     */
-    findAll(): Promise<User[]>;
-
+  /**
+   * Obtiene todos los usuarios.
+   */
+  findAll(): Promise<User[]>;
 }

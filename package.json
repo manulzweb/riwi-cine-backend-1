@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "express-rate-limit": "^8.6.2"
+    "express-rate-limit": "^8.6.2",
+    "sequelize": "^6.37.8"
   }
 }

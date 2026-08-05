@@ -29,20 +29,18 @@
  */
 
 export interface CreateUserDto {
+  /**
+   * Nombre completo del usuario.
+   */
+  name: string;
 
-    /**
-     * Nombre completo del usuario.
-     */
-    name: string;
+  /**
+   * Correo electrónico del usuario.
+   */
+  email: string;
 
-    /**
-     * Correo electrónico del usuario.
-     */
-    email: string;
-
-    /**
-     * Contraseña del usuario.
-     */
-    password: string;
-
+  /**
+   * Contraseña del usuario.
+   */
+  password: string;
 }

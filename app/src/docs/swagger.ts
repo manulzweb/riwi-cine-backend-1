@@ -33,7 +33,8 @@ const options = {
     info: {
       title: "API Example",
       version: "1.0.0",
-      description: "Documentación generada automáticamente con Swagger para la API de ejemplo.",
+      description:
+        "Documentación generada automáticamente con Swagger para la API de ejemplo.",
     },
   },
   apis: ["./src/routes/*.ts"], // Escanea las rutas para extraer anotaciones Swagger

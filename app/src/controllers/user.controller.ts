@@ -78,27 +78,24 @@ import { CreateUserDto } from "../dto/create-user.dto";
  * Cualquier excepción generada por la capa de servicios será capturada
  * y retornada como una respuesta HTTP con código 500.
  */
-export const createUser = async (req: Request, res: Response): Promise<Response> => {
+export const createUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    // Construcción del DTO recibido desde el cliente.
+    const dto: CreateUserDto = req.body;
 
-    try {
+    // Delega la lógica de negocio al servicio.
+    const user = await userService.create(dto);
 
-        // Construcción del DTO recibido desde el cliente.
-        const dto: CreateUserDto = req.body;
-
-        // Delega la lógica de negocio al servicio.
-        const user = await userService.create(dto);
-
-        // Retorna el recurso creado.
-        return res.status(201).json(user);
-
-    } catch (error: any) {
-
-        return res.status(500).json({
-            error: error.message
-        });
-
-    }
-
+    // Retorna el recurso creado.
+    return res.status(201).json(user);
+  } catch (error: any) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
 };
 
 /**
@@ -139,22 +136,19 @@ export const createUser = async (req: Request, res: Response): Promise<Response>
  *   }
  * ]
  */
-export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
+export const getUsers = async (
+  _req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    // Solicita la información al servicio.
+    const users = await userService.findAll();
 
-    try {
-
-        // Solicita la información al servicio.
-        const users = await userService.findAll();
-
-        // Retorna la colección de usuarios.
-        return res.status(200).json(users);
-
-    } catch (error: any) {
-
-        return res.status(500).json({
-            error: error.message
-        });
-
-    }
-
+    // Retorna la colección de usuarios.
+    return res.status(200).json(users);
+  } catch (error: any) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
 };
