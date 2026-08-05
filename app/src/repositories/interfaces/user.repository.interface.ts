@@ -1,6 +1,6 @@
 // app/src/repositories/interfaces/user.repository.interface.ts
 
-import User, { UserCreationAttributes } from "../../models/user.model";
+import User, { UserCreationAttributes } from '../../models/user.model';
 
 /**
  * Contrato del Repositorio de Usuarios
@@ -11,15 +11,13 @@ import User, { UserCreationAttributes } from "../../models/user.model";
  */
 
 export interface IUserRepository {
+  /**
+   * Crea un usuario.
+   */
+  create(data: UserCreationAttributes): Promise<User>;
 
-    /**
-     * Crea un usuario.
-     */
-    create(data: UserCreationAttributes): Promise<User>;
-
-    /**
-     * Obtiene todos los usuarios.
-     */
-    findAll(): Promise<User[]>;
-
+  /**
+   * Obtiene todos los usuarios.
+   */
+  findAll(): Promise<User[]>;
 }

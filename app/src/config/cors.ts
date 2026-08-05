@@ -1,6 +1,6 @@
-import { CorsOptions } from "cors";
+import { CorsOptions } from 'cors';
 
-const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [];
+const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
 export const corsOptions: CorsOptions = {
   origin(origin, callback) {
@@ -8,7 +8,7 @@ export const corsOptions: CorsOptions = {
       return callback(null, true);
     }
 
-    callback(new Error("Origen no permitido"));
+    callback(new Error('Origen no permitido'));
   },
   credentials: true,
 };

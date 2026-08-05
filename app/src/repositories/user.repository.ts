@@ -1,7 +1,7 @@
 // app/src/repositories/user.repository.ts
 
-import User, { UserCreationAttributes } from "../models/user.model";
-import { IUserRepository } from "./interfaces/user.repository.interface";
+import User, { UserCreationAttributes } from '../models/user.model';
+import { IUserRepository } from './interfaces/user.repository.interface';
 
 /**
  * Repositorio de Usuarios

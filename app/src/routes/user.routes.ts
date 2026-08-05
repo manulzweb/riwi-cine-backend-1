@@ -4,16 +4,16 @@
  * Rutas de Usuario
  * ----------------
  * Este archivo define las rutas HTTP relacionadas con la entidad `User`.
- * 
+ *
  * Endpoints disponibles:
  *  - `POST /users/` : Crear un nuevo usuario.
  *  - `GET /users/`  : Obtener todos los usuarios registrados.
- * 
+ *
  * Cada ruta se conecta con su respectivo controlador.
  */
 
-import { Router } from "express";
-import { createUser, getUsers } from "../controllers/user.controller";
+import { Router } from 'express';
+import { createUser, getUsers } from '../controllers/user.controller';
 
 const router = Router();
 
@@ -21,17 +21,17 @@ const router = Router();
  * POST /
  * -----
  * Crea un nuevo usuario en la base de datos.
- * 
+ *
  * Request Body:
  *  - `name`: string (obligatorio)
  *  - `email`: string (obligatorio, único)
  *  - `password`: string (obligatorio)
- * 
+ *
  * Response:
  *  - 201 Created: Retorna el usuario creado en formato JSON.
  *  - 500 Internal Server Error: En caso de error en la creación.
- * 
- * 
+ *
+ *
  * @swagger
  * /api/users:
  *   post:
@@ -66,7 +66,7 @@ const router = Router();
  *               name: "John Doe"
  *               email: "john.doe@example.com"
  *               password: "password123"
- * 
+ *
  *       400:
  *         description: Datos inválidos
  *         content:
@@ -80,17 +80,17 @@ const router = Router();
  *             example:
  *               error: "No se pudo crear el usuario"
  */
-router.post("/", createUser);
+router.post('/', createUser);
 
 /**
  * GET /
  * ----
  * Obtiene la lista completa de usuarios registrados en la base de datos.
- * 
+ *
  * Response:
  *  - 200 OK: Devuelve un array de usuarios en formato JSON.
- * 
- * 
+ *
+ *
  * @swagger
  * /api/users:
  *   get:
@@ -121,9 +121,6 @@ router.post("/", createUser);
  *             example:
  *               error: "Error al obtener los usuarios"
  */
-router.get("/", getUsers);
-
+router.get('/', getUsers);
 
 export default router;
-
-
