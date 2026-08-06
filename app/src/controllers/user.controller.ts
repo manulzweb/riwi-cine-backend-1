@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
 import userService from '../services/user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
 
 /**
  * ============================================================================
@@ -80,11 +79,8 @@ import { CreateUserDto } from '../dto/create-user.dto';
  */
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
   try {
-    // Construcción del DTO recibido desde el cliente.
-    const dto: CreateUserDto = req.body;
-
     // Delega la lógica de negocio al servicio.
-    const user = await userService.create(dto);
+    const user = await userService.findAll();
 
     // Retorna el recurso creado.
     return res.status(201).json(user);
