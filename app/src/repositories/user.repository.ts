@@ -1,5 +1,6 @@
 // app/src/repositories/user.repository.ts
 
+import { Transaction } from 'sequelize';
 import User, { UserCreationAttributes } from '../models/user.model';
 import { IUserRepository } from './interfaces/user.repository.interface';
 
@@ -16,8 +17,8 @@ class UserRepository implements IUserRepository {
   /**
    * Crea un nuevo usuario.
    */
-  async create(data: UserCreationAttributes): Promise<User> {
-    return await User.create(data);
+  async create(data: UserCreationAttributes, transaction?: Transaction): Promise<User> {
+    return await User.create(data, { transaction });
   }
 
   /**
@@ -32,6 +33,10 @@ class UserRepository implements IUserRepository {
    */
   async findByEmail(email: string): Promise<User | null> {
     return await User.findOne({ where: { email } });
+  }
+
+  async activate(userId: number): Promise<void> {
+    await User.update({isActive: true, activatedAt: new Date()}, {where: {id: userId}});
   }
 }
 

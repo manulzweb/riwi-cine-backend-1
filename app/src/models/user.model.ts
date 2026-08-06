@@ -21,9 +21,11 @@ import sequelize from '../config/database';
  */
 export interface UserAttributes {
   id: number;
-  name: string;
+  roleId: number;
   email: string;
-  password?: string;
+  passwordHash: string;
+  isActive: boolean;
+  activatedAt: Date | null;
 }
 
 /**
@@ -32,7 +34,7 @@ export interface UserAttributes {
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'roleId' | 'activatedAt' > {}
 
 /**
  * Clase que representa el modelo `User` en Sequelize.
@@ -44,10 +46,21 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public id!: number;
 
   /** Nombre completo del usuario. */
-  public name!: string;
+  public roleId!: number;
 
   /** Dirección de correo electrónico única del usuario. */
   public email!: string;
+
+  public passwordHash!: string;
+
+  public isActive!: boolean;
+
+  public activatedAt!: Date | null;
+
+  public readonly createdAt!: Date;
+
+  public readonly updateAt!: Date;
+  
 }
 
 /**
@@ -65,18 +78,30 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    roleId: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      field: 'role_id',
     },
     email: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(255),
       unique: true,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING(100),
+    passwordHash: {
+      type: DataTypes.STRING(255),
       allowNull: true,
+      field: 'password_hash',
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'is_active',
+    },
+    activatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'activated_at',
     },
   },
   {
@@ -84,6 +109,7 @@ User.init(
     modelName: 'User', // Nombre del modelo en Sequelize
     tableName: 'users', // Nombre de la tabla en la base de datos
     timestamps: true, // Incluye createdAt y updatedAt
+    underscored: true,
   },
 );
 
