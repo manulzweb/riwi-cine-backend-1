@@ -13,6 +13,7 @@ import cors from "cors";
 import { corsOptions } from "./config/cors";
 
 import userRoutes from "./routes/user.routes";
+import movieRoutes from "./routes/movie.routes";
 import { rateLimit } from "express-rate-limit";
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(cors(corsOptions));
 
 // Rutas
 app.use("/api/users", userRoutes);
+app.use("/api/movies", movieRoutes);
 
 // app.use("/api/login", authRoutes);
 
