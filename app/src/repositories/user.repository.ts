@@ -33,6 +33,36 @@ class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     return await User.findOne({ where: { email } });
   }
+
+  async findById(id: number): Promise<User | null> {
+    return await User.findOne({ where: { id } });
+  }
+
+  async incrementFailedAttempts(id: number): Promise<User | void> {
+    const max = Number(process.env.MAX_LOGIN_ATTEMPTS || 5);
+    const minutes = Number(process.env.LOCK_TIME_MINUTES || 15);
+
+    const user = await User.findByPk(id);
+    if (!user) return;
+
+    const attempts = (user.failed_login_attempts ?? 0) + 1;
+    await user.update({
+      failed_login_attempts: attempts,
+      locked_until: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.locked_until,
+    });
+  }
+  async resetFailedAttempts(id: number): Promise<void> {
+    await User.update(
+      {
+        failed_login_attempts: 0,
+        locked_until: null,
+        last_login_at: new Date(),
+      },
+      {
+        where: { id: id },
+      },
+    );
+  }
 }
 
 export default new UserRepository();

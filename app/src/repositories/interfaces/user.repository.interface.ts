@@ -20,4 +20,24 @@ export interface IUserRepository {
    * Obtiene todos los usuarios.
    */
   findAll(): Promise<User[]>;
+
+  /**
+   * Obtiene un usuario por su ID.
+   */
+  findById(id: number): Promise<User | null>;
+
+  /**
+   * Obtiene un usuario por el email.
+   */
+  findByEmail(email: string): Promise<User | null>;
+
+  /**
+   *  Incrementa el contador de fallos y bloquea al llegar al maximo
+   */
+  incrementFailedAttempts(userId: number): Promise<User | void>;
+
+  /**
+   * Limpia el contador, libera el bloqueo y registra el last_login_at
+   */
+  resetFailedAttempts(userId: number): Promise<void>;
 }
