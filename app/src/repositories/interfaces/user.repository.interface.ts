@@ -15,6 +15,10 @@ export interface IUserRepository {
    * Crea un usuario.
    */
   create(data: UserCreationAttributes): Promise<User>;
+  /**
+   * Crea un usuario.
+   */
+  create(data: UserCreationAttributes): Promise<User>;
 
   /**
    * Obtiene todos los usuarios.
