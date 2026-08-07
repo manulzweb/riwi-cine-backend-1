@@ -10,6 +10,7 @@ const config: Config = {
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   clearMocks: true,
   coverageDirectory: '../coverage',
+  setupFiles: ['<rootDir>/__tests__/setup/env.setup.ts']
 };
 
 export default config;
