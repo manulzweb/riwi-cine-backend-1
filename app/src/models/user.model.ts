@@ -24,6 +24,12 @@ export interface UserAttributes {
   name: string;
   email: string;
   password?: string;
+  password_hash?: string;
+  role_id?: number;
+  email_verified_at: Date | null;
+  failed_login_attempts: number;
+  locked_until: Date | null;
+  last_login_at: Date | null;
 }
 
 /**
@@ -32,7 +38,10 @@ export interface UserAttributes {
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export type UserCreationAttributes = Optional<
+  UserAttributes,
+  'id' | 'email_verified_at' | 'failed_login_attempts' | 'locked_until' | 'last_login_at'
+>;
 
 /**
  * Clase que representa el modelo `User` en Sequelize.
@@ -48,6 +57,13 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 
   /** Dirección de correo electrónico única del usuario. */
   public email!: string;
+
+  public password_hash!: string;
+  public role_id!: number;
+  public email_verified_at!: Date | null;
+  public failed_login_attempts!: number;
+  public locked_until!: Date | null;
+  public last_login_at!: Date | null;
 }
 
 /**
@@ -76,6 +92,30 @@ User.init(
     },
     password: {
       type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    password_hash: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    role_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    email_verified_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    failed_login_attempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    locked_until: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    last_login_at: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
   },

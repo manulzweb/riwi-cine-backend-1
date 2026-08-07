@@ -16,6 +16,7 @@ import userRoutes from './routes/user.routes';
 import countryRoutes from './routes/country.routes';
 import departmentRoutes from './routes/department.routes';
 import cityRoutes from './routes/city.routes';
+import authRoutes from './routes/auth.routes';
 import { rateLimit } from 'express-rate-limit';
 
 const app = express();
@@ -24,7 +25,9 @@ app.use(express.json());
 
 app.use(
   rateLimit({
-    windowMs: process.env.RATE_LIMIT_WINDOW_MS ? Number(process.env.RATE_LIMIT_WINDOW_MS) : 10 * 60 * 1000,
+    windowMs: process.env.RATE_LIMIT_WINDOW_MS
+      ? Number(process.env.RATE_LIMIT_WINDOW_MS)
+      : 10 * 60 * 1000,
     max: process.env.RATE_LIMIT_MAX_REQUESTS ? Number(process.env.RATE_LIMIT_MAX_REQUESTS) : 100,
   }),
 );
@@ -37,8 +40,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);
-
-// app.use("/api/login", authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Swagger
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

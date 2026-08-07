@@ -1,0 +1,7 @@
+case "$1" in
+  /*) msg="$1" ;;
+  *) msg="$PWD/$1" ;;
+esac
+
+cd "$(git rev-parse --show-toplevel)/app" || exit 1
+npx --no -- commitlint --edit "$msg"
