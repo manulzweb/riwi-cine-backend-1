@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import userService from "../services/user.service";
-import { CreateUserDto } from "../dto/create-user.dto";
+import userService from '../services/user.service';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 /**
  * ============================================================================
@@ -78,10 +78,7 @@ import { CreateUserDto } from "../dto/create-user.dto";
  * Cualquier excepción generada por la capa de servicios será capturada
  * y retornada como una respuesta HTTP con código 500.
  */
-export const createUser = async (
-  req: Request,
-  res: Response,
-): Promise<Response> => {
+export const createUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     // Construcción del DTO recibido desde el cliente.
     const dto: CreateUserDto = req.body;
@@ -136,10 +133,7 @@ export const createUser = async (
  *   }
  * ]
  */
-export const getUsers = async (
-  _req: Request,
-  res: Response,
-): Promise<Response> => {
+export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
   try {
     // Solicita la información al servicio.
     const users = await userService.findAll();

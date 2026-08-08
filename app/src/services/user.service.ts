@@ -1,9 +1,9 @@
 // app/src/services/user.service.ts
 
-import User from "../models/user.model";
-import { CreateUserDto } from "../dto/create-user.dto";
-import repository from "../repositories/user.repository";
-import { IUserService } from "./interfaces/user.service.interface";
+import User from '../models/user.model';
+import { CreateUserDto } from '../dto/create-user.dto';
+import repository from '../repositories/user.repository';
+import { IUserService } from './interfaces/user.service.interface';
 
 /**
  * Servicio de Usuarios
@@ -40,7 +40,7 @@ class UserService implements IUserService {
      **/
     const existingUser = await repository.findByEmail(dto.email);
     if (existingUser) {
-      throw new Error("El correo electrónico ya se encuentra registrado.");
+      throw new Error('El correo electrónico ya se encuentra registrado.');
     }
     /**
      * También podríamos:

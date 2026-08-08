@@ -1,7 +1,7 @@
 // app/src/services/interfaces/user.service.interface.ts
 
-import User from "../../models/user.model";
-import { CreateUserDto } from "../../dto/create-user.dto";
+import User from '../../models/user.model';
+import { CreateUserDto } from '../../dto/create-user.dto';
 
 /**
  * Contrato del Servicio de Usuarios.
