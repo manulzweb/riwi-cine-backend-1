@@ -12,8 +12,9 @@ import { swaggerSpec } from './docs/swagger';
 import cors from 'cors';
 import { corsOptions } from './config/cors';
 
-import userRoutes from './routes/user.routes';
 import { rateLimit } from 'express-rate-limit';
+import userRoutes from './routes/user.routes';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(cors(corsOptions));
 
 // Rutas
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // app.use("/api/login", authRoutes);
 
