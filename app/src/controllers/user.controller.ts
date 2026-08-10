@@ -136,9 +136,42 @@ export const getUsers = async (_req: Request, res: Response): Promise<Response> 
 
     // Retorna la colección de usuarios.
     return res.status(200).json(users);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
     return res.status(500).json({
-      error: error.message,
+      error: errorMessage,
+    });
+  }
+};
+
+/**
+ * Actualiza o valida la ubicación geográfica seleccionada por el usuario.
+ */
+export const updateLocation = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { countryId, departmentId, cityId } = req.body;
+    const authenticatedUser = (req as Request & { user?: { sub: number } }).user;
+    const userId = authenticatedUser ? authenticatedUser.sub : req.body.userId;
+
+    await userService.updateLocation({
+      countryId: countryId ? Number(countryId) : 0,
+      departmentId: departmentId ? Number(departmentId) : 0,
+      cityId: cityId ? Number(cityId) : 0,
+      userId: userId ? Number(userId) : undefined,
+    });
+
+    return res.status(200).json({
+      message: 'Ubicación seleccionada y validada correctamente.',
+      location: {
+        countryId,
+        departmentId,
+        cityId,
+      },
+    });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(400).json({
+      error: errorMessage,
     });
   }
 };

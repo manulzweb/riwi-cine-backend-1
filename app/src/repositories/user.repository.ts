@@ -37,6 +37,7 @@ class UserRepository implements IUserRepository {
 
   async activate(userId: number): Promise<void> {
     await User.update({isActive: true, activatedAt: new Date()}, {where: {id: userId}});
+  }
   async findById(id: number): Promise<User | null> {
     return await User.findOne({ where: { id } });
   }
@@ -48,18 +49,18 @@ class UserRepository implements IUserRepository {
     const user = await User.findByPk(id);
     if (!user) return;
 
-    const attempts = (user.failed_login_attempts ?? 0) + 1;
+    const attempts = (user.failedLoginAttempts ?? 0) + 1;
     await user.update({
-      failed_login_attempts: attempts,
-      locked_until: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.locked_until,
+      failedLoginAttempts: attempts,
+      lockedUntil: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.lockedUntil,
     });
   }
   async resetFailedAttempts(id: number): Promise<void> {
     await User.update(
       {
-        failed_login_attempts: 0,
-        locked_until: null,
-        last_login_at: new Date(),
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+        lastLoginAt: new Date(),
       },
       {
         where: { id: id },

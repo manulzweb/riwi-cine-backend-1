@@ -5,15 +5,15 @@ import { ICityRepository } from "./interfaces/city.repository.interface";
 
 class CityRepository implements ICityRepository {
   async findByDepartmentId(departmentId: number): Promise<City[]> {
-    const activeCinemaCityIds = await Cinema.findAll({
+    const activeCinemaCityNames = await Cinema.findAll({
       where: { isActive: true },
-      attributes: ["cityId"],
-      group: ["cityId"],
+      attributes: ["city"],
+      group: ["city"],
     });
 
-    const cityIds = activeCinemaCityIds.map((c: Cinema) => c.cityId);
+    const cityNames = activeCinemaCityNames.map((c: Cinema) => c.city);
 
-    if (cityIds.length === 0) {
+    if (cityNames.length === 0) {
       return [];
     }
 
@@ -21,7 +21,7 @@ class CityRepository implements ICityRepository {
       where: {
         departmentId,
         isActive: true,
-        id: { [Op.in]: cityIds },
+        name: { [Op.in]: cityNames },
       },
     });
   }

@@ -13,9 +13,10 @@ export const register = async (req: Request, res: Response): Promise<Response> =
             message: 'Registro Exitoso. Revisa tu correo para activar tu cuenta.',
             data: result,
         });
-    }catch(error: any){
+    }catch(error: unknown){
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
         return res.status(400).json({
-            error: error.message
+            error: errorMessage
         });
     };
 };
@@ -28,9 +29,10 @@ export const verifyEmail = async (req: Request, res: Response): Promise<Response
         return res.status(200).json({
             message: 'Cuenta Activada correctamente'
         });
-    }catch(error: any){
+    }catch(error: unknown){
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
         return res.status(400).json({
-            error: error.message
+            error: errorMessage
         });
     }
 };

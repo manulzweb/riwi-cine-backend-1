@@ -20,32 +20,32 @@ describe('UserRepository · RN-027', () => {
   it('increments the counter without locking when the maximum is not reached', async () => {
     const update = jest.fn();
     UserMock.findByPk.mockResolvedValue({
-      failed_login_attempts: 3,
-      locked_until: null,
+      failedLoginAttempts: 3,
+      lockedUntil: null,
       update,
     } as never);
 
     await userRepository.incrementFailedAttempts(1);
 
     expect(update).toHaveBeenCalledWith({
-      failed_login_attempts: 4,
-      locked_until: null,
+      failedLoginAttempts: 4,
+      lockedUntil: null,
     });
   });
 
   it('locks the account for 15 minutes on the fifth failed attempt', async () => {
     const update = jest.fn();
     UserMock.findByPk.mockResolvedValue({
-      failed_login_attempts: 4,
-      locked_until: null,
+      failedLoginAttempts: 4,
+      lockedUntil: null,
       update,
     } as never);
 
     await userRepository.incrementFailedAttempts(1);
 
     expect(update).toHaveBeenCalledWith({
-      failed_login_attempts: 5,
-      locked_until: new Date('2026-01-01T00:15:00.000Z'),
+      failedLoginAttempts: 5,
+      lockedUntil: new Date('2026-01-01T00:15:00.000Z'),
     });
   });
 
@@ -59,7 +59,7 @@ describe('UserRepository · RN-027', () => {
     await userRepository.resetFailedAttempts(1);
 
     expect(UserMock.update).toHaveBeenCalledWith(
-      { failed_login_attempts: 0, locked_until: null, last_login_at: now },
+      { failedLoginAttempts: 0, lockedUntil: null, lastLoginAt: now },
       { where: { id: 1 } },
     );
   });

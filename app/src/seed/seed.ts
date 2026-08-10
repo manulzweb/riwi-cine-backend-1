@@ -1,6 +1,9 @@
-import { Role } from '../models';
+// app/src/seed/seed.ts
+
+import { Role, MembershipLevel, MembershipStatus } from '../models';
 
 export const runSeed = async (): Promise<void> => {
+  // Roles
   await Role.findOrCreate({
     where: { name: 'cliente' },
     defaults: { name: 'cliente', description: 'Usuario final del portal Multicine.' },
@@ -10,5 +13,21 @@ export const runSeed = async (): Promise<void> => {
     defaults: { name: 'admin', description: 'Administrador de la plataforma.' },
   });
 
-  console.log('Seed ejecutado: roles verificados.');
+  // Membership Levels
+  await MembershipLevel.findOrCreate({
+    where: { name: 'BÁSICA' },
+    defaults: { name: 'BÁSICA', description: 'Nivel inicial de membresía digital.' },
+  });
+
+  // Membership Statuses
+  await MembershipStatus.findOrCreate({
+    where: { name: 'Activa' },
+    defaults: { name: 'Activa', description: 'Membresía activa y habilitada para beneficios.' },
+  });
+  await MembershipStatus.findOrCreate({
+    where: { name: 'Inactiva' },
+    defaults: { name: 'Inactiva', description: 'Membresía inactiva.' },
+  });
+
+  console.log('Seed ejecutado: roles, niveles y estados de membresía verificados.');
 };

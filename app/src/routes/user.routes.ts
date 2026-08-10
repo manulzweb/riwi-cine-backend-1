@@ -13,7 +13,7 @@
  */
 
 import { Router } from 'express';
-import { createUser, getUsers } from '../controllers/user.controller';
+import { createUser, getUsers, updateLocation } from '../controllers/user.controller';
 
 const router = Router();
 
@@ -122,6 +122,76 @@ router.post('/', createUser);
  *               error: "Error al obtener los usuarios"
  */
 router.get('/', getUsers);
+
+/**
+ * POST /api/users/location
+ * ------------------------
+ * Guarda o valida la ubicación geográfica seleccionada por el usuario (País, Departamento y Ciudad).
+ * Si el usuario está autenticado, actualiza su perfil de forma persistente.
+ *
+ * @swagger
+ * /api/users/location:
+ *   post:
+ *     summary: Seleccionar y validar ubicación geográfica del usuario
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - countryId
+ *               - departmentId
+ *               - cityId
+ *             properties:
+ *               countryId:
+ *                 type: integer
+ *                 example: 1
+ *               departmentId:
+ *                 type: integer
+ *                 example: 1
+ *               cityId:
+ *                 type: integer
+ *                 example: 1
+ *               userId:
+ *                 type: integer
+ *                 description: ID del usuario (opcional, útil si no se envía token de autenticación)
+ *                 example: 12
+ *     responses:
+ *       200:
+ *         description: Ubicación seleccionada y validada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ubicación seleccionada y validada correctamente."
+ *                 location:
+ *                   type: object
+ *                   properties:
+ *                     countryId:
+ *                       type: integer
+ *                     departmentId:
+ *                       type: integer
+ *                     cityId:
+ *                       type: integer
+ *       400:
+ *         description: Datos inválidos o faltantes, o la ciudad no está activa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "La ciudad seleccionada no está activa."
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/location', updateLocation);
 
 export default router;
 

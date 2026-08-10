@@ -4,6 +4,7 @@ import { VerifyEmailDto } from "../../dto/verify-email.dto";
 export interface RegisterResult {
     userId: number;
     email: string;
+    membershipCode: string;
 }
 
 export interface IAuthService {

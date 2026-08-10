@@ -4,12 +4,12 @@
  * Modelo de Usuario
  * -----------------
  * Este archivo define el modelo `User` de Sequelize, que representa la tabla `users` en la base de datos.
- * 
+ *
  * Contiene:
  *  - Atributos del modelo (`UserAttributes`).
  *  - Atributos requeridos para la creación (`UserCreationAttributes`).
  *  - Definición del modelo con sus columnas y restricciones.
- * 
+ *
  * Este modelo es utilizado por los servicios y controladores para realizar operaciones CRUD.
  */
 
@@ -23,59 +23,91 @@ export interface UserAttributes {
   id: number;
   roleId: number;
   email: string;
+  passwordHash: string | null;
   isActive: boolean;
   activatedAt: Date | null;
-  password?: string;
-  password_hash?: string;
-  role_id?: number;
-  email_verified_at: Date | null;
-  failed_login_attempts: number;
-  locked_until: Date | null;
-  last_login_at: Date | null;
+  emailVerifiedAt: Date | null;
+  failedLoginAttempts: number;
+  lockedUntil: Date | null;
+  lastLoginAt: Date | null;
+  personalDataConsent: boolean;
+  termsConsent: boolean;
+  commercialConsent: boolean;
 }
 
 /**
  * Atributos utilizados para la creación de un nuevo usuario.
- * 
+ *
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'roleId' | 'activatedAt' > {}
+export interface UserCreationAttributes
+  extends Optional<
+    UserAttributes,
+    | 'id'
+    | 'roleId'
+    | 'passwordHash'
+    | 'isActive'
+    | 'activatedAt'
+    | 'emailVerifiedAt'
+    | 'failedLoginAttempts'
+    | 'lockedUntil'
+    | 'lastLoginAt'
+    | 'commercialConsent'
+  > {}
 
 /**
  * Clase que representa el modelo `User` en Sequelize.
- * 
+ *
  * Implementa los atributos definidos en `UserAttributes` y `UserCreationAttributes`.
  */
-class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
-{
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   /** Identificador único del usuario (clave primaria). */
   public id!: number;
 
-  /** Nombre completo del usuario. */
+  /** Identificador del rol asignado. */
   public roleId!: number;
 
   /** Dirección de correo electrónico única del usuario. */
   public email!: string;
-  public password_hash!: string;
-  public role_id!: number;
-  public email_verified_at!: Date | null;
-  public failed_login_attempts!: number;
-  public locked_until!: Date | null;
-  public last_login_at!: Date | null;
-  public isActive!: boolean;
-  public activatedAt!: Date | null;
-  public readonly createdAt!: Date;
-  public readonly updateAt!: Date;
-  
 
+  /** Hash de la contraseña cifrada. */
+  public passwordHash!: string | null;
+
+  /** Indica si el usuario ha sido activado. */
+  public isActive!: boolean;
+
+  /** Fecha y hora en que la cuenta fue activada. */
+  public activatedAt!: Date | null;
+
+  /** Fecha y hora en que el correo electrónico fue verificado. */
+  public emailVerifiedAt!: Date | null;
+
+  /** Contador de intentos fallidos de inicio de sesión. */
+  public failedLoginAttempts!: number;
+
+  /** Fecha y hora hasta la cual la cuenta está bloqueada. */
+  public lockedUntil!: Date | null;
+
+  /** Fecha y hora del último inicio de sesión. */
+  public lastLoginAt!: Date | null;
+
+  /** Indica si el usuario dio consentimiento para el tratamiento de datos personales. */
+  public personalDataConsent!: boolean;
+
+  /** Indica si el usuario aceptó los términos y condiciones. */
+  public termsConsent!: boolean;
+
+  /** Indica si el usuario aceptó recibir comunicaciones comerciales. */
+  public commercialConsent!: boolean;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 /**
  * Inicialización del modelo `User` con la configuración de Sequelize.
- * 
+ *
  * - `id`: Entero autoincremental, clave primaria.
  * - `name`: Nombre obligatorio con máximo 100 caracteres.
  * - `email`: Correo electrónico único y obligatorio con máximo 100 caracteres.
@@ -89,7 +121,7 @@ User.init(
       primaryKey: true,
     },
     roleId: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: 'role_id',
     },
@@ -106,6 +138,7 @@ User.init(
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
       field: 'is_active',
     },
     activatedAt: {
@@ -113,35 +146,50 @@ User.init(
       allowNull: true,
       field: 'activated_at',
     },
-    password_hash: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    role_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    email_verified_at: {
+    emailVerifiedAt: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: 'email_verified_at',
     },
-    failed_login_attempts: {
+    failedLoginAttempts: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
+      field: 'failed_login_attempts',
     },
-    locked_until: {
+    lockedUntil: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: 'locked_until',
     },
-    last_login_at: {
+    lastLoginAt: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: 'last_login_at',
+    },
+    personalDataConsent: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'personal_data_consent',
+    },
+    termsConsent: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'terms_consent',
+    },
+    commercialConsent: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'commercial_consent',
     },
   },
   {
     sequelize,
-    modelName: "User", // Nombre del modelo en Sequelize
-    tableName: "users", // Nombre de la tabla en la base de datos
+    modelName: 'User', // Nombre del modelo en Sequelize
+    tableName: 'users', // Nombre de la tabla en la base de datos
     timestamps: true, // Incluye createdAt y updatedAt
     underscored: true,
   },
