@@ -89,7 +89,7 @@ User.init(
       primaryKey: true,
     },
     roleId: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: 'role_id',
     },
