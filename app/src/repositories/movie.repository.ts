@@ -1,19 +1,41 @@
 // app/src/repositories/movie.repository.ts
 
-import Movie from "../models/movie.model";
-import { IMovieRepository } from "./interfaces/movie.repository.interface";
-import { FilterMoviesDto } from "../dto/filter-movies.dto";
+import { Op } from 'sequelize';
+import Movie from '../models/movie.model';
+import CinemaFunction from '../models/function.model';
+import { IMovieRepository } from './interfaces/movie.repository.interface';
+import { FilterMoviesDto } from '../dto/filter-movies.dto';
 
 /**
- * Repositorio de Películas
- * ------------------------
- * Implementa el patrón Repository para encapsular todas las operaciones
- * de persistencia relacionadas con la entidad Movie.
- *
- * Esta clase es la única responsable de interactuar con Sequelize.
+ * Repositorio de Películas.
+ * Única capa que sabe cómo consultar Sequelize para la entidad Movie.
  */
-
 class MovieRepository implements IMovieRepository {
+  // --- Métodos de HU-004 ---
+  async findById(id: number): Promise<Movie | null> {
+    return await Movie.findOne({ where: { id, active: true } });
+  }
+
+  async findFunctionsByMovieId(movieId: number): Promise<CinemaFunction[]> {
+    return await CinemaFunction.findAll({
+      where: { movieId },
+      order: [['dateTime', 'ASC']],
+    });
+  }
+
+  async findByGenres(genres: string[], excludeId: number, limit: number): Promise<Movie[]> {
+    return await Movie.findAll({
+      where: {
+        id: { [Op.ne]: excludeId },
+        active: true,
+        genres: { [Op.overlap]: genres },
+      },
+      order: [['averageRating', 'DESC']],
+      limit,
+    });
+  }
+
+  // --- Métodos de develop / HU-003 ---
   /**
    * Obtiene todas las películas activas.
    */

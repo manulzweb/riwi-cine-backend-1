@@ -1,28 +1,16 @@
 // app/src/models/function.model.ts
 
 /**
- * Modelo de Función
- * -----------------
- * Este archivo define el modelo `Function` de Sequelize, que representa
- * la tabla `functions` en la base de datos.
- *
- * Contiene:
- *  - Atributos del modelo (`FunctionAttributes`).
- *  - Atributos requeridos para la creación (`FunctionCreationAttributes`).
- *  - Definición del modelo con sus columnas y restricciones.
- *
- * Una función es la combinación de una película, una sala y un horario específico.
- * Es el elemento central de la cartelera semanal.
+ * Modelo de Función (Showtime)
+ * -----------------------------
+ * Representa una función/horario disponible para una película, en un complex/sala.
  */
 
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
-import Movie from "./movie.model";
-import Room from "./room.model";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
+import Movie from './movie.model';
+import Room from './room.model';
 
-/**
- * Atributos principales de la entidad `Function`.
- */
 export interface FunctionAttributes {
   id: number;
   movieId: number;
@@ -32,54 +20,51 @@ export interface FunctionAttributes {
   price: number;
   availableSeats: number;
   isActive: boolean;
+
+  // Campos de HU-004 para compatibilidad y no romper la consulta de detalle
+  dateTime: Date;
+  format: string; // 2D, 3D, IMAX, VIP
+  room: string;
+  totalSeats: number;
+  active: boolean;
 }
 
-/**
- * Atributos utilizados para la creación de una nueva función.
- *
- * Se utiliza `Optional` para indicar que `id` no es requerido al momento
- * de la creación, ya que se genera automáticamente por la base de datos.
- */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface FunctionCreationAttributes extends Optional<
   FunctionAttributes,
-  "id"
+  | 'id'
+  | 'active'
+  | 'isActive'
+  | 'roomId'
+  | 'endTime'
+  | 'dateTime'
+  | 'format'
+  | 'room'
+  | 'totalSeats'
+  | 'startTime'
 > {}
 
-/**
- * Clase que representa el modelo `Function` en Sequelize.
- */
 class CinemaFunction
   extends Model<FunctionAttributes, FunctionCreationAttributes>
   implements FunctionAttributes
 {
-  /** Identificador único de la función (clave primaria). */
   public id!: number;
-
-  /** Identificador de la película que se proyecta. */
   public movieId!: number;
-
-  /** Identificador de la sala donde se proyecta. */
   public roomId!: number;
-
-  /** Fecha y hora de inicio de la función. */
   public startTime!: Date;
-
-  /** Fecha y hora de finalización de la función. */
   public endTime!: Date;
-
-  /** Precio de la entrada para esta función. */
   public price!: number;
-
-  /** Cantidad de asientos disponibles. */
   public availableSeats!: number;
-
-  /** Indica si la función está activa. */
   public isActive!: boolean;
+
+  // Compatibilidad con HU-004
+  public dateTime!: Date;
+  public format!: string;
+  public room!: string;
+  public totalSeats!: number;
+  public active!: boolean;
 }
 
-/**
- * Inicialización del modelo `CinemaFunction` con la configuración de Sequelize.
- */
 CinemaFunction.init(
   {
     id: {
@@ -90,18 +75,19 @@ CinemaFunction.init(
     movieId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: { model: Movie, key: 'id' },
     },
     roomId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true, // Permitir nulo para compatibilidad si no se asocia a sala física en test viejos
     },
     startTime: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     endTime: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     price: {
       type: DataTypes.FLOAT,
@@ -116,21 +102,42 @@ CinemaFunction.init(
       allowNull: false,
       defaultValue: true,
     },
+    // Compatibilidad con HU-004
+    dateTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    format: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
+    room: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    totalSeats: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     sequelize,
-    modelName: "CinemaFunction", // Nombre del modelo en Sequelize
-    tableName: "functions", // Nombre de la tabla en la base de datos
-    timestamps: true, // Incluye createdAt y updatedAt
+    modelName: 'CinemaFunction',
+    tableName: 'functions',
+    timestamps: true,
   },
 );
 
-// Una función pertenece a una película
-CinemaFunction.belongsTo(Movie, { foreignKey: "movieId", as: "movie" });
-Movie.hasMany(CinemaFunction, { foreignKey: "movieId", as: "functions" });
+// Relaciones
+CinemaFunction.belongsTo(Movie, { foreignKey: 'movieId', as: 'movie' });
+Movie.hasMany(CinemaFunction, { foreignKey: 'movieId', as: 'functions' });
 
-// Una función pertenece a una sala
-CinemaFunction.belongsTo(Room, { foreignKey: "roomId", as: "room" });
-Room.hasMany(CinemaFunction, { foreignKey: "roomId", as: "functions" });
+CinemaFunction.belongsTo(Room, { foreignKey: 'roomId', as: 'roomRelation' });
+Room.hasMany(CinemaFunction, { foreignKey: 'roomId', as: 'functions' });
 
 export default CinemaFunction;

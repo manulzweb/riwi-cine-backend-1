@@ -130,11 +130,6 @@ User.init(
       unique: true,
       allowNull: false,
     },
-    passwordHash: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      field: 'password_hash',
-    },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
