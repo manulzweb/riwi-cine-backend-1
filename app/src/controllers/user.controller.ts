@@ -78,17 +78,9 @@ import userService from '../services/user.service';
  * y retornada como una respuesta HTTP con código 500.
  */
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    // Delega la lógica de negocio al servicio.
-    const user = await userService.findAll();
-
-    // Retorna el recurso creado.
-    return res.status(201).json(user);
-  } catch (error: any) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
+  return res.status(400).json({
+    error: 'Para registrar usuarios y crear su membresía digital, utilice el endpoint POST /api/auth/register.',
+  });
 };
 
 /**
