@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { rateLimit } from 'express-rate-limit';
+import { LoginAuth } from '../controllers/auth.controller';
 import { register, verifyEmail } from '../controllers/auth.controller';
-
 const router = Router();
 
-const registerLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: { error: 'Demasiados intentos de registro, intenta más tarde' },
-});
-
+router.post('/login', LoginAuth);
 router.post('/register', registerLimiter, register);
 router.post('/verify-email', verifyEmail);
+
+// TODO
+// router.post('/refresh', refreshToken);
+// router.post('/logout', logoutUser);
+// router.post('/forgot-password', forgotPassword);
+// router.post('/reset-password', resetPassword);
 
 export default router;
