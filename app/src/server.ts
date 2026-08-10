@@ -19,6 +19,8 @@ import cityRoutes from './routes/city.routes';
 import authRoutes from './routes/auth.routes';
 import movieRoutes from "./routes/movie.routes";
 import { rateLimit } from 'express-rate-limit';
+import userRoutes from './routes/user.routes';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use(cors(corsOptions));
 
 // Rutas
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);

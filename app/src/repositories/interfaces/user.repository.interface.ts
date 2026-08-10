@@ -1,6 +1,7 @@
 // app/src/repositories/interfaces/user.repository.interface.ts
 
 import User, { UserCreationAttributes } from '../../models/user.model';
+import { Transaction } from 'sequelize';
 
 /**
  * Contrato del Repositorio de Usuarios
@@ -15,16 +16,14 @@ export interface IUserRepository {
    * Crea un usuario.
    */
   create(data: UserCreationAttributes): Promise<User>;
-  /**
-   * Crea un usuario.
-   */
-  create(data: UserCreationAttributes): Promise<User>;
 
   /**
    * Obtiene todos los usuarios.
    */
   findAll(): Promise<User[]>;
 
+
+  activate(userId: number): Promise<void>;
   /**
    * Obtiene un usuario por su ID.
    */
