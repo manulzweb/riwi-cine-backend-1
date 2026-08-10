@@ -3,49 +3,69 @@
 /**
  * Modelo de Función (Showtime)
  * -----------------------------
- * Representa una función/horario disponible para una película, en un
- * formato (2D, 3D, IMAX, VIP) y con un precio y aforo determinados.
- *
- * Nota de equipo:
- * Este modelo lo necesitan tanto HU-003 (Cartelera) como HU-004 (Detalle).
- * Coordinar con el compañero de HU-003 para no duplicar la tabla `functions`.
+ * Representa una función/horario disponible para una película, en un complex/sala.
  */
 
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
-import Movie from "./movie.model";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
+import Movie from './movie.model';
+import Room from './room.model';
 
 export interface FunctionAttributes {
   id: number;
   movieId: number;
-  dateTime: Date;
-  format: string;        // 2D, 3D, IMAX, VIP
-  room: string;
+  roomId: number;
+  startTime: Date;
+  endTime: Date;
   price: number;
-  totalSeats: number;
   availableSeats: number;
+  isActive: boolean;
+
+  // Campos de HU-004 para compatibilidad y no romper la consulta de detalle
+  dateTime: Date;
+  format: string; // 2D, 3D, IMAX, VIP
+  room: string;
+  totalSeats: number;
   active: boolean;
 }
 
-export interface FunctionCreationAttributes
-  extends Optional<FunctionAttributes, "id" | "active"> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface FunctionCreationAttributes extends Optional<
+  FunctionAttributes,
+  | 'id'
+  | 'active'
+  | 'isActive'
+  | 'roomId'
+  | 'endTime'
+  | 'dateTime'
+  | 'format'
+  | 'room'
+  | 'totalSeats'
+  | 'startTime'
+> {}
 
-class MovieFunction
+class CinemaFunction
   extends Model<FunctionAttributes, FunctionCreationAttributes>
   implements FunctionAttributes
 {
   public id!: number;
   public movieId!: number;
+  public roomId!: number;
+  public startTime!: Date;
+  public endTime!: Date;
+  public price!: number;
+  public availableSeats!: number;
+  public isActive!: boolean;
+
+  // Compatibilidad con HU-004
   public dateTime!: Date;
   public format!: string;
   public room!: string;
-  public price!: number;
   public totalSeats!: number;
-  public availableSeats!: number;
   public active!: boolean;
 }
 
-MovieFunction.init(
+CinemaFunction.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -55,31 +75,49 @@ MovieFunction.init(
     movieId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: Movie, key: "id" },
+      references: { model: Movie, key: 'id' },
     },
-    dateTime: {
+    roomId: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // Permitir nulo para compatibilidad si no se asocia a sala física en test viejos
+    },
+    startTime: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
-    format: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-    },
-    room: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+    endTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
     price: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-    },
-    totalSeats: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     availableSeats: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    // Compatibilidad con HU-004
+    dateTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    format: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
+    room: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    totalSeats: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -89,14 +127,17 @@ MovieFunction.init(
   },
   {
     sequelize,
-    modelName: "MovieFunction",
-    tableName: "functions",
+    modelName: 'CinemaFunction',
+    tableName: 'functions',
     timestamps: true,
-  }
+  },
 );
 
-// Relaciones: una película tiene muchas funciones.
-Movie.hasMany(MovieFunction, { foreignKey: "movieId", as: "functions" });
-MovieFunction.belongsTo(Movie, { foreignKey: "movieId", as: "movie" });
+// Relaciones
+CinemaFunction.belongsTo(Movie, { foreignKey: 'movieId', as: 'movie' });
+Movie.hasMany(CinemaFunction, { foreignKey: 'movieId', as: 'functions' });
 
-export default MovieFunction;
+CinemaFunction.belongsTo(Room, { foreignKey: 'roomId', as: 'roomRelation' });
+Room.hasMany(CinemaFunction, { foreignKey: 'roomId', as: 'functions' });
+
+export default CinemaFunction;

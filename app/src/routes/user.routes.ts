@@ -12,8 +12,8 @@
  * Cada ruta se conecta con su respectivo controlador.
  */
 
-import { Router } from "express";
-import { createUser, getUsers } from "../controllers/user.controller";
+import { Router } from 'express';
+import { createUser, getUsers } from '../controllers/user.controller';
 
 const router = Router();
 
@@ -25,6 +25,7 @@ const router = Router();
  * Request Body:
  *  - `name`: string (obligatorio)
  *  - `email`: string (obligatorio, único)
+ *  - `password`: string (obligatorio)
  * 
  * Response:
  *  - 201 Created: Retorna el usuario creado en formato JSON.
@@ -52,6 +53,9 @@ const router = Router();
  *               email:
  *                 type: string
  *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
  *     responses:
  *       201:
  *         description: Usuario creado exitosamente
@@ -61,6 +65,8 @@ const router = Router();
  *               id: 3
  *               name: "John Doe"
  *               email: "john.doe@example.com"
+ *               password: "password123"
+ * 
  *       400:
  *         description: Datos inválidos
  *         content:
@@ -74,7 +80,7 @@ const router = Router();
  *             example:
  *               error: "No se pudo crear el usuario"
  */
-router.post("/", createUser);
+router.post('/', createUser);
 
 /**
  * GET /
@@ -115,7 +121,7 @@ router.post("/", createUser);
  *             example:
  *               error: "Error al obtener los usuarios"
  */
-router.get("/", getUsers);
+router.get('/', getUsers);
 
 export default router;
 

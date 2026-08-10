@@ -14,7 +14,7 @@
  *  - Disponible en `/api/docs` (ver `server.ts`).
  */
 
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc from 'swagger-jsdoc';
 
 /**
  * Opciones de configuración para swagger-jsdoc.
@@ -29,14 +29,14 @@ import swaggerJSDoc from "swagger-jsdoc";
  */
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "API Example",
-      version: "1.0.0",
-      description: "Documentación generada automáticamente con Swagger para la API de ejemplo.",
+      title: 'API Example',
+      version: '1.0.0',
+      description: 'Documentación generada automáticamente con Swagger para la API de ejemplo.',
     },
   },
-  apis: ["./src/routes/*.ts"], // Escanea las rutas para extraer anotaciones Swagger
+  apis: ['./src/routes/*.ts'], // Escanea las rutas para extraer anotaciones Swagger
 };
 
 /**

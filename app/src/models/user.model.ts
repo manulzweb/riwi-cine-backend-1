@@ -4,38 +4,51 @@
  * Modelo de Usuario
  * -----------------
  * Este archivo define el modelo `User` de Sequelize, que representa la tabla `users` en la base de datos.
- * 
+ *
  * Contiene:
  *  - Atributos del modelo (`UserAttributes`).
  *  - Atributos requeridos para la creación (`UserCreationAttributes`).
  *  - Definición del modelo con sus columnas y restricciones.
- * 
+ *
  * Este modelo es utilizado por los servicios y controladores para realizar operaciones CRUD.
  */
 
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 /**
  * Atributos principales de la entidad `User`.
  */
 export interface UserAttributes {
   id: number;
-  name: string;
+  roleId: number;
   email: string;
+  isActive: boolean;
+  activatedAt: Date | null;
+  password?: string;
+  password_hash?: string;
+  role_id?: number;
+  email_verified_at: Date | null;
+  failed_login_attempts: number;
+  locked_until: Date | null;
+  last_login_at: Date | null;
 }
 
 /**
  * Atributos utilizados para la creación de un nuevo usuario.
- * 
+ *
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface UserCreationAttributes extends Optional<
+  UserAttributes,
+  'id' | 'roleId' | 'activatedAt'
+> {}
 
 /**
  * Clase que representa el modelo `User` en Sequelize.
- * 
+ *
  * Implementa los atributos definidos en `UserAttributes` y `UserCreationAttributes`.
  */
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -43,18 +56,24 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public id!: number;
 
   /** Nombre completo del usuario. */
-  public name!: string;
+  public roleId!: number;
 
   /** Dirección de correo electrónico única del usuario. */
   public email!: string;
+  public password_hash!: string;
+  public role_id!: number;
+  public email_verified_at!: Date | null;
+  public failed_login_attempts!: number;
+  public locked_until!: Date | null;
+  public last_login_at!: Date | null;
+  public isActive!: boolean;
+  public activatedAt!: Date | null;
+  public readonly createdAt!: Date;
+  public readonly updateAt!: Date;
 }
 
 /**
  * Inicialización del modelo `User` con la configuración de Sequelize.
- * 
- * - `id`: Entero autoincremental, clave primaria.
- * - `name`: Nombre obligatorio con máximo 100 caracteres.
- * - `email`: Correo electrónico único y obligatorio con máximo 100 caracteres.
  */
 User.init(
   {
@@ -63,22 +82,64 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING(100),
+    roleId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'role_id',
     },
     email: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(255),
       unique: true,
       allowNull: false,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'is_active',
+    },
+    activatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'activated_at',
+    },
+    password_hash: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      field: 'password_hash',
+    },
+    role_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'role_id',
+    },
+    email_verified_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'email_verified_at',
+    },
+    failed_login_attempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: 'failed_login_attempts',
+    },
+    locked_until: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'locked_until',
+    },
+    last_login_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'last_login_at',
     },
   },
   {
     sequelize,
-    modelName: "User",      // Nombre del modelo en Sequelize
-    tableName: "users",     // Nombre de la tabla en la base de datos
-    timestamps: true,      // Incluye createdAt y updatedAt
-  }
+    modelName: 'User', // Nombre del modelo en Sequelize
+    tableName: 'users', // Nombre de la tabla en la base de datos
+    timestamps: true, // Incluye createdAt y updatedAt
+    underscored: true,
+  },
 );
 
 export default User;
