@@ -42,20 +42,30 @@ export const runSeed = async (): Promise<void> => {
     defaults: { name: 'Colombia' },
   });
 
-  // 5. Department
-  const [department] = await Department.findOrCreate({
+  // 5. Departments
+  const [antioquia] = await Department.findOrCreate({
     where: { name: 'Antioquia', countryId: country.id },
     defaults: { name: 'Antioquia', countryId: country.id },
   });
 
-  // 6. City
-  const [city] = await City.findOrCreate({
-    where: { name: 'Medellín', departmentId: department.id },
-    defaults: { name: 'Medellín', departmentId: department.id, isActive: true },
+  const [atlantico] = await Department.findOrCreate({
+    where: { name: 'Atlántico', countryId: country.id },
+    defaults: { name: 'Atlántico', countryId: country.id },
   });
 
-  // 7. Cinema
-  const [cinema] = await Cinema.findOrCreate({
+  // 6. Cities
+  const [medellin] = await City.findOrCreate({
+    where: { name: 'Medellín', departmentId: antioquia.id },
+    defaults: { name: 'Medellín', departmentId: antioquia.id, isActive: true },
+  });
+
+  const [barranquilla] = await City.findOrCreate({
+    where: { name: 'Barranquilla', departmentId: atlantico.id },
+    defaults: { name: 'Barranquilla', departmentId: atlantico.id, isActive: true },
+  });
+
+  // 7. Cinemas
+  const [cinemaMedellin] = await Cinema.findOrCreate({
     where: { name: 'Multicine El Tesoro', city: 'Medellín' },
     defaults: {
       name: 'Multicine El Tesoro',
@@ -65,20 +75,41 @@ export const runSeed = async (): Promise<void> => {
     },
   });
 
-  // 8. Room
-  const [room] = await Room.findOrCreate({
-    where: { name: 'Sala IMAX 1', cinemaId: cinema.id },
+  const [cinemaBarranquilla] = await Cinema.findOrCreate({
+    where: { name: 'Multicine Buenavista', city: 'Barranquilla' },
     defaults: {
-      name: 'Sala IMAX 1',
-      format: 'IMAX',
-      capacity: 250,
-      cinemaId: cinema.id,
+      name: 'Multicine Buenavista',
+      city: 'Barranquilla',
+      address: 'Calle 98 # 52-115',
       isActive: true,
     },
   });
 
-  // 9. Movie
-  const [movie] = await Movie.findOrCreate({
+  // 8. Rooms
+  const [roomMedellin] = await Room.findOrCreate({
+    where: { name: 'Sala IMAX 1', cinemaId: cinemaMedellin.id },
+    defaults: {
+      name: 'Sala IMAX 1',
+      format: 'IMAX',
+      capacity: 250,
+      cinemaId: cinemaMedellin.id,
+      isActive: true,
+    },
+  });
+
+  const [roomBarranquilla] = await Room.findOrCreate({
+    where: { name: 'Sala 2D 1', cinemaId: cinemaBarranquilla.id },
+    defaults: {
+      name: 'Sala 2D 1',
+      format: '2D',
+      capacity: 180,
+      cinemaId: cinemaBarranquilla.id,
+      isActive: true,
+    },
+  });
+
+  // 9. Movies
+  const [movieBatman] = await Movie.findOrCreate({
     where: { title: 'Batman: El Caballero de la Noche' },
     defaults: {
       title: 'Batman: El Caballero de la Noche',
@@ -104,6 +135,32 @@ export const runSeed = async (): Promise<void> => {
     },
   });
 
+  const [movieSpiderman] = await Movie.findOrCreate({
+    where: { title: 'Spiderman: New Brand' },
+    defaults: {
+      title: 'Spiderman: New Brand',
+      synopsis: 'Una nueva aventura arácnida donde Peter Parker explora nuevos límites en el multiverso.',
+      director: 'Jon Watts',
+      actors: ['Tom Holland', 'Zendaya', 'Jacob Batalon'],
+      genres: ['Acción', 'Ciencia Ficción', 'Aventura'],
+      languages: ['Español', 'Inglés'],
+      formats: ['2D', '3D', 'VIP'],
+      duration: 135,
+      classification: 'PG-13',
+      releaseDate: new Date('2026-08-01'),
+      posterUrl: 'https://images.unsplash.com/photo-1635805737707-575885ab0820',
+      bannerUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1',
+      trailerUrl: 'JfVOs4VSpmA', // ID de video de YouTube
+      averageRating: 4.8,
+      active: true,
+      genre: 'Ciencia Ficción',
+      language: 'Subtitulada',
+      isSubtitled: true,
+      rating: 4.8,
+      isActive: true,
+    },
+  });
+
   // 10. Cinema Functions (Future functions)
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -112,11 +169,12 @@ export const runSeed = async (): Promise<void> => {
   const tomorrowEnd = new Date(tomorrow);
   tomorrowEnd.setHours(tomorrowEnd.getHours() + 3);
 
+  // Function for Batman in Medellín
   await CinemaFunction.findOrCreate({
-    where: { movieId: movie.id, format: 'IMAX' },
+    where: { movieId: movieBatman.id, format: 'IMAX', roomId: roomMedellin.id },
     defaults: {
-      movieId: movie.id,
-      roomId: room.id,
+      movieId: movieBatman.id,
+      roomId: roomMedellin.id,
       startTime: tomorrow,
       endTime: tomorrowEnd,
       price: 18000,
@@ -130,5 +188,24 @@ export const runSeed = async (): Promise<void> => {
     },
   });
 
-  console.log('Seed ejecutado: todos los datos mock (país, depto, ciudad, cine, sala, película, funciones) creados.');
+  // Function for Spiderman in Barranquilla
+  await CinemaFunction.findOrCreate({
+    where: { movieId: movieSpiderman.id, format: '2D', roomId: roomBarranquilla.id },
+    defaults: {
+      movieId: movieSpiderman.id,
+      roomId: roomBarranquilla.id,
+      startTime: tomorrow,
+      endTime: tomorrowEnd,
+      price: 14000,
+      availableSeats: 180,
+      isActive: true,
+      dateTime: tomorrow,
+      format: '2D',
+      room: 'Sala 2D 1',
+      totalSeats: 180,
+      active: true,
+    },
+  });
+
+  console.log('Seed ejecutado: todos los datos mock actualizados incluyendo Barranquilla y Spiderman: New Brand.');
 };
