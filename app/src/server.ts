@@ -11,7 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger";
 
 import userRoutes from "./routes/user.routes";
-
+import movieRoutes from "./routes/movie.routes"; // <-- HU-004: nuevo
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use(express.json());
 
 // Rutas
 app.use("/api/users", userRoutes);
+app.use("/api/movies", movieRoutes); // <-- HU-004: nuevo
 
 // Swagger
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
