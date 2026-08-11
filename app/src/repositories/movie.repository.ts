@@ -1,10 +1,12 @@
 // app/src/repositories/movie.repository.ts
 
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import Movie from '../models/movie.model';
 import CinemaFunction from '../models/function.model';
+import Room from '../models/room.model';
 import { IMovieRepository } from './interfaces/movie.repository.interface';
 import { FilterMoviesDto } from '../dto/filter-movies.dto';
+import { FunctionAttributes } from '../models/function.model';
 
 /**
  * Repositorio de Películas.
@@ -47,21 +49,119 @@ class MovieRepository implements IMovieRepository {
    * Obtiene las películas con funciones en los próximos 7 días.
    */
   async findWeekly(): Promise<Movie[]> {
-    return await Movie.findAll({ where: { isActive: true } });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const in7Days = new Date(today);
+    in7Days.setDate(today.getDate() + 7);
+    in7Days.setHours(23, 59, 59, 999);
+
+    return await Movie.findAll({
+      where: { isActive: true },
+      include: [
+        {
+          model: CinemaFunction,
+          as: 'functions',
+          where: {
+            isActive: true,
+            startTime: { [Op.between]: [today, in7Days] },
+          },
+          required: true,
+        },
+      ],
+    });
   }
 
   /**
    * Obtiene las películas con funciones el día de hoy.
    */
   async findToday(): Promise<Movie[]> {
-    return await Movie.findAll({ where: { isActive: true } });
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return await Movie.findAll({
+      where: { isActive: true },
+      include: [
+        {
+          model: CinemaFunction,
+          as: 'functions',
+          where: {
+            isActive: true,
+            startTime: { [Op.between]: [startOfDay, endOfDay] },
+          },
+          required: true,
+        },
+      ],
+    });
   }
 
   /**
    * Obtiene películas aplicando filtros opcionales.
    */
-  async findByFilters(_filters: FilterMoviesDto): Promise<Movie[]> {
-    return await Movie.findAll({ where: { isActive: true } });
+  async findByFilters(filters: FilterMoviesDto): Promise<Movie[]> {
+    const movieWhere: WhereOptions = { isActive: true };
+
+    if (filters.classification) {
+      movieWhere['classification'] = filters.classification;
+    }
+
+    // genre, language y format son arrays en la BD → Op.contains busca si el array incluye el valor
+    if (filters.genre) {
+      movieWhere['genres'] = { [Op.contains]: [filters.genre] };
+    }
+
+    if (filters.language) {
+      movieWhere['languages'] = { [Op.contains]: [filters.language] };
+    }
+
+    if (filters.format) {
+      movieWhere['formats'] = { [Op.contains]: [filters.format] };
+    }
+
+    // Si se filtra por fecha, cinemaId o disponibilidad necesitamos hacer join con funciones
+    const needsFunctionJoin = filters.date || filters.cinemaId || filters.available;
+
+    if (!needsFunctionJoin) {
+      return await Movie.findAll({ where: movieWhere });
+    }
+
+    const functionWhere: WhereOptions<FunctionAttributes> = { isActive: true };
+
+    if (filters.date) {
+      const day = new Date(filters.date);
+      day.setHours(0, 0, 0, 0);
+      const nextDay = new Date(filters.date);
+      nextDay.setHours(23, 59, 59, 999);
+      functionWhere['startTime'] = { [Op.between]: [day, nextDay] };
+    }
+
+    if (filters.cinemaId) {
+      // Para filtrar por cine necesitamos join con Room y filtrar Room.cinemaId
+      const roomIds = await Room.findAll({
+        where: { cinemaId: filters.cinemaId, isActive: true },
+        attributes: ['id'],
+      });
+      functionWhere['roomId'] = { [Op.in]: roomIds.map((r) => r.id) };
+    }
+
+    if (filters.available) {
+      functionWhere['availableSeats'] = { [Op.gt]: 0 };
+    }
+
+    return await Movie.findAll({
+      where: movieWhere,
+      include: [
+        {
+          model: CinemaFunction,
+          as: 'functions',
+          where: functionWhere,
+          required: true,
+        },
+      ],
+    });
   }
 }
 
