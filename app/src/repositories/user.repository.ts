@@ -49,18 +49,18 @@ class UserRepository implements IUserRepository {
     const user = await User.findByPk(id);
     if (!user) return;
 
-    const attempts = (user.failedLoginAttempts ?? 0) + 1;
+    const attempts = (user.failed_login_attempts ?? 0) + 1;
     await user.update({
-      failedLoginAttempts: attempts,
-      lockedUntil: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.lockedUntil,
+      failed_login_attempts: attempts,
+      locked_until: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.locked_until,
     });
   }
   async resetFailedAttempts(id: number): Promise<void> {
     await User.update(
       {
-        failedLoginAttempts: 0,
-        lockedUntil: null,
-        lastLoginAt: new Date(),
+        failed_login_attempts: 0,
+        locked_until: null,
+        last_login_at: new Date(),
       },
       {
         where: { id: id },

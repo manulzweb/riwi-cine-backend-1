@@ -1,11 +1,3 @@
-// app/src/routes/movie.routes.ts
-
-/**
- * Rutas de Películas
- * ------------------
- * Endpoints disponibles para Cartelera (HU-003) y Detalle (HU-004).
- */
-
 import { Router } from 'express';
 import {
   getMovies,
