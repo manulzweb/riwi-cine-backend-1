@@ -18,9 +18,10 @@ import countryRoutes from './routes/country.routes';
 import departmentRoutes from './routes/department.routes';
 import cityRoutes from './routes/city.routes';
 import authRoutes from './routes/auth.routes';
-import movieRoutes from "./routes/movie.routes";
+import movieRoutes from './routes/movie.routes';
 import membershipRoutes from './routes/membership.routes';
 import { rateLimit } from 'express-rate-limit';
+import { envConfig } from './config/env';
 
 const app = express();
 
@@ -29,10 +30,8 @@ app.use(express.json());
 
 app.use(
   rateLimit({
-    windowMs: process.env.RATE_LIMIT_WINDOW_MS
-      ? Number(process.env.RATE_LIMIT_WINDOW_MS)
-      : 10 * 60 * 1000,
-    max: process.env.RATE_LIMIT_MAX_REQUESTS ? Number(process.env.RATE_LIMIT_MAX_REQUESTS) : 100,
+    windowMs: envConfig.RATE_LIMIT.WINDOW_MS,
+    max: envConfig.RATE_LIMIT.MAX_REQUESTS,
   }),
 );
 
@@ -46,7 +45,7 @@ app.use('/api/countries', countryRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/membership', membershipRoutes);
-app.use("/api/movies", movieRoutes);
+app.use('/api/movies', movieRoutes);
 // app.use("/api/login", authRoutes);
 
 // Swagger

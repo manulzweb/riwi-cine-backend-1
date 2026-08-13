@@ -23,10 +23,9 @@ import { IAuthService, RegisterResult } from './interfaces/auth.service.interfac
 import { isValidPassword } from '../utils/password.util';
 import { sendActivationEmail } from '../config/mailer';
 import userRepository from '../repositories/user.repository';
+import { envConfig } from '../config/env';
 
-const activationTokenTime = process.env.ACTIVATION_TOKEN_EXPIRE_HOURS
-  ? Number(process.env.ACTIVATION_TOKEN_EXPIRE_HOURS)
-  : 24;
+const activationTokenTime = envConfig.REGISTER.ACTIVATION_TOKEN_EXPIRE_HOURS;
 const roleName = 'cliente';
 
 class AuthService implements IAuthService {
@@ -35,7 +34,9 @@ class AuthService implements IAuthService {
     const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
 
     if (!dto.personalDataConsent || !dto.termsConsent) {
-      throw new Error('Debe aceptar los términos y condiciones y el tratamiento de datos personales.');
+      throw new Error(
+        'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
+      );
     }
 
     if (email !== confirmEmail) {
@@ -127,8 +128,15 @@ class AuthService implements IAuthService {
       // 3. Generate unique membership code
       let isUnique = false;
       while (!isUnique) {
-        membershipCode = 'MC-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.floor(100000 + Math.random() * 900000);
-        const existing = await Membership.findOne({ where: { code: membershipCode }, transaction: t });
+        membershipCode =
+          'MC-' +
+          Math.floor(100000 + Math.random() * 900000) +
+          '-' +
+          Math.floor(100000 + Math.random() * 900000);
+        const existing = await Membership.findOne({
+          where: { code: membershipCode },
+          transaction: t,
+        });
         if (!existing) {
           isUnique = true;
         }

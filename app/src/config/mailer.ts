@@ -1,20 +1,21 @@
 import nodemailer from 'nodemailer';
+import { envConfig } from './env';
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: process.env.SMTP_SECURE === 'true',
+  host: envConfig.SMTP.HOST,
+  port: Number(envConfig.SMTP.PORT || 587),
+  secure: envConfig.SMTP.SECURE,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: envConfig.SMTP.USER,
+    pass: envConfig.SMTP.PASS,
   },
 });
 
 export const sendActivationEmail = async (email: string, token: string): Promise<void> => {
-  const activationLink = `${process.env.FRONTEND_URL}/activate?token=${token}&email=${encodeURIComponent(email)}`;
+  const activationLink = `${envConfig.FRONTEND_URL}/activate?token=${token}&email=${encodeURIComponent(email)}`;
 
   await transporter.sendMail({
-    from: `"MultiCine" <${process.env.SMTP_FROM || process.env.SMTP_User}`,
+    from: `"MultiCine" <${envConfig.SMTP.FROM}>`,
     to: email,
     subject: 'Activa tu cuenta en multicine',
     html: `<h2>Bienvenido a MultiCine!!</h2>

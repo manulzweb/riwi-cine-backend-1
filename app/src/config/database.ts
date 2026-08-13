@@ -19,21 +19,17 @@
  */
 
 import { Sequelize } from 'sequelize';
+import { envConfig } from './env';
 
 /**
  * Instancia de Sequelize configurada para PostgreSQL.
  * Se conecta utilizando las credenciales y parámetros definidos en las variables de entorno.
  */
-const sequelize = new Sequelize(
-  process.env.POSTGRES_DB as string,
-  process.env.POSTGRES_USER as string,
-  process.env.POSTGRES_PASSWORD as string,
-  {
-    host: process.env.POSTGRES_HOST || 'db', // En docker-compose, el servicio de la BD se llama "db"
-    port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
-    dialect: 'postgres',
-    logging: false, // Desactiva logs SQL en consola (útil en producción)
-  },
-);
+const sequelize = new Sequelize(envConfig.DB.NAME, envConfig.DB.USER, envConfig.DB.PASSWORD, {
+  host: envConfig.DB.HOST || 'db', // En docker-compose, el servicio de la BD se llama "db"
+  port: parseInt(envConfig.DB.PORT.toString() || '5432', 10),
+  dialect: 'postgres',
+  logging: false, // Desactiva logs SQL en consola (útil en producción)
+});
 
 export default sequelize;
