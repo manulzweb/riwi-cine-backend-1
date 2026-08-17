@@ -15,9 +15,8 @@
  * específico (2D, 3D, IMAX, VIP).
  */
 
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
-import Cinema from "./cinema.model";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 /**
  * Atributos principales de la entidad `Room`.
@@ -37,18 +36,12 @@ export interface RoomAttributes {
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface RoomCreationAttributes extends Optional<
-  RoomAttributes,
-  "id"
-> {}
+export type RoomCreationAttributes = Optional<RoomAttributes, 'id'>;
 
 /**
  * Clase que representa el modelo `Room` en Sequelize.
  */
-class Room
-  extends Model<RoomAttributes, RoomCreationAttributes>
-  implements RoomAttributes
-{
+class Room extends Model<RoomAttributes, RoomCreationAttributes> implements RoomAttributes {
   /** Identificador único de la sala (clave primaria). */
   public id!: number;
 
@@ -102,14 +95,10 @@ Room.init(
   },
   {
     sequelize,
-    modelName: "Room", // Nombre del modelo en Sequelize
-    tableName: "rooms", // Nombre de la tabla en la base de datos
+    modelName: 'Room', // Nombre del modelo en Sequelize
+    tableName: 'rooms', // Nombre de la tabla en la base de datos
     timestamps: true, // Incluye createdAt y updatedAt
   },
 );
-
-// Una sala pertenece a un complejo de cine
-Room.belongsTo(Cinema, { foreignKey: "cinemaId", as: "cinema" });
-Cinema.hasMany(Room, { foreignKey: "cinemaId", as: "rooms" });
 
 export default Room;

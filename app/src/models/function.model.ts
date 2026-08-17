@@ -9,7 +9,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import Movie from './movie.model';
-import Room from './room.model';
 
 export interface FunctionAttributes {
   id: number;
@@ -132,12 +131,5 @@ CinemaFunction.init(
     timestamps: true,
   },
 );
-
-// Relaciones
-CinemaFunction.belongsTo(Movie, { foreignKey: 'movieId', as: 'movie' });
-Movie.hasMany(CinemaFunction, { foreignKey: 'movieId', as: 'functions' });
-
-CinemaFunction.belongsTo(Room, { foreignKey: 'roomId', as: 'roomRelation' });
-Room.hasMany(CinemaFunction, { foreignKey: 'roomId', as: 'functions' });
 
 export default CinemaFunction;

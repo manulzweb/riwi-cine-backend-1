@@ -12,7 +12,7 @@ import { swaggerSpec } from './docs/swagger';
 import cors from 'cors';
 import { corsOptions } from './config/cors';
 import helmet from 'helmet';
-
+import reservationRoutes from './routes/reservation.routes';
 import userRoutes from './routes/user.routes';
 import countryRoutes from './routes/country.routes';
 import departmentRoutes from './routes/department.routes';
@@ -46,6 +46,7 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/membership', membershipRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api', reservationRoutes);
 // app.use("/api/login", authRoutes);
 
 // Swagger
