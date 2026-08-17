@@ -1,4 +1,4 @@
-// app/src/server.ts
+﻿// app/src/server.ts
 
 /**
  * Se encarga únicamente de configurar la aplicación Express: middlewares, rutas, swagger, etc.
@@ -18,7 +18,8 @@ import countryRoutes from './routes/country.routes';
 import departmentRoutes from './routes/department.routes';
 import cityRoutes from './routes/city.routes';
 import authRoutes from './routes/auth.routes';
-import movieRoutes from "./routes/movie.routes";
+import movieRoutes from './routes/movie.routes';
+import functionRoutes from './routes/function.routes';
 import membershipRoutes from './routes/membership.routes';
 import { rateLimit } from 'express-rate-limit';
 
@@ -46,7 +47,8 @@ app.use('/api/countries', countryRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/membership', membershipRoutes);
-app.use("/api/movies", movieRoutes);
+app.use('/api/movies', movieRoutes);
+app.use('/api/functions', functionRoutes);
 // app.use("/api/login", authRoutes);
 
 // Swagger
