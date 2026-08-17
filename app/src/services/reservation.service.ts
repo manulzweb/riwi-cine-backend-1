@@ -16,7 +16,7 @@ const DEFAULT_MAX_SEATS = 10;
 
 class ReservationService implements IReservationService {
   /**
-   * HU-010
+   * HU-001/SPRINT3
    * Obtiene el mapa de sillas correspondiente a una función.
    */
   async getFunctionSeats(functionId: number): Promise<unknown> {
@@ -68,7 +68,7 @@ class ReservationService implements IReservationService {
   }
 
   /**
-   * HU-010
+   * HU-001/SPRINT3
    * Bloquea temporalmente las sillas seleccionadas.
    *
    * RN-039: bloqueo durante 10 minutos.
@@ -186,7 +186,7 @@ class ReservationService implements IReservationService {
   }
 
   /**
-   * HU-010
+   * HU-001/SPRINT3
    * Libera las sillas de una reserva activa.
    *
    * RN-040: las sillas vuelven a estar disponibles.
@@ -222,7 +222,7 @@ class ReservationService implements IReservationService {
   }
 
   /**
-   * HU-010
+   * HU-001/SPRINT3
    * Obtiene el resumen de una reserva.
    */
   async getReservationSummary(reservationId: number, userId: number): Promise<unknown> {

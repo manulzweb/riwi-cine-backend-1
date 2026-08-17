@@ -6,7 +6,7 @@ import { ReleaseSeatsDto } from '../dto/release-seats.dto';
 class ReservationController {
   /**
    * GET /api/functions/:id/seats
-   * HU-010
+   * HU-001/SPRINT3
    */
   async getFunctionSeats(req: Request, res: Response): Promise<void> {
     try {
@@ -31,7 +31,7 @@ class ReservationController {
 
   /**
    * POST /api/reservations/lock-seats
-   * HU-010
+   * HU-001/SPRINT3
    */
   async lockSeats(req: Request, res: Response): Promise<void> {
     try {
@@ -49,7 +49,7 @@ class ReservationController {
 
   /**
    * DELETE /api/reservations/release-seats
-   * HU-010
+   * HU-001/SPRINT3
    */
   async releaseSeats(req: Request, res: Response): Promise<void> {
     try {
@@ -69,7 +69,7 @@ class ReservationController {
 
   /**
    * GET /api/reservations/summary
-   * HU-010
+   * HU-001/SPRINT3
    */
   async getReservationSummary(req: Request, res: Response): Promise<void> {
     try {
