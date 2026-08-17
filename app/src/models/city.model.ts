@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 export interface CityAttributes {
   id: number;
@@ -8,7 +8,7 @@ export interface CityAttributes {
   isActive: boolean;
 }
 
-export interface CityCreationAttributes extends Optional<CityAttributes, "id"> {}
+export type CityCreationAttributes = Optional<CityAttributes, 'id'>;
 
 class City extends Model<CityAttributes, CityCreationAttributes> implements CityAttributes {
   public id!: number;
@@ -40,10 +40,10 @@ City.init(
   },
   {
     sequelize,
-    modelName: "City",
-    tableName: "cities",
+    modelName: 'City',
+    tableName: 'cities',
     timestamps: false,
-  }
+  },
 );
 
 export default City;

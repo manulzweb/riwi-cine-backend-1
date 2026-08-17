@@ -2,18 +2,15 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { LoginAuth } from '../controllers/auth.controller';
 import { register, verifyEmail } from '../controllers/auth.controller';
+import { envConfig } from '../config/env';
 
 const registerLimiter = rateLimit({
-  windowMs: process.env.REGISTER_LIMIT_WINDOW_MS
-    ? Number(process.env.REGISTER_LIMIT_WINDOW_MS)
-    : 15 * 60 * 1000, // 15 minutes
-  max: process.env.REGISTER_LIMIT_MAX_REQUESTS
-    ? Number(process.env.REGISTER_LIMIT_MAX_REQUESTS)
-    : 10, // limit each IP to 10 registration attempts per windowMs
+  windowMs: envConfig.REGISTER.WINDOW_MS,
+  max: envConfig.REGISTER.MAX_REQUESTS,
   message: {
-    error: process.env.REGISTER_LIMIT_MESSAGE || 'Demasiadas solicitudes de registro. Por favor intente más tarde.',
+    error: envConfig.REGISTER.MESSAGE,
   },
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: () => envConfig.NODE_ENV === 'test',
 });
 
 const router = Router();
