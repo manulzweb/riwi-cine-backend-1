@@ -7,6 +7,7 @@ import departmentRoutes from './department.routes';
 import cityRoutes from './city.routes';
 import authRoutes from './auth.routes';
 import movieRoutes from './movie.routes';
+import functionRoutes from './function.routes';
 import membershipRoutes from './membership.routes';
 import notificationRoutes from './notification.routes';
 import healthRoutes from './health.routes';
@@ -19,6 +20,7 @@ router.use('/departments', departmentRoutes);
 router.use('/cities', cityRoutes);
 router.use('/membership', membershipRoutes);
 router.use('/movies', movieRoutes);
+router.use('/functions', functionRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/health', healthRoutes);
 
