@@ -14,6 +14,8 @@ import City from './city.model';
 import Cinema from './cinema.model';
 import Department from './department.model';
 import Country from './country.model';
+import Movie from './movie.model';
+import MovieStatus from './movie-status.model';
 
 // --- Associations ---
 
@@ -65,6 +67,10 @@ Department.belongsTo(Country, { foreignKey: 'country_id', as: 'country' });
 Department.hasMany(City, { foreignKey: 'department_id', as: 'cities' });
 City.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
 
+// MovieStatus - Movie
+MovieStatus.hasMany(Movie, { foreignKey: 'statusId', as: 'movies' });
+Movie.belongsTo(MovieStatus, { foreignKey: 'statusId', as: 'movieStatus' });
+
 export {
   sequelize,
   User,
@@ -80,4 +86,6 @@ export {
   Cinema,
   Department,
   Country,
+  Movie,
+  MovieStatus,
 };
