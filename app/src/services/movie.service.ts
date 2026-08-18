@@ -98,18 +98,17 @@ class MovieService implements IMovieService {
    */
   async findUpcoming(): Promise<UpcomingMovieDto[]> {
     const movies = await repository.findUpcoming();
-    return movies.map((m) => ({
-      id: m.id,
-      title: m.title,
-      posterUrl: m.posterUrl,
-      releaseDate: m.releaseDate.toString().slice(0, 10),
-      genres: m.genres,
-      classification: m.classification,
-      duration: m.duration,
-      trailerUrl: m.trailerUrl || '',
-      synopsis: m.synopsis,
-      daysUntil: this.daysUntil(m.releaseDate),
-    }));
+    return movies.map((m) => this.toUpcomingDto(m));
+  }
+
+  /**
+   * Retorna el detalle de una película en estado "Próximo Estreno" (HU-005).
+   */
+  async getUpcomingMovie(id: number): Promise<UpcomingMovieDto | null> {
+    const movie = await repository.findUpcomingById(id);
+    if (!movie) return null;
+
+    return this.toUpcomingDto(movie);
   }
 
   /**
@@ -138,6 +137,21 @@ class MovieService implements IMovieService {
    */
   async findByFilters(filters: FilterMoviesDto): Promise<Movie[]> {
     return await repository.findByFilters(filters);
+  }
+
+  private toUpcomingDto(m: Movie): UpcomingMovieDto {
+    return {
+      id: m.id,
+      title: m.title,
+      posterUrl: m.posterUrl,
+      releaseDate: m.releaseDate.toString().slice(0, 10),
+      genres: m.genres,
+      classification: m.classification,
+      duration: m.duration,
+      trailerUrl: m.trailerUrl || '',
+      synopsis: m.synopsis,
+      daysUntil: this.daysUntil(m.releaseDate),
+    };
   }
 
   private daysUntil(releaseDate: Date): number {

@@ -27,6 +27,9 @@ export interface IMovieService {
   /** Retorna las películas en estado "Próximo Estreno" (HU-005). */
   findUpcoming(): Promise<UpcomingMovieDto[]>;
 
+  /** Retorna el detalle de una película en estado "Próximo Estreno", o null si no existe/no aplica (HU-005). */
+  getUpcomingMovie(id: number): Promise<UpcomingMovieDto | null>;
+
   findAll(): Promise<Movie[]>;
 
   findWeekly(): Promise<Movie[]>;

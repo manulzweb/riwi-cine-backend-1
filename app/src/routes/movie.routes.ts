@@ -8,6 +8,7 @@ import {
   getMovieFunctions,
   getMovieRecommendations,
   getUpcomingMovies,
+  getUpcomingMovie,
 } from '../controllers/movie.controller';
 
 const router = Router();
@@ -95,6 +96,59 @@ router.get('/', getMovies);
  *         description: Error interno del servidor.
  */
 router.get('/upcoming', getUpcomingMovies);
+
+/**
+ * @swagger
+ * /api/movies/upcoming/{id}:
+ *   get:
+ *     summary: Obtener el detalle de una película en estado "Próximo Estreno"
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la película.
+ *     responses:
+ *       200:
+ *         description: Detalle del próximo estreno obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 title:
+ *                   type: string
+ *                 posterUrl:
+ *                   type: string
+ *                 releaseDate:
+ *                   type: string
+ *                   format: date
+ *                 genres:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 classification:
+ *                   type: string
+ *                 duration:
+ *                   type: integer
+ *                 trailerUrl:
+ *                   type: string
+ *                 synopsis:
+ *                   type: string
+ *                 daysUntil:
+ *                   type: integer
+ *       400:
+ *         description: Id de la película inválido.
+ *       404:
+ *         description: Próximo estreno no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/upcoming/:id', getUpcomingMovie);
 
 /**
  * @swagger

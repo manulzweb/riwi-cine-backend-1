@@ -50,6 +50,15 @@ class MovieRepository implements IMovieRepository {
   }
 
   /**
+   * Busca una película activa en estado "Próximo Estreno" por su id (HU-005).
+   */
+  async findUpcomingById(id: number): Promise<Movie | null> {
+    return await Movie.findOne({
+      where: { id, isActive: true, releaseDate: { [Op.gt]: todayDateOnly() } },
+    });
+  }
+
+  /**
    * Obtiene todas las películas activas.
    */
   async findAll(): Promise<Movie[]> {

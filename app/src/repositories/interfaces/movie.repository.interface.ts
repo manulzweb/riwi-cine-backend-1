@@ -21,6 +21,9 @@ export interface IMovieRepository {
   /** Obtiene las películas en estado "Próximo Estreno" (HU-005). */
   findUpcoming(): Promise<Movie[]>;
 
+  /** Busca una película activa en estado "Próximo Estreno" por su id (HU-005). */
+  findUpcomingById(id: number): Promise<Movie | null>;
+
   /** Obtiene todas las películas activas. (develop/HU-003) */
   findAll(): Promise<Movie[]>;
 

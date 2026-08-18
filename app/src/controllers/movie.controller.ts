@@ -85,6 +85,27 @@ export const getUpcomingMovies = async (_req: Request, res: Response): Promise<R
   }
 };
 
+export const getUpcomingMovie = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'El id de la película es inválido.' });
+    }
+
+    const movie = await movieService.getUpcomingMovie(id);
+
+    if (!movie) {
+      return res.status(404).json({ error: 'Próximo estreno no encontrado.' });
+    }
+
+    return res.status(200).json(movie);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(500).json({ error: message });
+  }
+};
+
 // --- Métodos de develop / HU-003 ---
 export const getMovies = async (_req: Request, res: Response): Promise<Response> => {
   try {
