@@ -7,6 +7,16 @@ export interface ITokenService {
   generateAccessToken(userId: number): string;
 
   /**
+   * Genera un token JWT de refresco para el usuario.
+   */
+  generateRefreshToken(userId: number): string;
+
+  /**
+   * Verifica y decodifica un token JWT de refresco
+   */
+  verifyRefreshToken(token: string): AccessTokenPayload | null;
+
+  /**
    * Verifica y decodifica un token JWT de acceso
    *
    * @param token - Token JWT a verificar

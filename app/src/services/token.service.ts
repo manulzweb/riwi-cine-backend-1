@@ -48,6 +48,15 @@ export class TokenService implements ITokenService {
     } as SignOptions);
   }
 
+  generateRefreshToken(userId: number): string {
+    return jwt.sign({ sub: String(userId), type: 'refresh' }, envConfig.JWT.REFRESH_SECRET, {
+      expiresIn: envConfig.JWT.REFRESH_EXPIRES_IN,
+      issuer: envConfig.JWT.ISSUER,
+      audience: envConfig.JWT.AUDIENCE,
+      algorithm: 'HS256',
+    } as SignOptions);
+  }
+
   /**
    * Verifica y decodifica un token JWT de acceso
    *
@@ -57,6 +66,18 @@ export class TokenService implements ITokenService {
   verifyAccessToken(token: string): AccessTokenPayload | null {
     try {
       return jwt.verify(token, envConfig.JWT.ACCESS_SECRET, {
+        issuer: envConfig.JWT.ISSUER,
+        audience: envConfig.JWT.AUDIENCE,
+        algorithms: ['HS256'],
+      }) as AccessTokenPayload;
+    } catch {
+      return null;
+    }
+  }
+
+  verifyRefreshToken(token: string): AccessTokenPayload | null {
+    try {
+      return jwt.verify(token, envConfig.JWT.REFRESH_SECRET, {
         issuer: envConfig.JWT.ISSUER,
         audience: envConfig.JWT.AUDIENCE,
         algorithms: ['HS256'],

@@ -1,19 +1,22 @@
 // app/src/models/index.ts
 
-import sequelize from "../config/database";
-import User from "./user.model";
-import Role from "./role.model";
-import EmailVerificationToken from "./email-verification-model";
-import Profile from "./profile.model";
-import Membership from "./membership.model";
-import MembershipLevel from "./membership-level.model";
-import MembershipStatus from "./membership-status.model";
-import BonusWallet from "./bonus-wallet.model";
-import NotificationPreference from "./notification-preference.model";
-import City from "./city.model";
-import Cinema from "./cinema.model";
-import Department from "./department.model";
-import Country from "./country.model";
+import sequelize from '../config/database';
+import User from './user.model';
+import Role from './role.model';
+import EmailVerificationToken from './email-verification-model';
+import Profile from './profile.model';
+import Membership from './membership.model';
+import MembershipLevel from './membership-level.model';
+import MembershipStatus from './membership-status.model';
+import BonusWallet from './bonus-wallet.model';
+import NotificationPreference from './notification-preference.model';
+import City from './city.model';
+import Cinema from './cinema.model';
+import Department from './department.model';
+import Country from './country.model';
+import RefreshToken from './refresh-token.model';
+import LoginAudit from './login-audit.model';
+import PasswordResetToken from './password-reset-token.model';
 
 // --- Associations ---
 
@@ -65,6 +68,18 @@ Department.belongsTo(Country, { foreignKey: 'country_id', as: 'country' });
 Department.hasMany(City, { foreignKey: 'department_id', as: 'cities' });
 City.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
 
+// User - RefreshToken
+User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens' });
+RefreshToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// User - LoginAudit
+User.hasMany(LoginAudit, { foreignKey: 'user_id', as: 'loginAudits' });
+LoginAudit.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// User - PasswordResetToken
+User.hasMany(PasswordResetToken, { foreignKey: 'user_id', as: 'passwordResetTokens' });
+PasswordResetToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 export {
   sequelize,
   User,
@@ -79,5 +94,8 @@ export {
   City,
   Cinema,
   Department,
-  Country
+  Country,
+  RefreshToken,
+  LoginAudit,
+  PasswordResetToken,
 };

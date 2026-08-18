@@ -134,27 +134,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const { userId, accessToken } = await authService.login(dto);
+    const ipAddress = req.ip || req.headers['x-forwarded-for']?.toString() || '';
+    const userAgent = req.headers['user-agent'] || '';
+    const { userId, accessToken, refreshToken, profile, membership } = await authService.login(
+      dto,
+      ipAddress,
+      userAgent,
+    );
 
     res.status(200).json({
       message: 'Authentication successful',
       userId: userId,
       tokenType: 'Bearer',
       accessToken: accessToken,
-    } as RegisterUserResponseDto);
+      refreshToken: refreshToken,
+      profile: profile,
+      membership: membership,
+    });
   } catch (e) {
-    /**
-     * Se utiliza un mensaje genérico para evitar la enumeración de usuarios.
-     *
-     * Tanto un correo inexistente como una contraseña incorrecta producen
-     * exactamente la misma respuesta HTTP 401.
-     */
-    if (e instanceof Error && e.message === 'INVALID_CREDENTIALS') {
-      res.status(401).json({
-        message: 'Invalid credentials',
-      });
-
-      return;
+    if (e instanceof Error) {
+      if (e.message === 'Credenciales inválidas' || e.message === 'INVALID_CREDENTIALS') {
+        res.status(401).json({ message: 'Invalid credentials' });
+        return;
+      }
+      if (e.message.includes('bloqueada')) {
+        res.status(403).json({ message: e.message });
+        return;
+      }
+      if (e.message.includes('activada')) {
+        res.status(403).json({ message: e.message });
+        return;
+      }
     }
 
     /**
@@ -166,5 +176,102 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({
       message: 'Internal server error',
     });
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response): Promise<void> => {
+  const { token } = req.body ?? {};
+
+  if (!token) {
+    res.status(400).json({ message: 'Refresh token is required' });
+    return;
+  }
+
+  try {
+    const {
+      userId,
+      accessToken,
+      refreshToken: newRefreshToken,
+      profile,
+      membership,
+    } = await authService.refreshToken(token);
+
+    res.status(200).json({
+      message: 'Token refreshed successfully',
+      userId,
+      tokenType: 'Bearer',
+      accessToken,
+      refreshToken: newRefreshToken,
+      profile,
+      membership,
+    });
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('inválido')) {
+      res.status(401).json({ message: 'Invalid or expired refresh token' });
+      return;
+    }
+    console.error('Refresh token error:', e);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const logoutUser = async (req: Request, res: Response): Promise<void> => {
+  const { token } = req.body ?? {};
+
+  if (!token) {
+    res.status(400).json({ message: 'Refresh token is required for logout' });
+    return;
+  }
+
+  try {
+    await authService.logout(token);
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (e) {
+    console.error('Logout error:', e);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body ?? {};
+
+  if (!email) {
+    res.status(400).json({ message: 'Email is required' });
+    return;
+  }
+
+  try {
+    await authService.forgotPassword({ email });
+    res.status(200).json({ message: 'If the email exists, a reset link was sent' });
+  } catch (e) {
+    console.error('Forgot password error:', e);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const dto: import('../dto/request/reset-password.dto').ResetPasswordRequestDto = req.body ?? {};
+
+  if (!dto.token || !dto.email || !dto.newPassword || !dto.confirmPassword) {
+    res.status(400).json({ message: 'All fields are required' });
+    return;
+  }
+
+  try {
+    await authService.resetPassword(dto);
+    res.status(200).json({ message: 'Password has been reset successfully' });
+  } catch (e) {
+    if (
+      e instanceof Error &&
+      (e.message.includes('inválido') ||
+        e.message.includes('expirado') ||
+        e.message.includes('coinciden') ||
+        e.message.includes('seguridad'))
+    ) {
+      res.status(400).json({ message: e.message });
+      return;
+    }
+    console.error('Reset password error:', e);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

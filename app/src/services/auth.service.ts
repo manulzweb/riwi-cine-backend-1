@@ -14,7 +14,7 @@ import {
 } from './interfaces/auth.service.interface';
 
 import { isValidPassword } from '../utils/password.util';
-import { sendActivationEmail } from '../config/mailer';
+import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer';
 
 import userRepository from '../repositories/user.repository';
 import roleRepository from '../repositories/role.repository';
@@ -27,10 +27,15 @@ import notificationPreferenceRepository from '../repositories/notification-prefe
 import cityRepository from '../repositories/city.repository';
 import cinemaRepository from '../repositories/cinema.repository';
 import emailVerificationTokenRepository from '../repositories/email-verification-token.repository';
+import refreshTokenRepository from '../repositories/refresh-token.repository';
+import loginAuditRepository from '../repositories/login-audit.repository';
 
 import passwordService from './password.service';
 import tokenService from './token.service';
 import emailVerificationTokenService from './email-verification-token.service';
+import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto';
+import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository';
+import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto';
 
 const roleName = 'cliente';
 const membershipLevelName = 'BÁSICA';
@@ -498,47 +503,217 @@ class AuthService implements IAuthService {
    * La contraseña nunca se compara directamente con el hash.
    * La verificación se delega a `PasswordService`.
    */
-  async login(dto: LoginUserRequestDto): Promise<LoginUserResult> {
+  async login(
+    dto: LoginUserRequestDto,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<LoginUserResult> {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
 
-    /**
-     * Obtener el usuario mediante el Repository.
-     */
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
+      await loginAuditRepository.create({
+        userId: null,
+        emailAttempted: email,
+        ipAddress: ipAddress || null,
+        deviceUserAgent: deviceUserAgent || null,
+        status: 'FAILED_USER_NOT_FOUND',
+      });
       throw new Error('Credenciales inválidas');
     }
 
-    /**
-     * Impedir el inicio de sesión mientras la cuenta
-     * no haya sido activada.
-     */
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      await loginAuditRepository.create({
+        userId: user.id,
+        emailAttempted: email,
+        ipAddress: ipAddress || null,
+        deviceUserAgent: deviceUserAgent || null,
+        status: 'ACCOUNT_LOCKED',
+      });
+      throw new Error('La cuenta está temporalmente bloqueada. Intente más tarde.');
+    }
+
     if (!user.isActive) {
+      await loginAuditRepository.create({
+        userId: user.id,
+        emailAttempted: email,
+        ipAddress: ipAddress || null,
+        deviceUserAgent: deviceUserAgent || null,
+        status: 'ACCOUNT_NOT_ACTIVATED',
+      });
       throw new Error('La cuenta no está activada');
     }
 
-    /**
-     * Verificar la contraseña mediante PasswordService.
-     *
-     * El AuthService no conoce directamente bcrypt.
-     */
     const isMatch = await passwordService.verify(dto.password, user.passwordHash);
 
     if (!isMatch) {
+      await userRepository.incrementFailedAttempts(user.id);
+      await loginAuditRepository.create({
+        userId: user.id,
+        emailAttempted: email,
+        ipAddress: ipAddress || null,
+        deviceUserAgent: deviceUserAgent || null,
+        status: 'FAILED_PASSWORD',
+      });
       throw new Error('Credenciales inválidas');
     }
 
-    /**
-     * Generar el JWT de acceso únicamente después de
-     * validar correctamente las credenciales.
-     */
+    await userRepository.resetFailedAttempts(user.id);
+
+    await loginAuditRepository.create({
+      userId: user.id,
+      emailAttempted: email,
+      ipAddress: ipAddress || null,
+      deviceUserAgent: deviceUserAgent || null,
+      status: 'SUCCESS',
+    });
+
     const accessToken = tokenService.generateAccessToken(user.id);
+    const refreshToken = tokenService.generateRefreshToken(user.id);
+
+    await refreshTokenRepository.revokeAllByUserId(user.id);
+
+    const decodedRefresh = tokenService.verifyRefreshToken(refreshToken);
+    if (decodedRefresh && decodedRefresh.exp) {
+      await refreshTokenRepository.create({
+        userId: user.id,
+        tokenHash: refreshToken,
+        expiresAt: new Date(decodedRefresh.exp * 1000),
+      });
+    }
+
+    const profile = await profileRepository.findByUserId(user.id);
+    const membership = await membershipRepository.findByUserId(user.id);
 
     return {
       userId: user.id,
       accessToken,
+      refreshToken,
+      profile: profile?.toJSON() || null,
+      membership: membership?.toJSON() || null,
     };
+  }
+
+  async refreshToken(token: string): Promise<LoginUserResult> {
+    const decoded = tokenService.verifyRefreshToken(token);
+    if (!decoded || !decoded.sub) {
+      throw new Error('Refresh token inválido o expirado');
+    }
+
+    const userId = Number(decoded.sub);
+    const existingToken = await refreshTokenRepository.findByTokenHash(token);
+    if (!existingToken || existingToken.isRevoked) {
+      throw new Error('Refresh token inválido o revocado');
+    }
+
+    // Revoke old token
+    await refreshTokenRepository.revoke(existingToken.id);
+
+    // Generate new tokens
+    const accessToken = tokenService.generateAccessToken(userId);
+    const newRefreshToken = tokenService.generateRefreshToken(userId);
+
+    const newDecoded = tokenService.verifyRefreshToken(newRefreshToken);
+    if (newDecoded && newDecoded.exp) {
+      await refreshTokenRepository.create({
+        userId,
+        tokenHash: newRefreshToken,
+        expiresAt: new Date(newDecoded.exp * 1000),
+      });
+    }
+
+    const profile = await profileRepository.findByUserId(userId);
+    const membership = await membershipRepository.findByUserId(userId);
+
+    return {
+      userId,
+      accessToken,
+      refreshToken: newRefreshToken,
+      profile: profile?.toJSON() || null,
+      membership: membership?.toJSON() || null,
+    };
+  }
+
+  async logout(token: string): Promise<void> {
+    const decoded = tokenService.verifyRefreshToken(token);
+    if (decoded && decoded.sub) {
+      const userId = Number(decoded.sub);
+      await refreshTokenRepository.revokeAllByUserId(userId);
+    }
+  }
+
+  async forgotPassword(dto: ForgotPasswordRequestDto): Promise<void> {
+    const email = dto.email ? dto.email.trim().toLowerCase() : '';
+    const user = await userRepository.findByEmail(email);
+
+    if (!user) {
+      // Do not reveal if the user exists
+      return;
+    }
+
+    const { randomBytes } = await import('crypto');
+    const bcrypt = await import('bcryptjs');
+
+    const token = randomBytes(32).toString('hex');
+    const hash = await bcrypt.hash(token, 10);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await passwordResetTokenRepository.create({
+      userId: user.id,
+      tokenHash: hash,
+      expiresAt,
+    });
+
+    try {
+      await sendPasswordResetEmail(user.email, token);
+    } catch (e) {
+      console.error('Error sending password reset email', e);
+    }
+  }
+
+  async resetPassword(dto: ResetPasswordRequestDto): Promise<void> {
+    if (!dto.newPassword || !dto.confirmPassword || dto.newPassword !== dto.confirmPassword) {
+      throw new Error('Las contraseñas no coinciden o están vacías');
+    }
+
+    if (!isValidPassword(dto.newPassword)) {
+      throw new Error('La contraseña no cumple con los requisitos de seguridad');
+    }
+
+    const email = dto.email ? dto.email.trim().toLowerCase() : '';
+    const user = await userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new Error('Token inválido o expirado');
+    }
+
+    const tokenRecord = await passwordResetTokenRepository.findLatestUnusedByUserId(user.id);
+
+    if (!tokenRecord) {
+      throw new Error('Token inválido o expirado');
+    }
+
+    if (new Date() > tokenRecord.expiresAt) {
+      throw new Error('El token ha expirado, solicita uno nuevo');
+    }
+
+    const bcrypt = await import('bcryptjs');
+    const isMatch = await bcrypt.compare(dto.token, tokenRecord.tokenHash);
+
+    if (!isMatch) {
+      throw new Error('Token inválido o expirado');
+    }
+
+    const { hash: newPasswordHash } = await passwordService.hash(dto.newPassword);
+
+    // Replace password - wait, do we have a method for this? Let's check user repository or just use model if there's an update method.
+    // For now we assume a method like updatePassword or we import User model directly. We can add an update method to userRepository.
+    await import('../models/user.model').then((m) =>
+      m.default.update({ passwordHash: newPasswordHash }, { where: { id: user.id } }),
+    );
+
+    await passwordResetTokenRepository.markAsUsed(tokenRecord.id);
   }
 }
 
@@ -549,6 +724,5 @@ class AuthService implements IAuthService {
  * @constant
  * @type {AuthService}
  */
-export const authService = new AuthService();
 
-export default authService;
+export default new AuthService();

@@ -8,21 +8,35 @@ export interface AccessTokenPayload {
   /** Identificador único del usuario */
   sub: string;
 
-  /** ID del usuario */
-  userId: number;
+  /** Rol del usuario */
+  role: number;
 
-  /** Email del usuario */
-  email: string;
+  /** Tipo de token */
+  type: 'access';
 
   /** Fecha de emisión (added by jwt library) */
   iat?: number;
 
   /** Fecha de expiración (added by jwt library) */
   exp?: number;
+}
 
-  /** Emisor del token */
-  iss?: string;
+/**
+ * Payload del token JWT de refresco
+ *
+ * Contiene información mínima para renovar el token de acceso.
+ * Los campos `iat` y `exp` son añadidos automáticamente por la librería `jsonwebtoken`.
+ */
+export interface RefreshTokenPayload {
+  /** Identificador único del usuario */
+  sub: string;
 
-  /** Audiencia del token */
-  aud?: string;
+  /** Tipo de token */
+  type: 'refresh';
+
+  /** Fecha de emisión (added by jwt library) */
+  iat?: number;
+
+  /** Fecha de expiración (added by jwt library) */
+  exp?: number;
 }
