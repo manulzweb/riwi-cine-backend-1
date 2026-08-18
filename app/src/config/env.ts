@@ -28,12 +28,17 @@ export const envConfig = {
   },
 
   JWT: {
+    ISSUER: process.env.JWT_ISSUER ?? 'express-typescript-auth',
+    AUDIENCE: process.env.JWT_AUDIENCE ?? 'auth-client',
     ACCESS_SECRET: required('JWT_ACCESS_SECRET'),
     REFRESH_SECRET: required('JWT_REFRESH_SECRET'),
     ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
     REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
   },
 
+  BCRYPT: {
+    ROUNDS: Number(process.env.BCRYPT_ROUNDS ?? 12),
+  },
   LOGIN: {
     MAX_ATTEMPTS: Number(process.env.MAX_LOGIN_ATTEMPTS ?? 5),
     LOCK_TIME_MINUTES: Number(process.env.LOCK_TIME_MINUTES ?? 15),

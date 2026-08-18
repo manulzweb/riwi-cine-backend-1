@@ -1,0 +1,5 @@
+export const AUTH_LIMITS = {
+  MIN_PASSWORD_LENGTH: 12,
+  MAX_PASSWORD_LENGTH: 128,
+  MAX_EMAIL_LENGTH: 254,
+} as const;

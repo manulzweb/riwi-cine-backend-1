@@ -24,3 +24,17 @@ export const sendActivationEmail = async (email: string, token: string): Promise
             <p>Este enlace expira en 24 horas.</p>`,
   });
 };
+
+export const sendPasswordResetEmail = async (email: string, token: string): Promise<void> => {
+  const resetLink = `${envConfig.FRONTEND_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+
+  await transporter.sendMail({
+    from: `"MultiCine" <${envConfig.SMTP.FROM}>`,
+    to: email,
+    subject: 'Recuperación de contraseña',
+    html: `<h2>Recuperación de contraseña</h2>
+            <p>Has solicitado restablecer tu contraseña. Haz clic en el enlace para crear una nueva.</p>
+            <p><a href="${resetLink}">Restablecer contraseña</a></p>
+            <p>Este enlace expira en 1 hora. Si no solicitaste esto, ignora este mensaje.</p>`,
+  });
+};

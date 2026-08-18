@@ -5,7 +5,7 @@ import Movie from '../models/movie.model';
 import CinemaFunction from '../models/function.model';
 import Room from '../models/room.model';
 import { IMovieRepository } from './interfaces/movie.repository.interface';
-import { FilterMoviesDto } from '../dto/filter-movies.dto';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
 import { FunctionAttributes } from '../models/function.model';
 
 /**

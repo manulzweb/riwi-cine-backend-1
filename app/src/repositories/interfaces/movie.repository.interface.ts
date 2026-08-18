@@ -2,7 +2,7 @@
 
 import Movie from '../../models/movie.model';
 import CinemaFunction from '../../models/function.model';
-import { FilterMoviesDto } from '../../dto/filter-movies.dto';
+import { FilterMoviesDto } from '../../dto/request/filter-movies.dto';
 
 /**
  * Contrato del Repositorio de Películas.

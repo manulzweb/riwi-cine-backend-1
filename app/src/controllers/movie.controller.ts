@@ -2,7 +2,7 @@
 
 import { Request, Response } from 'express';
 import movieService from '../services/movie.service';
-import { FilterMoviesDto } from '../dto/filter-movies.dto';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
 
 /**
  * Controlador de Películas
