@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { LoginAuth } from '../controllers/auth.controller';
-import { register, verifyEmail } from '../controllers/auth.controller';
+import { login, register, verifyEmail } from '../controllers/auth.controller';
 import { envConfig } from '../config/env';
 
 const registerLimiter = rateLimit({
@@ -15,7 +14,7 @@ const registerLimiter = rateLimit({
 
 const router = Router();
 
-router.post('/login', LoginAuth);
+router.post('/login', login);
 
 /**
  * POST /api/auth/register

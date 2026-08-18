@@ -1,13 +1,18 @@
-import { RegisterUserDto } from "../../dto/register-user.dto";
-import { VerifyEmailDto } from "../../dto/verify-email.dto";
+import { LoginUserRequestDto } from '../../dto/request/login-user.dto';
+import { RegisterUserRequestDto } from '../../dto/request/register-user.dto';
+import { VerifyEmailRequestDto } from '../../dto/request/verify-email.dto';
 
-export interface RegisterResult {
-    userId: number;
-    email: string;
-    membershipCode: string;
+export interface LoginUserResult {
+  userId: number;
+  accessToken: string;
+}
+
+export interface RegisterUserResult {
+  userId: number;
 }
 
 export interface IAuthService {
-    register(dto: RegisterUserDto): Promise<RegisterResult>;
-    verifyEmail(dto: VerifyEmailDto): Promise<void>;
+  register(dto: RegisterUserRequestDto): Promise<RegisterUserResult>;
+  login(dto: LoginUserRequestDto): Promise<LoginUserResult>;
+  verifyEmail(dto: VerifyEmailRequestDto): Promise<void>;
 }
