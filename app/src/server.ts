@@ -11,20 +11,21 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger';
 import cors from 'cors';
 import { corsOptions } from './config/cors';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 
 import userRoutes from './routes/user.routes';
 import countryRoutes from './routes/country.routes';
 import departmentRoutes from './routes/department.routes';
 import cityRoutes from './routes/city.routes';
 import authRoutes from './routes/auth.routes';
-import movieRoutes from "./routes/movie.routes";
+import movieRoutes from './routes/movie.routes';
 import membershipRoutes from './routes/membership.routes';
+import snackRoutes from './routes/snack.routes';
 import { rateLimit } from 'express-rate-limit';
 
 const app = express();
 
-app.use(helmet());
+// app.use(helmet());
 app.use(express.json());
 
 app.use(
@@ -46,7 +47,8 @@ app.use('/api/countries', countryRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/membership', membershipRoutes);
-app.use("/api/movies", movieRoutes);
+app.use('/api/movies', movieRoutes);
+app.use('/api/snacks', snackRoutes);
 // app.use("/api/login", authRoutes);
 
 // Swagger
