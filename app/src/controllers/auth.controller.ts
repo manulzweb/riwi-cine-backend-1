@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authService } from '../services/auth.service';
+import authService from '../services/auth.service';
 import { validateCredentials } from '../utils/auth.utils';
 import { LoginUserRequestDto } from '../dto/request/login-user.dto';
 import { RegisterUserRequestDto } from '../dto/request/register-user.dto';

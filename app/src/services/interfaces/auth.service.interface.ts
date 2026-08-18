@@ -9,6 +9,8 @@ export interface LoginUserResult {
 
 export interface RegisterUserResult {
   userId: number;
+  membershipCode: string;
+  isActive: boolean;
 }
 
 export interface IAuthService {

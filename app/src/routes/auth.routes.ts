@@ -14,6 +14,67 @@ const registerLimiter = rateLimit({
 
 const router = Router();
 
+/**
+ * POST /api/auth/login
+ * --------------------
+ * Autentica un usuario existente y genera un token JWT de acceso.
+ *
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Autenticar usuario y generar token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "usuario@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "Password123!"
+ *     responses:
+ *       200:
+ *         description: Autenticación exitosa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication successful"
+ *                 userId:
+ *                   type: integer
+ *                   example: 12
+ *                 tokenType:
+ *                   type: string
+ *                   example: "Bearer"
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Datos inválidos o credenciales incorrectas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid credentials"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post('/login', login);
 
 /**

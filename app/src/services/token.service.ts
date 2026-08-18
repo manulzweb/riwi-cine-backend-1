@@ -1,12 +1,15 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envConfig } from '../config/env';
+import type { AccessTokenPayload } from '../types/auth.types';
 import { ITokenService } from './interfaces/token.service.interface';
 
 /**
- * Servicio encargado de generar tokens de acceso JWT.
+ * Servicio encargado de generar y verificar tokens JWT de acceso.
  *
  * Responsabilidades:
  * - Generar tokens JWT de corta duración.
+ * - Verificar y decodificar tokens JWT.
+ * - Extraer tokens del header Authorization.
  * - Identificar al usuario mediante el claim `sub`.
  * - Identificar el tipo de token mediante el claim `type`.
  * - Aplicar la configuración de seguridad definida en `envConfig`.
@@ -43,6 +46,76 @@ export class TokenService implements ITokenService {
       audience: envConfig.JWT.AUDIENCE,
       algorithm: 'HS256',
     } as SignOptions);
+  }
+
+  /**
+   * Verifica y decodifica un token JWT de acceso
+   *
+   * @param token - Token JWT a verificar
+   * @returns Payload del token si es válido, null si es inválido o está expirado
+   */
+  verifyAccessToken(token: string): AccessTokenPayload | null {
+    try {
+      return jwt.verify(token, envConfig.JWT.ACCESS_SECRET, {
+        issuer: envConfig.JWT.ISSUER,
+        audience: envConfig.JWT.AUDIENCE,
+        algorithms: ['HS256'],
+      }) as AccessTokenPayload;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Extrae el token del header Authorization
+   *
+   * Espera un header en formato: "Bearer <token>"
+   *
+   * @param authHeader - Valor del header Authorization
+   * @returns Token extraído o null si el formato es inválido
+   */
+  extractTokenFromHeader(authHeader?: string): string | null {
+    if (!authHeader) return null;
+
+    const [scheme, token] = authHeader.trim().split(/\s+/);
+
+    if (scheme !== 'Bearer' || !token) {
+      return null;
+    }
+
+    return token;
+  }
+
+  /**
+   * Decodifica un token JWT sin verificar su firma
+   *
+   * Útil para inspeccionar el contenido de un token sin validar su integridad.
+   *
+   * @param token - Token JWT a decodificar
+   * @returns Payload decodificado o null si el token es inválido
+   */
+  decodeToken(token: string): AccessTokenPayload | null {
+    const decoded = jwt.decode(token);
+
+    if (!decoded || typeof decoded !== 'object') {
+      return null;
+    }
+
+    return decoded as AccessTokenPayload;
+  }
+
+  /**
+   * Verifica si un token JWT está expirado
+   *
+   * @param token - Token JWT a verificar
+   * @returns true si el token está expirado, false en caso contrario
+   */
+  isTokenExpired(token: string): boolean {
+    const decoded = this.decodeToken(token);
+
+    if (!decoded?.exp) return true;
+
+    return decoded.exp <= Math.floor(Date.now() / 1000);
   }
 }
 

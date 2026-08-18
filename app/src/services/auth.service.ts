@@ -370,6 +370,8 @@ class AuthService implements IAuthService {
      */
     return {
       userId: result.id,
+      membershipCode: membershipCode,
+      isActive: result.isActive,
     };
   }
 
@@ -547,5 +549,6 @@ class AuthService implements IAuthService {
  * @constant
  * @type {AuthService}
  */
+export const authService = new AuthService();
 
-export default new AuthService();
+export default authService;
