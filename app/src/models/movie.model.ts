@@ -27,6 +27,7 @@ export interface MovieAttributes {
   trailerUrl: string | null; // URL o ID del video de YouTube
   averageRating: number; // Calificación promedio del público (0-5 o 0-10, unificado a 0-5 o similar)
   active: boolean; // Si la película sigue en cartelera
+  status: string; // Estado: proximamente, en_estreno
 
   // Compatibilidad con la rama develop
   genre: string;
@@ -52,6 +53,7 @@ export interface MovieCreationAttributes extends Optional<
   | 'genres'
   | 'languages'
   | 'formats'
+  | 'status'
 > {}
 
 class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements MovieAttributes {
@@ -71,6 +73,7 @@ class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements M
   public trailerUrl!: string | null;
   public averageRating!: number;
   public active!: boolean;
+  public status!: string;
 
   // Compatibilidad con develop
   public genre!: string;
@@ -152,6 +155,11 @@ Movie.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    status: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: 'en_estreno',
     },
     // Columnas de develop para compatibilidad
     genre: {

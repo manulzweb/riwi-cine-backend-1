@@ -1,19 +1,19 @@
 // app/src/models/index.ts
 
-import sequelize from "../config/database";
-import User from "./user.model";
-import Role from "./role.model";
-import EmailVerificationToken from "./email-verification-model";
-import Profile from "./profile.model";
-import Membership from "./membership.model";
-import MembershipLevel from "./membership-level.model";
-import MembershipStatus from "./membership-status.model";
-import BonusWallet from "./bonus-wallet.model";
-import NotificationPreference from "./notification-preference.model";
-import City from "./city.model";
-import Cinema from "./cinema.model";
-import Department from "./department.model";
-import Country from "./country.model";
+import sequelize from '../config/database';
+import User from './user.model';
+import Role from './role.model';
+import EmailVerificationToken from './email-verification-model';
+import Profile from './profile.model';
+import Membership from './membership.model';
+import MembershipLevel from './membership-level.model';
+import MembershipStatus from './membership-status.model';
+import BonusWallet from './bonus-wallet.model';
+import NotificationPreference from './notification-preference.model';
+import City from './city.model';
+import Cinema from './cinema.model';
+import Department from './department.model';
+import Country from './country.model';
 
 // --- Associations ---
 
@@ -79,5 +79,5 @@ export {
   City,
   Cinema,
   Department,
-  Country
+  Country,
 };
