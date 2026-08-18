@@ -28,6 +28,7 @@ export interface MovieAttributes {
   averageRating: number; // Calificación promedio del público (0-5 o 0-10, unificado a 0-5 o similar)
   active: boolean; // Si la película sigue en cartelera
   status: string; // Estado: proximamente, en_estreno
+  statusId?: number; // Referencia a la tabla movie_statuses
 
   // Compatibilidad con la rama develop
   genre: string;
@@ -54,6 +55,7 @@ export interface MovieCreationAttributes extends Optional<
   | 'languages'
   | 'formats'
   | 'status'
+  | 'statusId'
 > {}
 
 class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements MovieAttributes {
@@ -74,6 +76,7 @@ class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements M
   public averageRating!: number;
   public active!: boolean;
   public status!: string;
+  public statusId?: number;
 
   // Compatibilidad con develop
   public genre!: string;
@@ -160,6 +163,14 @@ Movie.init(
       type: DataTypes.STRING(50),
       allowNull: false,
       defaultValue: 'en_estreno',
+    },
+    statusId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'movie_statuses',
+        key: 'id',
+      },
     },
     // Columnas de develop para compatibilidad
     genre: {
