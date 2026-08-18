@@ -74,6 +74,17 @@ export const getMovieRecommendations = async (req: Request, res: Response): Prom
   }
 };
 
+// --- Métodos de HU-005 ---
+export const getUpcomingMovies = async (_req: Request, res: Response): Promise<Response> => {
+  try {
+    const movies = await movieService.findUpcoming();
+    return res.status(200).json(movies);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(500).json({ error: message });
+  }
+};
+
 // --- Métodos de develop / HU-003 ---
 export const getMovies = async (_req: Request, res: Response): Promise<Response> => {
   try {

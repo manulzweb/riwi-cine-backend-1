@@ -1,19 +1,21 @@
 // app/src/models/index.ts
 
-import sequelize from "../config/database";
-import User from "./user.model";
-import Role from "./role.model";
-import EmailVerificationToken from "./email-verification-model";
-import Profile from "./profile.model";
-import Membership from "./membership.model";
-import MembershipLevel from "./membership-level.model";
-import MembershipStatus from "./membership-status.model";
-import BonusWallet from "./bonus-wallet.model";
-import NotificationPreference from "./notification-preference.model";
-import City from "./city.model";
-import Cinema from "./cinema.model";
-import Department from "./department.model";
-import Country from "./country.model";
+import sequelize from '../config/database';
+import User from './user.model';
+import Role from './role.model';
+import EmailVerificationToken from './email-verification-model';
+import Profile from './profile.model';
+import Membership from './membership.model';
+import MembershipLevel from './membership-level.model';
+import MembershipStatus from './membership-status.model';
+import BonusWallet from './bonus-wallet.model';
+import NotificationPreference from './notification-preference.model';
+import UpcomingMovieNotification from './upcoming-movie-notification.model';
+import City from './city.model';
+import Cinema from './cinema.model';
+import Department from './department.model';
+import Country from './country.model';
+import Movie from './movie.model';
 
 // --- Associations ---
 
@@ -49,6 +51,20 @@ BonusWallet.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasOne(NotificationPreference, { foreignKey: 'user_id', as: 'notificationPreference' });
 NotificationPreference.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+// User - UpcomingMovieNotification
+User.hasMany(UpcomingMovieNotification, {
+  foreignKey: 'user_id',
+  as: 'upcomingMovieNotifications',
+});
+UpcomingMovieNotification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// Movie - UpcomingMovieNotification
+Movie.hasMany(UpcomingMovieNotification, {
+  foreignKey: 'movie_id',
+  as: 'upcomingMovieNotifications',
+});
+UpcomingMovieNotification.belongsTo(Movie, { foreignKey: 'movie_id', as: 'movie' });
+
 // City - Profile
 City.hasMany(Profile, { foreignKey: 'city_id', as: 'profiles' });
 Profile.belongsTo(City, { foreignKey: 'city_id', as: 'city' });
@@ -76,8 +92,10 @@ export {
   MembershipStatus,
   BonusWallet,
   NotificationPreference,
+  UpcomingMovieNotification,
   City,
   Cinema,
   Department,
-  Country
+  Country,
+  Movie,
 };

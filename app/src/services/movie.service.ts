@@ -10,6 +10,7 @@ import {
   MovieRecommendationDto,
   PriceByFormatDto,
 } from '../dto/movie-detail.dto';
+import { UpcomingMovieDto } from '../dto/upcoming-movie.dto';
 
 const RECOMMENDATIONS_LIMIT = 6;
 
@@ -93,6 +94,25 @@ class MovieService implements IMovieService {
 
   // --- Métodos de develop / HU-003 ---
   /**
+   * Obtiene las películas en estado "Próximo Estreno" (HU-005).
+   */
+  async findUpcoming(): Promise<UpcomingMovieDto[]> {
+    const movies = await repository.findUpcoming();
+    return movies.map((m) => ({
+      id: m.id,
+      title: m.title,
+      posterUrl: m.posterUrl,
+      releaseDate: m.releaseDate.toString().slice(0, 10),
+      genres: m.genres,
+      classification: m.classification,
+      duration: m.duration,
+      trailerUrl: m.trailerUrl || '',
+      synopsis: m.synopsis,
+      daysUntil: this.daysUntil(m.releaseDate),
+    }));
+  }
+
+  /**
    * Obtiene todas las películas activas en cartelera.
    */
   async findAll(): Promise<Movie[]> {
@@ -118,6 +138,15 @@ class MovieService implements IMovieService {
    */
   async findByFilters(filters: FilterMoviesDto): Promise<Movie[]> {
     return await repository.findByFilters(filters);
+  }
+
+  private daysUntil(releaseDate: Date): number {
+    const value = releaseDate.toString().slice(0, 10);
+    const [year, month, day] = value.split('-').map(Number);
+    const release = new Date(year, month - 1, day).getTime();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    return Math.max(0, Math.ceil((release - today) / 86_400_000));
   }
 }
 

@@ -7,6 +7,7 @@ import Room from '../models/room.model';
 import { IMovieRepository } from './interfaces/movie.repository.interface';
 import { FilterMoviesDto } from '../dto/filter-movies.dto';
 import { FunctionAttributes } from '../models/function.model';
+import { todayDateOnly } from '../utils/date.util';
 
 /**
  * Repositorio de Películas.
@@ -38,6 +39,16 @@ class MovieRepository implements IMovieRepository {
   }
 
   // --- Métodos de develop / HU-003 ---
+  /**
+   * Obtiene las películas en estado "Próximo Estreno" (RN-017).
+   */
+  async findUpcoming(): Promise<Movie[]> {
+    return await Movie.findAll({
+      where: { isActive: true, releaseDate: { [Op.gt]: todayDateOnly() } },
+      order: [['releaseDate', 'ASC']],
+    });
+  }
+
   /**
    * Obtiene todas las películas activas.
    */

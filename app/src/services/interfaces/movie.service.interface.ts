@@ -2,6 +2,7 @@
 
 import Movie from '../../models/movie.model';
 import { FilterMoviesDto } from '../../dto/filter-movies.dto';
+import { UpcomingMovieDto } from '../../dto/upcoming-movie.dto';
 import {
   MovieDetailDto,
   MovieFunctionDto,
@@ -23,6 +24,9 @@ export interface IMovieService {
   getMovieRecommendations(id: number): Promise<MovieRecommendationDto[] | null>;
 
   // --- Métodos de develop / HU-003 ---
+  /** Retorna las películas en estado "Próximo Estreno" (HU-005). */
+  findUpcoming(): Promise<UpcomingMovieDto[]>;
+
   findAll(): Promise<Movie[]>;
 
   findWeekly(): Promise<Movie[]>;

@@ -18,6 +18,9 @@ export interface IMovieRepository {
   /** Obtiene películas activas que compartan al menos un género, excluyendo el id dado. (HU-004) */
   findByGenres(genres: string[], excludeId: number, limit: number): Promise<Movie[]>;
 
+  /** Obtiene las películas en estado "Próximo Estreno" (HU-005). */
+  findUpcoming(): Promise<Movie[]>;
+
   /** Obtiene todas las películas activas. (develop/HU-003) */
   findAll(): Promise<Movie[]>;
 
