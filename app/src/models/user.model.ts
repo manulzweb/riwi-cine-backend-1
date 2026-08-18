@@ -23,7 +23,7 @@ export interface UserAttributes {
   id: number;
   roleId: number;
   email: string;
-  passwordHash: string | null;
+  passwordHash: string;
   isActive: boolean;
   activatedAt: Date | null;
   emailVerifiedAt: Date | null;
@@ -41,20 +41,19 @@ export interface UserAttributes {
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface UserCreationAttributes
-  extends Optional<
-    UserAttributes,
-    | 'id'
-    | 'roleId'
-    | 'passwordHash'
-    | 'isActive'
-    | 'activatedAt'
-    | 'emailVerifiedAt'
-    | 'failedLoginAttempts'
-    | 'lockedUntil'
-    | 'lastLoginAt'
-    | 'commercialConsent'
-  > {}
+export type UserCreationAttributes = Optional<
+  UserAttributes,
+  | 'id'
+  | 'roleId'
+  | 'passwordHash'
+  | 'isActive'
+  | 'activatedAt'
+  | 'emailVerifiedAt'
+  | 'failedLoginAttempts'
+  | 'lockedUntil'
+  | 'lastLoginAt'
+  | 'commercialConsent'
+>;
 
 /**
  * Clase que representa el modelo `User` en Sequelize.
@@ -72,7 +71,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public email!: string;
 
   /** Hash de la contraseña cifrada. */
-  public passwordHash!: string | null;
+  public passwordHash!: string;
 
   /** Indica si el usuario ha sido activado. */
   public isActive!: boolean;
