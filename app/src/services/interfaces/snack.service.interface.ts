@@ -1,6 +1,7 @@
 // app/src/services/interfaces/snack.service.interface.ts
 
-import { Snack } from '../../models/snack.model';
+import { CartItem } from '../../models/cart-item.model';
+import { AddToCartDto, UpdateCartItemDto } from '../../dto/snack-cart.dto';
 
 /**
  * Interfaz para el Servicio de Confitería
@@ -9,14 +10,35 @@ import { Snack } from '../../models/snack.model';
  * el servicio encargado de la gestión de snacks y confitería.
  */
 export interface ISnackService {
-  
   /**
    * Obtiene todos los productos de confitería, permitiendo un filtro opcional por categoría.
    */
-  getAll(category?: string): Promise<Snack[]>;
+  getAll(category?: string): Promise<any[]>;
 
   /**
-   * Valida el inventario y añade un producto de confitería al carrito de compras.
+   * Obtiene la disponibilidad (stock) de todos los productos de confitería.
    */
-  addToCart(snackId: number, quantity: number): Promise<any>;
+  getAvailability(): Promise<any[]>;
+
+  /**
+   * Valida el inventario, respeta promociones y añade un producto de confitería
+   * al carrito de compras del usuario.
+   */
+  addToCart(dto: AddToCartDto): Promise<CartItem>;
+
+  /**
+   * Actualiza la cantidad de un ítem del carrito validando inventario.
+   */
+  updateCartItem(userId: number, cartItemId: number, dto: UpdateCartItemDto): Promise<CartItem>;
+
+  /**
+   * Elimina un ítem del carrito de compras.
+   */
+  removeCartItem(userId: number, cartItemId: number): Promise<void>;
+
+  /**
+   * Obtiene el carrito del usuario con sus ítems y el valor total
+   * (respetando promociones y descuentos).
+   */
+  getCart(userId: number): Promise<any>;
 }

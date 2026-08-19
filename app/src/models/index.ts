@@ -14,6 +14,10 @@ import City from "./city.model";
 import Cinema from "./cinema.model";
 import Department from "./department.model";
 import Country from "./country.model";
+import Snack from "./snack.model";
+import Cart from "./cart.model";
+import CartItem from "./cart-item.model";
+import Promotion from "./promotion.model";
 
 // --- Associations ---
 
@@ -65,6 +69,24 @@ Department.belongsTo(Country, { foreignKey: 'country_id', as: 'country' });
 Department.hasMany(City, { foreignKey: 'department_id', as: 'cities' });
 City.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
 
+// --- Confitería (HU-012) ---
+
+// User - Cart (un único carrito por usuario)
+User.hasOne(Cart, { foreignKey: 'user_id', as: 'cart' });
+Cart.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// Cart - CartItem
+Cart.hasMany(CartItem, { foreignKey: 'cart_id', as: 'items' });
+CartItem.belongsTo(Cart, { foreignKey: 'cart_id', as: 'cart' });
+
+// Snack - CartItem
+Snack.hasMany(CartItem, { foreignKey: 'snack_id', as: 'cartItems' });
+CartItem.belongsTo(Snack, { foreignKey: 'snack_id', as: 'snack' });
+
+// Snack - Promotion
+Snack.hasMany(Promotion, { foreignKey: 'snack_id', as: 'promotions' });
+Promotion.belongsTo(Snack, { foreignKey: 'snack_id', as: 'snack' });
+
 export {
   sequelize,
   User,
@@ -79,5 +101,9 @@ export {
   City,
   Cinema,
   Department,
-  Country
+  Country,
+  Snack,
+  Cart,
+  CartItem,
+  Promotion
 };

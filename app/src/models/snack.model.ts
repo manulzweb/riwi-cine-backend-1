@@ -17,6 +17,10 @@ import sequelize from '../config/database';
  * 
  * Cada producto o combo de confitería puede ser añadido al carrito de compras
  * por los usuarios, validando siempre la disponibilidad de inventario.
+ *
+ * Adicionalmente, cada producto maneja un descuento base (`discountPercentage`)
+ * que representa la promoción vigente del producto. Las promociones temporales
+ * se gestionan a través del modelo `Promotion` (ver promotion.model.ts).
  */
 
 /**
@@ -30,13 +34,14 @@ export interface SnackAttributes {
   category: string;
   stock: number;
   imageUrl: string | null;
+  discountPercentage: number;
 }
 
 /**
  * Atributos opcionales a la hora de crear un nuevo `Snack`.
  * El `id` se omite porque es autoincrementable en la base de datos.
  */
-export interface SnackCreationAttributes extends Optional<SnackAttributes, 'id'> {}
+export interface SnackCreationAttributes extends Optional<SnackAttributes, 'id' | 'discountPercentage'> {}
 
 /**
  * Clase que representa la entidad `Snack` mapeada en PostgreSQL.
@@ -49,6 +54,7 @@ export class Snack extends Model<SnackAttributes, SnackCreationAttributes> imple
   public category!: string;
   public stock!: number;
   public imageUrl!: string | null;
+  public discountPercentage!: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -85,6 +91,11 @@ Snack.init(
     imageUrl: {
       type: DataTypes.STRING(255),
       allowNull: true,
+    },
+    discountPercentage: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      defaultValue: 0, // Promoción base vigente del producto (0 = sin descuento)
     },
   },
   {
