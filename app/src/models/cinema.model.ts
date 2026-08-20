@@ -15,8 +15,8 @@
  * consultar los complejos de cine disponibles por ciudad.
  */
 
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 /**
  * Atributos principales de la entidad `Cinema`.
@@ -35,18 +35,12 @@ export interface CinemaAttributes {
  * Se utiliza `Optional` para indicar que `id` no es requerido al momento
  * de la creación, ya que se genera automáticamente por la base de datos.
  */
-export interface CinemaCreationAttributes extends Optional<
-  CinemaAttributes,
-  "id"
-> {}
+export type CinemaCreationAttributes = Optional<CinemaAttributes, 'id'>;
 
 /**
  * Clase que representa el modelo `Cinema` en Sequelize.
  */
-class Cinema
-  extends Model<CinemaAttributes, CinemaCreationAttributes>
-  implements CinemaAttributes
-{
+class Cinema extends Model<CinemaAttributes, CinemaCreationAttributes> implements CinemaAttributes {
   /** Identificador único del complejo de cine (clave primaria). */
   public id!: number;
 
@@ -93,8 +87,8 @@ Cinema.init(
   },
   {
     sequelize,
-    modelName: "Cinema", // Nombre del modelo en Sequelize
-    tableName: "cinemas", // Nombre de la tabla en la base de datos
+    modelName: 'Cinema', // Nombre del modelo en Sequelize
+    tableName: 'cinemas', // Nombre de la tabla en la base de datos
     timestamps: true, // Incluye createdAt y updatedAt
   },
 );

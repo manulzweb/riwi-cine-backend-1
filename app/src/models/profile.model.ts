@@ -17,10 +17,15 @@ export interface ProfileAttributes {
   favoriteCinemaId: number | null;
 }
 
-export interface ProfileCreationAttributes
-  extends Optional<ProfileAttributes, 'id' | 'gender' | 'favoriteCinemaId'> {}
+export type ProfileCreationAttributes = Optional<
+  ProfileAttributes,
+  'id' | 'gender' | 'favoriteCinemaId'
+>;
 
-class Profile extends Model<ProfileAttributes, ProfileCreationAttributes> implements ProfileAttributes {
+class Profile
+  extends Model<ProfileAttributes, ProfileCreationAttributes>
+  implements ProfileAttributes
+{
   public id!: number;
   public userId!: number;
   public firstName!: string;

@@ -10,7 +10,7 @@
 
 /** Precio agrupado por formato, para la sección "Valor de la entrada por formato". */
 export interface PriceByFormatDto {
-  format: string;   // "2D" | "3D" | "IMAX" | "VIP"
+  format: string; // "2D" | "3D" | "IMAX" | "VIP"
   price: number;
 }
 

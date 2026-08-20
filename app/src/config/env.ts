@@ -10,6 +10,28 @@ const required = (name: string): string => {
   return value;
 };
 
+const parseExpiresToMs = (value: string): number => {
+  const match = /^(\d+)([smhd])$/.exec(value.trim());
+
+  if (!match) {
+    throw new Error(
+      `Invalid expiration format: "${value}". Use a number followed by s, m, h, or d (e.g., "7d", "15m").`,
+    );
+  }
+
+  const amount = Number(match[1]);
+  const unit = match[2];
+
+  const multipliers: Record<string, number> = {
+    s: 1000,
+    m: 60 * 1000,
+    h: 60 * 60 * 1000,
+    d: 24 * 60 * 60 * 1000,
+  };
+
+  return amount * multipliers[unit];
+};
+
 export const envConfig = {
   PORT: Number(process.env.APP_PORT ?? 3000),
 
@@ -28,12 +50,17 @@ export const envConfig = {
   },
 
   JWT: {
+    ISSUER: process.env.JWT_ISSUER ?? 'express-typescript-auth',
+    AUDIENCE: process.env.JWT_AUDIENCE ?? 'auth-client',
     ACCESS_SECRET: required('JWT_ACCESS_SECRET'),
     REFRESH_SECRET: required('JWT_REFRESH_SECRET'),
     ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
     REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
   },
 
+  BCRYPT: {
+    ROUNDS: Number(process.env.BCRYPT_ROUNDS ?? 12),
+  },
   LOGIN: {
     MAX_ATTEMPTS: Number(process.env.MAX_LOGIN_ATTEMPTS ?? 5),
     LOCK_TIME_MINUTES: Number(process.env.LOCK_TIME_MINUTES ?? 15),
@@ -60,5 +87,9 @@ export const envConfig = {
     USER: required('SMTP_USER'),
     PASS: required('SMTP_PASS'),
     FROM: required('SMTP_FROM'),
+  },
+
+  COOKIE: {
+    MAXAGE: parseExpiresToMs(process.env.JWT_REFRESH_EXPIRES_IN ?? '7d'),
   },
 };

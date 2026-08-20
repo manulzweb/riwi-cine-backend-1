@@ -21,6 +21,7 @@ import authRoutes from './routes/auth.routes';
 import movieRoutes from './routes/movie.routes';
 import membershipRoutes from './routes/membership.routes';
 import notificationRoutes from './routes/notification.routes';
+import healthRoutes from './routes/health.routes';
 import { rateLimit } from 'express-rate-limit';
 import { envConfig } from './config/env';
 
@@ -48,6 +49,7 @@ app.use('/api/cities', cityRoutes);
 app.use('/api/membership', membershipRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/health', healthRoutes);
 // app.use("/api/login", authRoutes);
 
 // Swagger

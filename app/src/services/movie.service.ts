@@ -1,7 +1,7 @@
 // app/src/services/movie.service.ts
 
 import Movie from '../models/movie.model';
-import { FilterMoviesDto } from '../dto/filter-movies.dto';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
 import repository from '../repositories/movie.repository';
 import { IMovieService } from './interfaces/movie.service.interface';
 import {
@@ -9,8 +9,8 @@ import {
   MovieFunctionDto,
   MovieRecommendationDto,
   PriceByFormatDto,
-} from '../dto/movie-detail.dto';
-import { UpcomingMovieDto } from '../dto/upcoming-movie.dto';
+} from '../dto/response/movie-detail.dto';
+import { UpcomingMovieDto } from '../dto/response/upcoming-movie.dto';
 
 const RECOMMENDATIONS_LIMIT = 6;
 

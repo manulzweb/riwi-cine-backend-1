@@ -12,9 +12,12 @@ export interface MembershipAttributes {
   pointsBalance: number;
 }
 
-export interface MembershipCreationAttributes extends Optional<MembershipAttributes, 'id' | 'pointsBalance'> {}
+export type MembershipCreationAttributes = Optional<MembershipAttributes, 'id' | 'pointsBalance'>;
 
-class Membership extends Model<MembershipAttributes, MembershipCreationAttributes> implements MembershipAttributes {
+class Membership
+  extends Model<MembershipAttributes, MembershipCreationAttributes>
+  implements MembershipAttributes
+{
   public id!: number;
   public userId!: number;
   public code!: string;

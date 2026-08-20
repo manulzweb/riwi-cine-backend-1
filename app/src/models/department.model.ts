@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 export interface DepartmentAttributes {
   id: number;
@@ -7,9 +7,12 @@ export interface DepartmentAttributes {
   countryId: number;
 }
 
-export interface DepartmentCreationAttributes extends Optional<DepartmentAttributes, "id"> {}
+export type DepartmentCreationAttributes = Optional<DepartmentAttributes, 'id'>;
 
-class Department extends Model<DepartmentAttributes, DepartmentCreationAttributes> implements DepartmentAttributes {
+class Department
+  extends Model<DepartmentAttributes, DepartmentCreationAttributes>
+  implements DepartmentAttributes
+{
   public id!: number;
   public name!: string;
   public countryId!: number;
@@ -33,10 +36,10 @@ Department.init(
   },
   {
     sequelize,
-    modelName: "Department",
-    tableName: "departments",
+    modelName: 'Department',
+    tableName: 'departments',
     timestamps: false,
-  }
+  },
 );
 
 export default Department;

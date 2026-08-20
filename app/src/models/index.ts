@@ -16,6 +16,9 @@ import Cinema from './cinema.model';
 import Department from './department.model';
 import Country from './country.model';
 import Movie from './movie.model';
+import RefreshToken from './refresh-token.model';
+import LoginAudit from './login-audit.model';
+import PasswordResetToken from './password-reset-token.model';
 
 // --- Associations ---
 
@@ -81,6 +84,18 @@ Department.belongsTo(Country, { foreignKey: 'country_id', as: 'country' });
 Department.hasMany(City, { foreignKey: 'department_id', as: 'cities' });
 City.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
 
+// User - RefreshToken
+User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens' });
+RefreshToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// User - LoginAudit
+User.hasMany(LoginAudit, { foreignKey: 'user_id', as: 'loginAudits' });
+LoginAudit.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// User - PasswordResetToken
+User.hasMany(PasswordResetToken, { foreignKey: 'user_id', as: 'passwordResetTokens' });
+PasswordResetToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 export {
   sequelize,
   User,
@@ -98,4 +113,7 @@ export {
   Department,
   Country,
   Movie,
+  RefreshToken,
+  LoginAudit,
+  PasswordResetToken,
 };

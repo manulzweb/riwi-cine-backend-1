@@ -1,7 +1,7 @@
 // app/src/services/interfaces/user.service.interface.ts
 
 import User from '../../models/user.model';
-import { UserLocationDto } from '../../dto/user-location.dto';
+import { UserLocationDto } from '../../dto/request/user-location.dto';
 
 /**
  * Contrato del Servicio de Usuarios.

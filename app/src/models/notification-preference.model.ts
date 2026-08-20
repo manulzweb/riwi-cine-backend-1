@@ -11,8 +11,10 @@ export interface NotificationPreferenceAttributes {
   pushEnabled: boolean;
 }
 
-export interface NotificationPreferenceCreationAttributes
-  extends Optional<NotificationPreferenceAttributes, 'id' | 'emailEnabled' | 'smsEnabled' | 'pushEnabled'> {}
+export type NotificationPreferenceCreationAttributes = Optional<
+  NotificationPreferenceAttributes,
+  'id' | 'emailEnabled' | 'smsEnabled' | 'pushEnabled'
+>;
 
 class NotificationPreference
   extends Model<NotificationPreferenceAttributes, NotificationPreferenceCreationAttributes>

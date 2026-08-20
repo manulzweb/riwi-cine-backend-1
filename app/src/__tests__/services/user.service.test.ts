@@ -34,32 +34,71 @@ describe('UserService · HU-002 Location Selection', () => {
   });
 
   it('should throw error if countryId is missing', async () => {
-    await expect(
-      userService.updateLocation({ ...validDto, countryId: 0 })
-    ).rejects.toThrow('El país es obligatorio.');
+    await expect(userService.updateLocation({ ...validDto, countryId: 0 })).rejects.toThrow(
+      'El país es obligatorio.',
+    );
   });
 
   it('should throw error if departmentId is missing', async () => {
-    await expect(
-      userService.updateLocation({ ...validDto, departmentId: 0 })
-    ).rejects.toThrow('El departamento es obligatorio.');
+    await expect(userService.updateLocation({ ...validDto, departmentId: 0 })).rejects.toThrow(
+      'El departamento es obligatorio.',
+    );
   });
 
   it('should throw error if cityId is missing', async () => {
-    await expect(
-      userService.updateLocation({ ...validDto, cityId: 0 })
-    ).rejects.toThrow('La ciudad es obligatoria.');
+    await expect(userService.updateLocation({ ...validDto, cityId: 0 })).rejects.toThrow(
+      'La ciudad es obligatoria.',
+    );
+  });
+
+  it('should throw error if country does not exist', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue(null);
+
+    await expect(userService.updateLocation(validDto)).rejects.toThrow(
+      'El país seleccionado no existe.',
+    );
+  });
+
+  it('should throw error if department does not exist', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
+    (Department.findByPk as jest.Mock).mockResolvedValue(null);
+
+    await expect(userService.updateLocation(validDto)).rejects.toThrow(
+      'El departamento seleccionado no existe.',
+    );
+  });
+
+  it('should throw error if department does not belong to country', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
+    (Department.findByPk as jest.Mock).mockResolvedValue({
+      id: 10,
+      countryId: 999,
+    });
+
+    await expect(userService.updateLocation(validDto)).rejects.toThrow(
+      'El departamento no pertenece al país seleccionado.',
+    );
   });
 
   it('should throw error if city does not exist', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
+    (Department.findByPk as jest.Mock).mockResolvedValue({
+      id: 10,
+      countryId: 1,
+    });
     (City.findByPk as jest.Mock).mockResolvedValue(null);
 
     await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'La ciudad seleccionada no existe.'
+      'La ciudad seleccionada no existe.',
     );
   });
 
   it('should throw error if city is inactive', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
+    (Department.findByPk as jest.Mock).mockResolvedValue({
+      id: 10,
+      countryId: 1,
+    });
     (City.findByPk as jest.Mock).mockResolvedValue({
       id: 100,
       isActive: false,
@@ -67,65 +106,24 @@ describe('UserService · HU-002 Location Selection', () => {
     });
 
     await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'La ciudad seleccionada no está activa.'
+      'La ciudad seleccionada no está activa.',
     );
   });
 
   it('should throw error if city does not belong to department', async () => {
-    (City.findByPk as jest.Mock).mockResolvedValue({
-      id: 100,
-      isActive: true,
-      departmentId: 999, // different
-    });
-
-    await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'La ciudad no pertenece al departamento seleccionado.'
-    );
-  });
-
-  it('should throw error if department does not exist', async () => {
-    (City.findByPk as jest.Mock).mockResolvedValue({
-      id: 100,
-      isActive: true,
-      departmentId: 10,
-    });
-    (Department.findByPk as jest.Mock).mockResolvedValue(null);
-
-    await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'El departamento seleccionado no existe.'
-    );
-  });
-
-  it('should throw error if department does not belong to country', async () => {
-    (City.findByPk as jest.Mock).mockResolvedValue({
-      id: 100,
-      isActive: true,
-      departmentId: 10,
-    });
-    (Department.findByPk as jest.Mock).mockResolvedValue({
-      id: 10,
-      countryId: 999, // different
-    });
-
-    await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'El departamento no pertenece al país seleccionado.'
-    );
-  });
-
-  it('should throw error if country does not exist', async () => {
-    (City.findByPk as jest.Mock).mockResolvedValue({
-      id: 100,
-      isActive: true,
-      departmentId: 10,
-    });
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
     (Department.findByPk as jest.Mock).mockResolvedValue({
       id: 10,
       countryId: 1,
     });
-    (Country.findByPk as jest.Mock).mockResolvedValue(null);
+    (City.findByPk as jest.Mock).mockResolvedValue({
+      id: 100,
+      isActive: true,
+      departmentId: 999,
+    });
 
     await expect(userService.updateLocation(validDto)).rejects.toThrow(
-      'El país seleccionado no existe.'
+      'La ciudad no pertenece al departamento seleccionado.',
     );
   });
 

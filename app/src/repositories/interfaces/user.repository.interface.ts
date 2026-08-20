@@ -1,29 +1,31 @@
 // app/src/repositories/interfaces/user.repository.interface.ts
 
-import User, { UserCreationAttributes } from '../../models/user.model';
 import { Transaction } from 'sequelize';
+import User, { UserCreationAttributes } from '../../models/user.model';
 
 /**
- * Contrato del Repositorio de Usuarios
- * -----------------------------------
- * Define las operaciones de persistencia disponibles para la entidad User.
+ * Contrato del Repositorio de Usuarios.
  *
- * Cualquier implementación deberá cumplir esta interfaz.
+ * Define la capa de persistencia para la entidad User. El repositorio
+ * encapsula la lógica de consulta y escritura contra Sequelize y no contiene
+ * validaciones de negocio.
  */
-
 export interface IUserRepository {
   /**
    * Crea un usuario.
    */
-  create(data: UserCreationAttributes): Promise<User>;
+  create(data: UserCreationAttributes, transaction?: Transaction): Promise<User>;
 
   /**
-   * Obtiene todos los usuarios.
+   * Obtiene todos los usuarios activos/inactivos según la regla de negocio.
    */
   findAll(): Promise<User[]>;
 
-
+  /**
+   * Activa la cuenta del usuario.
+   */
   activate(userId: number): Promise<void>;
+
   /**
    * Obtiene un usuario por su ID.
    */
@@ -35,12 +37,12 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
 
   /**
-   *  Incrementa el contador de fallos y bloquea al llegar al maximo
+   * Incrementa los intentos fallidos de login y puede bloquear la cuenta.
    */
   incrementFailedAttempts(userId: number): Promise<User | void>;
 
   /**
-   * Limpia el contador, libera el bloqueo y registra el last_login_at
+   * Reinicia la cantidad de intentos fallidos y actualiza el último login.
    */
   resetFailedAttempts(userId: number): Promise<void>;
 }

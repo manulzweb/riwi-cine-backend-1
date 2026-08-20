@@ -9,9 +9,15 @@ export interface MembershipLevelAttributes {
   description: string | null;
 }
 
-export interface MembershipLevelCreationAttributes extends Optional<MembershipLevelAttributes, 'id' | 'description'> {}
+export type MembershipLevelCreationAttributes = Optional<
+  MembershipLevelAttributes,
+  'id' | 'description'
+>;
 
-class MembershipLevel extends Model<MembershipLevelAttributes, MembershipLevelCreationAttributes> implements MembershipLevelAttributes {
+class MembershipLevel
+  extends Model<MembershipLevelAttributes, MembershipLevelCreationAttributes>
+  implements MembershipLevelAttributes
+{
   public id!: number;
   public name!: string;
   public description!: string | null;

@@ -12,6 +12,7 @@ import app from './server';
 import sequelize from './config/database';
 import './models'; // registra todos los modelos y sus asociaciones antes del sync
 import { runSeed } from './seed/seed';
+import { startUpcomingReleaseJob } from './jobs/upcoming-release.job';
 
 const PORT = process.env.APP_PORT || 3000;
 
@@ -25,6 +26,8 @@ const start = async () => {
     }); // crea tablas si no existen
 
     await runSeed();
+
+    startUpcomingReleaseJob();
 
     app.listen(PORT, () => {
       console.log(`Servidor escuchando en puerto ${PORT}`);
