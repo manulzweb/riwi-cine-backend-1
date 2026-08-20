@@ -2,6 +2,7 @@
 
 import { Request, Response } from 'express';
 import { User, Membership, MembershipLevel, MembershipStatus } from '../models';
+import { generateSecureRandomNumber } from '../utils/crypto.util';
 
 export const createMembership = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -43,9 +44,9 @@ export const createMembership = async (req: Request, res: Response): Promise<Res
     while (!isUnique) {
       membershipCode =
         'MC-' +
-        Math.floor(100000 + Math.random() * 900000) +
+        generateSecureRandomNumber(100000, 999999) +
         '-' +
-        Math.floor(100000 + Math.random() * 900000);
+        generateSecureRandomNumber(100000, 999999);
       const existing = await Membership.findOne({ where: { code: membershipCode } });
       if (!existing) {
         isUnique = true;
