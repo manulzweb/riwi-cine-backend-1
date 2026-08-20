@@ -1,6 +1,7 @@
 import { Transaction } from 'sequelize';
 import EmailVerificationToken, {
   EmailVerificationTokenCreationAttributes,
+  EmailVerificationTokenInstance,
 } from '../models/email-verification-token.model';
 import { IEmailVerificationTokenRepository } from './interfaces/email-verification-token.repository.interface';
 
@@ -34,7 +35,7 @@ class EmailVerificationTokenRepository implements IEmailVerificationTokenReposit
   async create(
     data: EmailVerificationTokenCreationAttributes,
     transaction?: Transaction,
-  ): Promise<EmailVerificationToken> {
+  ): Promise<EmailVerificationTokenInstance> {
     return EmailVerificationToken.create(data, { transaction });
   }
 
@@ -49,7 +50,7 @@ class EmailVerificationTokenRepository implements IEmailVerificationTokenReposit
    *
    * @returns El token más reciente sin utilizar o null si no existe.
    */
-  async findLatestUnusedByUserId(userId: number): Promise<EmailVerificationToken | null> {
+  async findLatestUnusedByUserId(userId: number): Promise<EmailVerificationTokenInstance | null> {
     return EmailVerificationToken.findOne({
       where: {
         userId,

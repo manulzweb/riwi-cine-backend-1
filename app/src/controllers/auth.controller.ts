@@ -1,10 +1,12 @@
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 import authService from '../services/auth.service';
 import { validateCredentials } from '../utils/auth.utils';
 import { LoginUserRequestDto } from '../dto/request/login-user.dto';
 import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
 import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto';
 import { RegisterUserResponseDto } from '../dto/response/register.user.dto';
+import { envConfig } from '../config/env';
+import { COOKIE_NAMES } from '../constant/auth.constant';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const dto: RegisterUserRequestDto = req.body ?? {};
@@ -136,18 +138,26 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const ipAddress = req.ip || req.headers['x-forwarded-for']?.toString() || '';
     const userAgent = req.headers['user-agent'] || '';
+
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      secure: envConfig.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: envConfig.COOKIE.MAXAGE,
+    };
+
     const { userId, accessToken, refreshToken, profile, membership } = await authService.login(
       dto,
       ipAddress,
       userAgent,
     );
 
+    res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, cookieOptions);
+    res.cookie(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, cookieOptions);
+
     res.status(200).json({
       message: 'Authentication successful',
       userId: userId,
-      tokenType: 'Bearer',
-      accessToken: accessToken,
-      refreshToken: refreshToken,
       profile: profile,
       membership: membership,
     });
@@ -180,7 +190,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const refreshToken = async (req: Request, res: Response): Promise<void> => {
-  const { token } = req.body ?? {};
+  const token = req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN];
 
   if (!token) {
     res.status(400).json({ message: 'Refresh token is required' });
@@ -188,6 +198,13 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
   }
 
   try {
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      secure: envConfig.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: envConfig.COOKIE.MAXAGE,
+    };
+
     const {
       userId,
       accessToken,
@@ -196,12 +213,12 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
       membership,
     } = await authService.refreshToken(token);
 
+    res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, cookieOptions);
+    res.cookie(COOKIE_NAMES.REFRESH_TOKEN, newRefreshToken, cookieOptions);
+
     res.status(200).json({
       message: 'Token refreshed successfully',
       userId,
-      tokenType: 'Bearer',
-      accessToken,
-      refreshToken: newRefreshToken,
       profile,
       membership,
     });
@@ -216,7 +233,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
 };
 
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
-  const { token } = req.body ?? {};
+  const token = req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN];
 
   if (!token) {
     res.status(400).json({ message: 'Refresh token is required for logout' });
@@ -225,6 +242,10 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 
   try {
     await authService.logout(token);
+
+    res.clearCookie(COOKIE_NAMES.ACCESS_TOKEN);
+    res.clearCookie(COOKIE_NAMES.REFRESH_TOKEN);
+
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (e) {
     console.error('Logout error:', e);

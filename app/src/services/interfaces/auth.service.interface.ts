@@ -1,3 +1,5 @@
+import { ProfileAttributes } from '../../models/profile.model';
+import { MembershipAttributes } from '../../models/membership.model';
 import { ForgotPasswordRequestDto } from '../../dto/request/forgot-password.dto';
 import { LoginUserRequestDto } from '../../dto/request/login-user.dto';
 import { RegisterUserRequestDto } from '../../dto/request/register-user.dto';
@@ -8,8 +10,8 @@ export interface LoginUserResult {
   userId: number;
   accessToken: string;
   refreshToken: string;
-  profile: Record<string, unknown>;
-  membership: Record<string, unknown>;
+  profile: ProfileAttributes | null;
+  membership: MembershipAttributes | null;
 }
 
 export interface RegisterUserResult {

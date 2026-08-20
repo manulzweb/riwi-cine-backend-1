@@ -1,20 +1,21 @@
 import { Transaction } from 'sequelize';
 import PasswordResetToken, {
   PasswordResetTokenCreationAttributes,
+  PasswordResetTokenInstance,
 } from '../models/password-reset-token.model';
 
 class PasswordResetTokenRepository {
   async create(
     data: PasswordResetTokenCreationAttributes,
     transaction?: Transaction,
-  ): Promise<PasswordResetToken> {
+  ): Promise<PasswordResetTokenInstance> {
     return await PasswordResetToken.create(data, { transaction });
   }
 
   async findLatestUnusedByUserId(
     userId: number,
     transaction?: Transaction,
-  ): Promise<PasswordResetToken | null> {
+  ): Promise<PasswordResetTokenInstance | null> {
     return await PasswordResetToken.findOne({
       where: { userId, usedAt: null },
       order: [['createdAt', 'DESC']],

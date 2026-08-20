@@ -2,6 +2,7 @@
 
 import { Request, Response } from 'express';
 import { User, Membership, MembershipLevel, MembershipStatus } from '../models';
+import { generateSecureRandomNumber } from '../utils/crypto.util';
 
 export const createMembership = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -18,24 +19,34 @@ export const createMembership = async (req: Request, res: Response): Promise<Res
 
     const existingMembership = await Membership.findOne({ where: { userId } });
     if (existingMembership) {
-      return res.status(400).json({ error: 'El usuario ya cuenta con una membresía digital activa' });
+      return res
+        .status(400)
+        .json({ error: 'El usuario ya cuenta con una membresía digital activa' });
     }
 
     const defaultLevel = await MembershipLevel.findOne({ where: { name: 'BÁSICA' } });
     if (!defaultLevel) {
-      return res.status(500).json({ error: 'No existe el nivel de membresía por defecto en el sistema' });
+      return res
+        .status(500)
+        .json({ error: 'No existe el nivel de membresía por defecto en el sistema' });
     }
 
     const defaultStatus = await MembershipStatus.findOne({ where: { name: 'Activa' } });
     if (!defaultStatus) {
-      return res.status(500).json({ error: 'No existe el estado de membresía por defecto en el sistema' });
+      return res
+        .status(500)
+        .json({ error: 'No existe el estado de membresía por defecto en el sistema' });
     }
 
     // Generate unique membership code
     let membershipCode = '';
     let isUnique = false;
     while (!isUnique) {
-      membershipCode = 'MC-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.floor(100000 + Math.random() * 900000);
+      membershipCode =
+        'MC-' +
+        generateSecureRandomNumber(100000, 999999) +
+        '-' +
+        generateSecureRandomNumber(100000, 999999);
       const existing = await Membership.findOne({ where: { code: membershipCode } });
       if (!existing) {
         isUnique = true;
@@ -61,7 +72,8 @@ export const createMembership = async (req: Request, res: Response): Promise<Res
         status: defaultStatus.name,
       },
     });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(500).json({ error: message });
   }
 };

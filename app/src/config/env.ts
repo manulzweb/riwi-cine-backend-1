@@ -10,6 +10,28 @@ const required = (name: string): string => {
   return value;
 };
 
+const parseExpiresToMs = (value: string): number => {
+  const match = /^(\d+)([smhd])$/.exec(value.trim());
+
+  if (!match) {
+    throw new Error(
+      `Invalid expiration format: "${value}". Use a number followed by s, m, h, or d (e.g., "7d", "15m").`,
+    );
+  }
+
+  const amount = Number(match[1]);
+  const unit = match[2];
+
+  const multipliers: Record<string, number> = {
+    s: 1000,
+    m: 60 * 1000,
+    h: 60 * 60 * 1000,
+    d: 24 * 60 * 60 * 1000,
+  };
+
+  return amount * multipliers[unit];
+};
+
 export const envConfig = {
   PORT: Number(process.env.APP_PORT ?? 3000),
 
@@ -65,5 +87,9 @@ export const envConfig = {
     USER: required('SMTP_USER'),
     PASS: required('SMTP_PASS'),
     FROM: required('SMTP_FROM'),
+  },
+
+  COOKIE: {
+    MAXAGE: parseExpiresToMs(process.env.JWT_REFRESH_EXPIRES_IN ?? '7d'),
   },
 };

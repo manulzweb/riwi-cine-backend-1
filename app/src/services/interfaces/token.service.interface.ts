@@ -1,4 +1,4 @@
-import type { AccessTokenPayload } from '../../types/auth.types';
+import type { AccessTokenPayload, RefreshTokenPayload } from '../../types/auth.types';
 
 export interface ITokenService {
   /**
@@ -14,7 +14,7 @@ export interface ITokenService {
   /**
    * Verifica y decodifica un token JWT de refresco
    */
-  verifyRefreshToken(token: string): AccessTokenPayload | null;
+  verifyRefreshToken(token: string): RefreshTokenPayload | null;
 
   /**
    * Verifica y decodifica un token JWT de acceso

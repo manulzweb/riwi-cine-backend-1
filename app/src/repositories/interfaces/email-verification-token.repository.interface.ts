@@ -1,6 +1,7 @@
 import { Transaction } from 'sequelize';
-import EmailVerificationToken, {
+import type {
   EmailVerificationTokenCreationAttributes,
+  EmailVerificationTokenInstance,
 } from '../../models/email-verification-token.model';
 /**
  * Contrato del Repositorio de Tokens de Verificación
@@ -25,7 +26,7 @@ export interface IEmailVerificationTokenRepository {
   create(
     data: EmailVerificationTokenCreationAttributes,
     transaction?: Transaction,
-  ): Promise<EmailVerificationToken>;
+  ): Promise<EmailVerificationTokenInstance>;
 
   /**
    * Obtiene el token de verificación más reciente de un usuario
@@ -35,7 +36,7 @@ export interface IEmailVerificationTokenRepository {
    *
    * @returns El token más reciente o null si no existe.
    */
-  findLatestUnusedByUserId(userId: number): Promise<EmailVerificationToken | null>;
+  findLatestUnusedByUserId(userId: number): Promise<EmailVerificationTokenInstance | null>;
 
   /**
    * Marca un token de verificación como utilizado.

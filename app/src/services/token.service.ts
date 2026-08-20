@@ -1,6 +1,6 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envConfig } from '../config/env';
-import type { AccessTokenPayload } from '../types/auth.types';
+import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types';
 import { ITokenService } from './interfaces/token.service.interface';
 
 /**
@@ -75,13 +75,17 @@ export class TokenService implements ITokenService {
     }
   }
 
-  verifyRefreshToken(token: string): AccessTokenPayload | null {
+  verifyRefreshToken(token: string): RefreshTokenPayload | null {
     try {
-      return jwt.verify(token, envConfig.JWT.REFRESH_SECRET, {
+      const decoded = jwt.verify(token, envConfig.JWT.REFRESH_SECRET, {
         issuer: envConfig.JWT.ISSUER,
         audience: envConfig.JWT.AUDIENCE,
         algorithms: ['HS256'],
-      }) as AccessTokenPayload;
+      }) as RefreshTokenPayload;
+
+      if (decoded.type !== 'refresh') return null;
+
+      return decoded;
     } catch {
       return null;
     }
