@@ -9,9 +9,12 @@ export interface BonusWalletAttributes {
   balance: number;
 }
 
-export interface BonusWalletCreationAttributes extends Optional<BonusWalletAttributes, 'id' | 'balance'> {}
+export type BonusWalletCreationAttributes = Optional<BonusWalletAttributes, 'id' | 'balance'>;
 
-class BonusWallet extends Model<BonusWalletAttributes, BonusWalletCreationAttributes> implements BonusWalletAttributes {
+class BonusWallet
+  extends Model<BonusWalletAttributes, BonusWalletCreationAttributes>
+  implements BonusWalletAttributes
+{
   public id!: number;
   public userId!: number;
   public balance!: number;

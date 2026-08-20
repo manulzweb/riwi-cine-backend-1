@@ -1,14 +1,17 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 export interface CountryAttributes {
   id: number;
   name: string;
 }
 
-export interface CountryCreationAttributes extends Optional<CountryAttributes, "id"> {}
+export type CountryCreationAttributes = Optional<CountryAttributes, 'id'>;
 
-class Country extends Model<CountryAttributes, CountryCreationAttributes> implements CountryAttributes {
+class Country
+  extends Model<CountryAttributes, CountryCreationAttributes>
+  implements CountryAttributes
+{
   public id!: number;
   public name!: string;
 }
@@ -27,10 +30,10 @@ Country.init(
   },
   {
     sequelize,
-    modelName: "Country",
-    tableName: "countries",
+    modelName: 'Country',
+    tableName: 'countries',
     timestamps: false,
-  }
+  },
 );
 
 export default Country;

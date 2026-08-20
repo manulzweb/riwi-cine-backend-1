@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { envConfig } from '../config/env';
 import { IPasswordService, PasswordHashResult } from './interfaces/password.service.interface';
 

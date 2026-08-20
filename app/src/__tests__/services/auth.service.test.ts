@@ -103,6 +103,37 @@ jest.mock('../../repositories/email-verification-token.repository', () => ({
   },
 }));
 
+jest.mock('../../repositories/refresh-token.repository', () => ({
+  __esModule: true,
+  default: {
+    create: jest.fn(),
+    revokeAllByUserId: jest.fn(),
+    findByTokenHash: jest.fn(),
+    revoke: jest.fn(),
+  },
+}));
+
+jest.mock('../../repositories/login-audit.repository', () => ({
+  __esModule: true,
+  default: {
+    create: jest.fn(),
+  },
+}));
+
+jest.mock('../../repositories/password-reset-token.repository', () => ({
+  __esModule: true,
+  default: {
+    create: jest.fn(),
+    findLatestUnusedByUserId: jest.fn(),
+    markAsUsed: jest.fn(),
+  },
+  passwordResetTokenRepository: {
+    create: jest.fn(),
+    findLatestUnusedByUserId: jest.fn(),
+    markAsUsed: jest.fn(),
+  },
+}));
+
 jest.mock('../../config/mailer');
 
 describe('AuthService · HU-006 Registration', () => {
