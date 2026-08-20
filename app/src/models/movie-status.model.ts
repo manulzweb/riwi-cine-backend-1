@@ -17,11 +17,10 @@ export interface MovieStatusAttributes {
   updatedAt?: Date;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface MovieStatusCreationAttributes extends Optional<
+export type MovieStatusCreationAttributes = Optional<
   MovieStatusAttributes,
   'id' | 'createdAt' | 'updatedAt'
-> {}
+>;
 
 class MovieStatus
   extends Model<MovieStatusAttributes, MovieStatusCreationAttributes>
