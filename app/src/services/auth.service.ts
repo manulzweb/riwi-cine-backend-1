@@ -120,7 +120,15 @@ class AuthService implements IAuthService {
    * @throws {Error}
    * Cuando alguna referencia requerida no existe.
    */
-  async register(dto: RegisterUserRequestDto): Promise<RegisterUserResult> {
+  /**
+   * Valida los datos de entrada del registro.
+   *
+   * Verifica los consentimientos obligatorios, la coincidencia de
+   * correos y contraseñas, y la política de seguridad de la contraseña.
+   *
+   * @returns El correo electrónico normalizado.
+   */
+  private validateRegistrationInput(dto: RegisterUserRequestDto): string {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
     const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
 
@@ -157,16 +165,21 @@ class AuthService implements IAuthService {
       );
     }
 
-    /**
-     * Verificar que el correo electrónico no se encuentre
-     * registrado previamente.
-     */
-    const existingUser = await userRepository.findByEmail(email);
+    return email;
+  }
 
-    if (existingUser) {
-      throw new EmailAlreadyExistsError();
-    }
-
+  /**
+   * Resuelve las referencias requeridas por el registro.
+   *
+   * Verifica la existencia del rol, nivel y estado de membresía por
+   * defecto, así como la ciudad principal y el complejo favorito
+   * opcional seleccionados por el usuario.
+   */
+  private async resolveRegistrationReferences(dto: RegisterUserRequestDto): Promise<{
+    defaultRole: NonNullable<Awaited<ReturnType<typeof roleRepository.findByName>>>;
+    defaultLevel: NonNullable<Awaited<ReturnType<typeof membershipLevelRepository.findByName>>>;
+    defaultStatus: NonNullable<Awaited<ReturnType<typeof membershipStatusRepository.findByName>>>;
+  }> {
     /**
      * Obtener el rol que será asignado al nuevo usuario.
      */
@@ -215,6 +228,25 @@ class AuthService implements IAuthService {
         throw new Error('El complejo favorito seleccionado no existe');
       }
     }
+
+    return { defaultRole, defaultLevel, defaultStatus };
+  }
+
+  async register(dto: RegisterUserRequestDto): Promise<RegisterUserResult> {
+    const email = this.validateRegistrationInput(dto);
+
+    /**
+     * Verificar que el correo electrónico no se encuentre
+     * registrado previamente.
+     */
+    const existingUser = await userRepository.findByEmail(email);
+
+    if (existingUser) {
+      throw new EmailAlreadyExistsError();
+    }
+
+    const { defaultRole, defaultLevel, defaultStatus } =
+      await this.resolveRegistrationReferences(dto);
 
     /**
      * Generar el hash de la contraseña.
@@ -698,7 +730,7 @@ class AuthService implements IAuthService {
       return;
     }
 
-    const { randomBytes } = await import('crypto');
+    const { randomBytes } = await import('node:crypto');
     const bcrypt = await import('bcryptjs');
 
     const token = randomBytes(32).toString('hex');
