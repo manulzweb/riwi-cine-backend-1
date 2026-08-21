@@ -12,18 +12,9 @@ import { swaggerSpec } from './docs/swagger';
 import cors from 'cors';
 import { corsOptions } from './config/cors';
 import helmet from 'helmet';
-
-import userRoutes from './routes/user.routes';
-import countryRoutes from './routes/country.routes';
-import departmentRoutes from './routes/department.routes';
-import cityRoutes from './routes/city.routes';
-import authRoutes from './routes/auth.routes';
-import movieRoutes from './routes/movie.routes';
-import membershipRoutes from './routes/membership.routes';
-import notificationRoutes from './routes/notification.routes';
-import healthRoutes from './routes/health.routes';
 import { rateLimit } from 'express-rate-limit';
 import { envConfig } from './config/env';
+import router from './routes';
 
 const app = express();
 
@@ -40,17 +31,9 @@ app.use(
 // Configuración de CORS
 app.use(cors(corsOptions));
 
-// Rutas
-app.use('/api/users', userRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/countries', countryRoutes);
-app.use('/api/departments', departmentRoutes);
-app.use('/api/cities', cityRoutes);
-app.use('/api/membership', membershipRoutes);
-app.use('/api/movies', movieRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/health', healthRoutes);
-// app.use("/api/login", authRoutes);
+// Router principal
+
+app.use('/api/v1', router);
 
 // Swagger
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
