@@ -68,6 +68,13 @@ class UserRepository implements IUserRepository {
       },
     );
   }
+
+  /**
+   * Actualiza el hash de la contraseña del usuario.
+   */
+  async updatePassword(id: number, passwordHash: string): Promise<void> {
+    await User.update({ passwordHash }, { where: { id } });
+  }
 }
 
 export default new UserRepository();

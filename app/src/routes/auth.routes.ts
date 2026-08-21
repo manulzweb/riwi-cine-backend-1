@@ -177,19 +177,10 @@ router.post('/login', login);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Registro Exitoso. Revisa tu correo para activar tu cuenta."
- *                 data:
- *                   type: object
- *                   properties:
- *                     userId:
- *                       type: integer
- *                       example: 12
- *                     email:
- *                       type: string
- *                       example: "usuario@example.com"
- *                     membershipCode:
- *                       type: string
- *                       example: "MC-482910-859201"
+ *                   example: "User registered successfully"
+ *                 userId:
+ *                   type: integer
+ *                   example: 12
  *       400:
  *         description: Error de validación o datos incorrectos
  *         content:
@@ -197,9 +188,19 @@ router.post('/login', login);
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
  *                   example: "La contraseña debe tener al menos 10 caracteres, incluir mayúscula, minúscula, número y caracter especial."
+ *       409:
+ *         description: El correo electrónico ya se encuentra registrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unable to register user with the provided email"
  *       500:
  *         description: Error interno del servidor
  */

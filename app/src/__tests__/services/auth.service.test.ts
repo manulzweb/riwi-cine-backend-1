@@ -8,11 +8,14 @@ import membershipRepository from '../../repositories/membership.repository';
 import membershipLevelRepository from '../../repositories/membership-level.repository';
 import membershipStatusRepository from '../../repositories/membership-status.repository';
 import bonusWalletRepository from '../../repositories/bonus-wallet.repository';
+import purchaseHistoryRepository from '../../repositories/purchase-history.repository';
 import notificationPreferenceRepository from '../../repositories/notification-preference.repository';
 import cityRepository from '../../repositories/city.repository';
 import cinemaRepository from '../../repositories/cinema.repository';
 import emailVerificationTokenRepository from '../../repositories/email-verification-token.repository';
 import { sendActivationEmail } from '../../config/mailer';
+import { EmailAlreadyExistsError } from '../../errors/domain-errors';
+import { UniqueConstraintError } from 'sequelize';
 
 jest.mock('../../config/database', () => ({
   __esModule: true,
@@ -67,6 +70,13 @@ jest.mock('../../repositories/membership-status.repository', () => ({
 }));
 
 jest.mock('../../repositories/bonus-wallet.repository', () => ({
+  __esModule: true,
+  default: {
+    create: jest.fn(),
+  },
+}));
+
+jest.mock('../../repositories/purchase-history.repository', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
@@ -160,7 +170,7 @@ describe('AuthService · HU-006 Registration', () => {
     jest.clearAllMocks();
   });
 
-  it('should successfully register a user, profile, membership, wallet, preference, and verification token', async () => {
+  it('should successfully register a user, profile, membership, purchase history, wallet, preference, and verification token', async () => {
     (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
     (roleRepository.findByName as jest.Mock).mockResolvedValue({ id: 1, name: 'cliente' });
     (membershipLevelRepository.findByName as jest.Mock).mockResolvedValue({
@@ -209,6 +219,18 @@ describe('AuthService · HU-006 Registration', () => {
       expect.objectContaining({ userId: 100, balance: 0 }),
       expect.any(Object),
     );
+    expect(purchaseHistoryRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: 100 }),
+      expect.any(Object),
+    );
+    expect(membershipRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 100,
+        code: expect.stringMatching(/^MC-\d{6}-\d{6}$/),
+        pointsBalance: 0,
+      }),
+      expect.any(Object),
+    );
     expect(notificationPreferenceRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({ userId: 100, emailEnabled: true }),
       expect.any(Object),
@@ -247,11 +269,39 @@ describe('AuthService · HU-006 Registration', () => {
     );
   });
 
-  it('should throw an error if email is already registered', async () => {
+  it('should throw EmailAlreadyExistsError if email is already registered', async () => {
     (userRepository.findByEmail as jest.Mock).mockResolvedValue({ id: 1 });
+    await expect(authService.register(validDto)).rejects.toBeInstanceOf(EmailAlreadyExistsError);
+  });
+
+  it('should throw EmailAlreadyExistsError when the unique email constraint fails (race condition)', async () => {
+    const baseMocks = () => {
+      (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
+      (roleRepository.findByName as jest.Mock).mockResolvedValue({ id: 1 });
+      (membershipLevelRepository.findByName as jest.Mock).mockResolvedValue({ id: 10 });
+      (membershipStatusRepository.findByName as jest.Mock).mockResolvedValue({ id: 20 });
+      (cityRepository.findById as jest.Mock).mockResolvedValue({ id: 1 });
+    };
+
+    baseMocks();
+    (userRepository.create as jest.Mock).mockRejectedValue(new UniqueConstraintError({}));
+
+    await expect(authService.register(validDto)).rejects.toBeInstanceOf(EmailAlreadyExistsError);
+  });
+
+  it('should fail with a business error when no unique membership code can be generated', async () => {
+    (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
+    (roleRepository.findByName as jest.Mock).mockResolvedValue({ id: 1 });
+    (membershipLevelRepository.findByName as jest.Mock).mockResolvedValue({ id: 10 });
+    (membershipStatusRepository.findByName as jest.Mock).mockResolvedValue({ id: 20 });
+    (cityRepository.findById as jest.Mock).mockResolvedValue({ id: 1 });
+    (userRepository.create as jest.Mock).mockResolvedValue({ id: 100, isActive: false });
+    (membershipRepository.create as jest.Mock).mockRejectedValue(new UniqueConstraintError({}));
+
     await expect(authService.register(validDto)).rejects.toThrow(
-      'El correo ya se encuentra registrado',
+      'No se pudo generar un código único de membresía',
     );
+    expect(membershipRepository.create).toHaveBeenCalledTimes(3);
   });
 
   it('should throw an error if city does not exist', async () => {

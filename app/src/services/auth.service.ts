@@ -1,7 +1,7 @@
 // app/src/services/auth.service.ts
 
 import sequelize from '../config/database';
-import { Transaction } from 'sequelize';
+import { Transaction, UniqueConstraintError } from 'sequelize';
 
 import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
 import { LoginUserRequestDto } from '../dto/request/login-user.dto';
@@ -15,6 +15,7 @@ import {
 
 import { isValidPassword } from '../utils/password.util';
 import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer';
+import { generateMembershipCode } from '../utils/crypto.util';
 
 import userRepository from '../repositories/user.repository';
 import roleRepository from '../repositories/role.repository';
@@ -23,6 +24,7 @@ import membershipRepository from '../repositories/membership.repository';
 import membershipLevelRepository from '../repositories/membership-level.repository';
 import membershipStatusRepository from '../repositories/membership-status.repository';
 import bonusWalletRepository from '../repositories/bonus-wallet.repository';
+import purchaseHistoryRepository from '../repositories/purchase-history.repository';
 import notificationPreferenceRepository from '../repositories/notification-preference.repository';
 import cityRepository from '../repositories/city.repository';
 import cinemaRepository from '../repositories/cinema.repository';
@@ -36,6 +38,18 @@ import emailVerificationTokenService from './email-verification-token.service';
 import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto';
 import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository';
 import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto';
+import {
+  AccountAlreadyActivatedError,
+  AccountLockedError,
+  AccountNotActivatedError,
+  EmailAlreadyExistsError,
+  ExpiredTokenError,
+  InvalidCredentialsError,
+  InvalidTokenError,
+  PasswordMismatchError,
+  UserNotFoundError,
+  WeakPasswordError,
+} from '../errors/domain-errors';
 
 const roleName = 'cliente';
 const membershipLevelName = 'BÁSICA';
@@ -150,7 +164,7 @@ class AuthService implements IAuthService {
     const existingUser = await userRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error('El correo ya se encuentra registrado');
+      throw new EmailAlreadyExistsError();
     }
 
     /**
@@ -236,7 +250,7 @@ class AuthService implements IAuthService {
      * automáticamente todas las operaciones realizadas dentro
      * de la transacción.
      */
-    const result = await sequelize.transaction(async (transaction: Transaction) => {
+    const persistRegistration = async (transaction: Transaction) => {
       /**
        * 1. Crear la cuenta de usuario.
        */
@@ -273,44 +287,48 @@ class AuthService implements IAuthService {
       );
 
       /**
-       * 3. Generar un código único de membresía.
+       * 3 y 4. Crear la membresía con un código único.
        *
-       * La generación del código pertenece al flujo de negocio,
-       * mientras que la consulta para comprobar su existencia
-       * pertenece al MembershipRepository.
+       * El código se genera criptográficamente mediante el helper
+       * compartido `generateMembershipCode`. La unicidad final la
+       * garantiza el constraint único de la columna `code`; ante una
+       * colisión se reintenta un número acotado de veces dentro de
+       * la misma transacción.
        */
-      let isUnique = false;
+      const maxMembershipCodeAttempts = 3;
 
-      while (!isUnique) {
-        membershipCode =
-          'MC-' +
-          Math.floor(100000 + Math.random() * 900000) +
-          '-' +
-          Math.floor(100000 + Math.random() * 900000);
+      for (let attempt = 1; attempt <= maxMembershipCodeAttempts; attempt += 1) {
+        membershipCode = generateMembershipCode();
 
-        const existingMembership = await membershipRepository.findByCode(
-          membershipCode,
-          transaction,
-        );
+        try {
+          await membershipRepository.create(
+            {
+              userId: user.id,
+              code: membershipCode,
+              levelId: defaultLevel.id,
+              statusId: defaultStatus.id,
+              pointsBalance: 0,
+            },
+            transaction,
+          );
+          break;
+        } catch (error) {
+          if (!(error instanceof UniqueConstraintError)) {
+            throw error;
+          }
 
-        if (!existingMembership) {
-          isUnique = true;
+          /**
+           * Colisión de código: se agota el número de reintentos o se
+           * convierte en un error de negocio para no confundirlo con
+           * la violación de unicidad del correo.
+           */
+          if (attempt === maxMembershipCodeAttempts) {
+            throw new Error('No se pudo generar un código único de membresía', {
+              cause: error,
+            });
+          }
         }
       }
-
-      /**
-       * 4. Crear la membresía inicial del usuario.
-       */
-      await membershipRepository.create(
-        {
-          userId: user.id,
-          code: membershipCode,
-          levelId: defaultLevel.id,
-          statusId: defaultStatus.id,
-          pointsBalance: 0,
-        },
-        transaction,
-      );
 
       /**
        * 5. Crear la billetera de bonos del usuario.
@@ -324,7 +342,17 @@ class AuthService implements IAuthService {
       );
 
       /**
-       * 6. Crear las preferencias de notificación
+       * 6. Crear el historial de compras vacío del usuario.
+       */
+      await purchaseHistoryRepository.create(
+        {
+          userId: user.id,
+        },
+        transaction,
+      );
+
+      /**
+       * 7. Crear las preferencias de notificación
        * iniciales del usuario.
        */
       await notificationPreferenceRepository.create(
@@ -338,7 +366,7 @@ class AuthService implements IAuthService {
       );
 
       /**
-       * 7. Persistir el hash del token de verificación.
+       * 8. Persistir el hash del token de verificación.
        *
        * El token original nunca se almacena en la base de datos.
        */
@@ -352,7 +380,25 @@ class AuthService implements IAuthService {
       );
 
       return user;
-    });
+    };
+
+    let result: Awaited<ReturnType<typeof persistRegistration>>;
+
+    try {
+      result = await sequelize.transaction(persistRegistration);
+    } catch (error) {
+      /**
+       * Si dos registros concurrentes superan la verificación previa,
+       * el constraint único de la base de datos protege la integridad
+       * del correo. El error de persistencia se traduce a un error de
+       * dominio para que el controlador responda HTTP 409.
+       */
+      if (error instanceof UniqueConstraintError) {
+        throw new EmailAlreadyExistsError();
+      }
+
+      throw error;
+    }
 
     /**
      * El correo se envía después de completar correctamente
@@ -424,11 +470,11 @@ class AuthService implements IAuthService {
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-      throw new Error('Usuario no encontrado');
+      throw new UserNotFoundError();
     }
 
     if (user.isActive) {
-      throw new Error('La cuenta ya se encuentra activada');
+      throw new AccountAlreadyActivatedError();
     }
 
     /**
@@ -440,14 +486,14 @@ class AuthService implements IAuthService {
     );
 
     if (!verificationRecord) {
-      throw new Error('Token inválido');
+      throw new InvalidTokenError('Token inválido');
     }
 
     /**
      * Validar la fecha de expiración del token.
      */
     if (new Date() > verificationRecord.expiresAt) {
-      throw new Error('El token ha expirado, solicita uno nuevo');
+      throw new ExpiredTokenError();
     }
 
     /**
@@ -461,7 +507,7 @@ class AuthService implements IAuthService {
     );
 
     if (!isMatch) {
-      throw new Error('Token inválido');
+      throw new InvalidTokenError('Token inválido');
     }
 
     /**
@@ -520,7 +566,7 @@ class AuthService implements IAuthService {
         deviceUserAgent: deviceUserAgent || null,
         status: 'FAILED_USER_NOT_FOUND',
       });
-      throw new Error('Credenciales inválidas');
+      throw new InvalidCredentialsError();
     }
 
     if (user.lockedUntil && user.lockedUntil > new Date()) {
@@ -531,7 +577,7 @@ class AuthService implements IAuthService {
         deviceUserAgent: deviceUserAgent || null,
         status: 'ACCOUNT_LOCKED',
       });
-      throw new Error('La cuenta está temporalmente bloqueada. Intente más tarde.');
+      throw new AccountLockedError();
     }
 
     if (!user.isActive) {
@@ -542,7 +588,7 @@ class AuthService implements IAuthService {
         deviceUserAgent: deviceUserAgent || null,
         status: 'ACCOUNT_NOT_ACTIVATED',
       });
-      throw new Error('La cuenta no está activada');
+      throw new AccountNotActivatedError();
     }
 
     const isMatch = await passwordService.verify(dto.password, user.passwordHash);
@@ -556,7 +602,7 @@ class AuthService implements IAuthService {
         deviceUserAgent: deviceUserAgent || null,
         status: 'FAILED_PASSWORD',
       });
-      throw new Error('Credenciales inválidas');
+      throw new InvalidCredentialsError();
     }
 
     await userRepository.resetFailedAttempts(user.id);
@@ -575,7 +621,7 @@ class AuthService implements IAuthService {
     await refreshTokenRepository.revokeAllByUserId(user.id);
 
     const decodedRefresh = tokenService.verifyRefreshToken(refreshToken);
-    if (decodedRefresh && decodedRefresh.exp) {
+    if (decodedRefresh?.exp) {
       await refreshTokenRepository.create({
         userId: user.id,
         tokenHash: refreshToken,
@@ -597,14 +643,14 @@ class AuthService implements IAuthService {
 
   async refreshToken(token: string): Promise<LoginUserResult> {
     const decoded = tokenService.verifyRefreshToken(token);
-    if (!decoded || !decoded.sub) {
-      throw new Error('Refresh token inválido o expirado');
+    if (!decoded?.sub) {
+      throw new InvalidTokenError('Refresh token inválido o expirado');
     }
 
     const userId = Number(decoded.sub);
     const existingToken = await refreshTokenRepository.findByTokenHash(token);
     if (!existingToken || existingToken.isRevoked) {
-      throw new Error('Refresh token inválido o revocado');
+      throw new InvalidTokenError('Refresh token inválido o revocado');
     }
 
     // Revoke old token
@@ -615,7 +661,7 @@ class AuthService implements IAuthService {
     const newRefreshToken = tokenService.generateRefreshToken(userId);
 
     const newDecoded = tokenService.verifyRefreshToken(newRefreshToken);
-    if (newDecoded && newDecoded.exp) {
+    if (newDecoded?.exp) {
       await refreshTokenRepository.create({
         userId,
         tokenHash: newRefreshToken,
@@ -637,7 +683,7 @@ class AuthService implements IAuthService {
 
   async logout(token: string): Promise<void> {
     const decoded = tokenService.verifyRefreshToken(token);
-    if (decoded && decoded.sub) {
+    if (decoded?.sub) {
       const userId = Number(decoded.sub);
       await refreshTokenRepository.revokeAllByUserId(userId);
     }
@@ -674,44 +720,40 @@ class AuthService implements IAuthService {
 
   async resetPassword(dto: ResetPasswordRequestDto): Promise<void> {
     if (!dto.newPassword || !dto.confirmPassword || dto.newPassword !== dto.confirmPassword) {
-      throw new Error('Las contraseñas no coinciden o están vacías');
+      throw new PasswordMismatchError();
     }
 
     if (!isValidPassword(dto.newPassword)) {
-      throw new Error('La contraseña no cumple con los requisitos de seguridad');
+      throw new WeakPasswordError();
     }
 
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-      throw new Error('Token inválido o expirado');
+      throw new InvalidTokenError();
     }
 
     const tokenRecord = await passwordResetTokenRepository.findLatestUnusedByUserId(user.id);
 
     if (!tokenRecord) {
-      throw new Error('Token inválido o expirado');
+      throw new InvalidTokenError();
     }
 
     if (new Date() > tokenRecord.expiresAt) {
-      throw new Error('El token ha expirado, solicita uno nuevo');
+      throw new ExpiredTokenError();
     }
 
     const bcrypt = await import('bcryptjs');
     const isMatch = await bcrypt.compare(dto.token, tokenRecord.tokenHash);
 
     if (!isMatch) {
-      throw new Error('Token inválido o expirado');
+      throw new InvalidTokenError();
     }
 
     const { hash: newPasswordHash } = await passwordService.hash(dto.newPassword);
 
-    // Replace password - wait, do we have a method for this? Let's check user repository or just use model if there's an update method.
-    // For now we assume a method like updatePassword or we import User model directly. We can add an update method to userRepository.
-    await import('../models/user.model').then((m) =>
-      m.default.update({ passwordHash: newPasswordHash }, { where: { id: user.id } }),
-    );
+    await userRepository.updatePassword(user.id, newPasswordHash);
 
     await passwordResetTokenRepository.markAsUsed(tokenRecord.id);
   }

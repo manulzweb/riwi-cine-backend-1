@@ -45,4 +45,9 @@ export interface IUserRepository {
    * Reinicia la cantidad de intentos fallidos y actualiza el último login.
    */
   resetFailedAttempts(userId: number): Promise<void>;
+
+  /**
+   * Actualiza el hash de la contraseña del usuario.
+   */
+  updatePassword(userId: number, passwordHash: string): Promise<void>;
 }

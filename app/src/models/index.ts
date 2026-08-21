@@ -9,6 +9,7 @@ import Membership from './membership.model';
 import MembershipLevel from './membership-level.model';
 import MembershipStatus from './membership-status.model';
 import BonusWallet from './bonus-wallet.model';
+import PurchaseHistory from './purchase-history.model';
 import NotificationPreference from './notification-preference.model';
 import UpcomingMovieNotification from './upcoming-movie-notification.model';
 import City from './city.model';
@@ -49,6 +50,10 @@ Membership.belongsTo(MembershipStatus, { foreignKey: 'status_id', as: 'status' }
 // User - BonusWallet
 User.hasOne(BonusWallet, { foreignKey: 'user_id', as: 'bonusWallet' });
 BonusWallet.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// User - PurchaseHistory
+User.hasOne(PurchaseHistory, { foreignKey: 'user_id', as: 'purchaseHistory' });
+PurchaseHistory.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 // User - NotificationPreference
 User.hasOne(NotificationPreference, { foreignKey: 'user_id', as: 'notificationPreference' });
@@ -106,6 +111,7 @@ export {
   MembershipLevel,
   MembershipStatus,
   BonusWallet,
+  PurchaseHistory,
   NotificationPreference,
   UpcomingMovieNotification,
   City,
