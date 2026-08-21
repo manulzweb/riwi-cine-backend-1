@@ -2,7 +2,7 @@
 
 import { Request, Response } from 'express';
 import { User, Membership, MembershipLevel, MembershipStatus } from '../models';
-import { generateSecureRandomNumber } from '../utils/crypto.util';
+import { generateMembershipCode } from '../utils/crypto.util';
 
 export const createMembership = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -38,19 +38,25 @@ export const createMembership = async (req: Request, res: Response): Promise<Res
         .json({ error: 'No existe el estado de membresía por defecto en el sistema' });
     }
 
-    // Generate unique membership code
+    // Generate unique membership code with a bounded number of attempts
+    const maxMembershipCodeAttempts = 3;
     let membershipCode = '';
     let isUnique = false;
-    while (!isUnique) {
-      membershipCode =
-        'MC-' +
-        generateSecureRandomNumber(100000, 999999) +
-        '-' +
-        generateSecureRandomNumber(100000, 999999);
-      const existing = await Membership.findOne({ where: { code: membershipCode } });
+
+    for (let attempt = 1; attempt <= maxMembershipCodeAttempts; attempt += 1) {
+      const candidateCode = generateMembershipCode();
+
+      const existing = await Membership.findOne({ where: { code: candidateCode } });
+
       if (!existing) {
+        membershipCode = candidateCode;
         isUnique = true;
+        break;
       }
+    }
+
+    if (!isUnique) {
+      return res.status(500).json({ error: 'No se pudo generar un código único de membresía' });
     }
 
     const membership = await Membership.create({
