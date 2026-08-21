@@ -33,7 +33,7 @@ import refreshTokenRepository from '../repositories/refresh-token.repository';
 import loginAuditRepository from '../repositories/login-audit.repository';
 
 import passwordService from './password.service';
-import tokenService from './token.service';
+import tokenService from './auth-token.service';
 import emailVerificationTokenService from './email-verification-token.service';
 import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto';
 import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository';
