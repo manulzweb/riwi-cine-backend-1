@@ -7,6 +7,17 @@ import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto';
 import { RegisterUserResponseDto } from '../dto/response/register.user.dto';
 import { envConfig } from '../config/env';
 import { COOKIE_NAMES } from '../constant/auth.constant';
+import {
+  AccountAlreadyActivatedError,
+  AccountLockedError,
+  AccountNotActivatedError,
+  EmailAlreadyExistsError,
+  InvalidCredentialsError,
+  InvalidTokenError,
+  PasswordMismatchError,
+  UserNotFoundError,
+  WeakPasswordError,
+} from '../errors/domain-errors';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const dto: RegisterUserRequestDto = req.body ?? {};
@@ -32,7 +43,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
      * El mensaje enviado al cliente no revela detalles internos de la
      * implementación ni información adicional sobre el usuario existente.
      */
-    if (e instanceof Error && e.message === 'EMAIL_ALREADY_EXISTS') {
+    if (e instanceof EmailAlreadyExistsError) {
       res.status(409).json({
         message: 'Unable to register user with the provided email',
       } as RegisterUserResponseDto);
@@ -63,10 +74,21 @@ export const verifyEmail = async (req: Request, res: Response): Promise<Response
       message: 'Cuenta Activada correctamente',
     });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(400).json({
-      error: errorMessage,
-    });
+    /**
+     * La respuesta no revela si el correo existe ni el motivo exacto
+     * del fallo del token, evitando exponer detalles internos.
+     */
+    if (error instanceof AccountAlreadyActivatedError) {
+      return res.status(409).json({ message: 'Account is already activated' });
+    }
+
+    if (error instanceof InvalidTokenError || error instanceof UserNotFoundError) {
+      return res.status(400).json({ message: 'Invalid or expired verification token' });
+    }
+
+    console.error('Email verification error:', error);
+
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -162,19 +184,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       membership: membership,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      if (e.message === 'Credenciales inválidas' || e.message === 'INVALID_CREDENTIALS') {
-        res.status(401).json({ message: 'Invalid credentials' });
-        return;
-      }
-      if (e.message.includes('bloqueada')) {
-        res.status(403).json({ message: e.message });
-        return;
-      }
-      if (e.message.includes('activada')) {
-        res.status(403).json({ message: e.message });
-        return;
-      }
+    if (e instanceof InvalidCredentialsError) {
+      res.status(401).json({ message: 'Invalid credentials' });
+      return;
+    }
+    if (e instanceof AccountLockedError) {
+      res.status(403).json({ message: 'Account is temporarily locked. Try again later.' });
+      return;
+    }
+    if (e instanceof AccountNotActivatedError) {
+      res.status(403).json({ message: 'Account is not activated' });
+      return;
     }
 
     /**
@@ -223,7 +243,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
       membership,
     });
   } catch (e) {
-    if (e instanceof Error && e.message.includes('inválido')) {
+    if (e instanceof InvalidTokenError) {
       res.status(401).json({ message: 'Invalid or expired refresh token' });
       return;
     }
@@ -282,14 +302,19 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     await authService.resetPassword(dto);
     res.status(200).json({ message: 'Password has been reset successfully' });
   } catch (e) {
-    if (
-      e instanceof Error &&
-      (e.message.includes('inválido') ||
-        e.message.includes('expirado') ||
-        e.message.includes('coinciden') ||
-        e.message.includes('seguridad'))
-    ) {
-      res.status(400).json({ message: e.message });
+    if (e instanceof PasswordMismatchError) {
+      res.status(400).json({ message: 'Passwords do not match or are empty' });
+      return;
+    }
+    if (e instanceof WeakPasswordError) {
+      res.status(400).json({
+        message:
+          'Password must be at least 10 characters and include uppercase, lowercase, number and special character',
+      });
+      return;
+    }
+    if (e instanceof InvalidTokenError) {
+      res.status(400).json({ message: 'Invalid or expired reset token' });
       return;
     }
     console.error('Reset password error:', e);
