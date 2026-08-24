@@ -1,5 +1,7 @@
-import { Router } from "express";
-import { getCountries } from "../controllers/country.controller";
+// app/src/routes/country.routes.ts
+
+import { Router } from 'express';
+import { getCountries } from '../controllers/country.controller';
 
 const router = Router();
 
@@ -26,6 +28,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener los países"
  */
-router.get("/", getCountries);
+router.get('/', getCountries);
 
 export default router;

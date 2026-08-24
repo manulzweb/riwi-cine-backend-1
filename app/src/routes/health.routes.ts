@@ -1,3 +1,5 @@
+// app/src/routes/health.routes.ts
+
 import { Router } from 'express';
 import { checkHealth } from '../controllers/health.controller';
 

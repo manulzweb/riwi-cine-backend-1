@@ -1,3 +1,5 @@
+// app/src/constant/auth.constant.ts
+
 export const AUTH_LIMITS = {
   MIN_PASSWORD_LENGTH: 10,
   MAX_PASSWORD_LENGTH: 128,

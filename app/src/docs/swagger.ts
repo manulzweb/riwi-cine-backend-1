@@ -1,8 +1,8 @@
 // app/src/docs/swagger.ts
 
 /**
- * Swagger Configuration
- * ---------------------
+ * Configuración de Swagger
+ * ------------------------
  * Este archivo configura la documentación automática de la API
  * utilizando `swagger-jsdoc` y `swagger-ui-express`.
  *

@@ -1,3 +1,5 @@
+// app/src/dto/response/upcoming-movie.dto.ts
+
 export interface UpcomingMovieDto {
   id: number;
   title: string;

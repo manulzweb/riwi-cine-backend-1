@@ -1,4 +1,4 @@
-// /app/src/config/database.ts
+// app/src/config/database.ts
 
 /**
  * Configuración de Sequelize para PostgreSQL

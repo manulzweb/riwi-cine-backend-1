@@ -1,3 +1,5 @@
+// app/src/dto/request/verify-email.dto.ts
+
 /**
  * DTO de entrada para la verificación de correo electrónico.
  *

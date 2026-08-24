@@ -1,3 +1,5 @@
+// app/src/dto/response/login.user.dto.ts
+
 /**
  * DTO de salida para el login de usuario.
  *

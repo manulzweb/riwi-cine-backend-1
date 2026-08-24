@@ -1,3 +1,5 @@
+// app/src/config/mailer.ts
+
 import nodemailer from 'nodemailer';
 import { envConfig } from './env';
 
