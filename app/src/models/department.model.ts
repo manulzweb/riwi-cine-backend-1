@@ -1,3 +1,5 @@
+// app/src/models/department.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 

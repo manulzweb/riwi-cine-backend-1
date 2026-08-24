@@ -1,3 +1,5 @@
+// app/src/models/refresh-token.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 

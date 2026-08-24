@@ -1,3 +1,5 @@
+// app/src/models/email-verification-token.model.ts
+
 import { createTokenModel } from './common/base-token-schema';
 
 const EmailVerificationToken = createTokenModel('email_verification_tokens');
