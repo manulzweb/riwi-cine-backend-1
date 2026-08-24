@@ -1,3 +1,5 @@
+// app/src/dto/request/register-user.dto.ts
+
 /**
  * DTO de entrada para el registro de usuario.
  *

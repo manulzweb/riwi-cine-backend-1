@@ -1,3 +1,5 @@
+// app/src/routes/auth.routes.ts
+
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import {
@@ -10,6 +12,7 @@ import {
   resetPassword,
 } from '../controllers/auth.controller';
 import { envConfig } from '../config/env';
+import { verifyCaptcha } from '../middleware/captcha.middleware';
 
 const registerLimiter = rateLimit({
   windowMs: envConfig.REGISTER.WINDOW_MS,
@@ -99,6 +102,9 @@ router.post('/login', login);
  *     tags: [Auth]
  *     requestBody:
  *       required: true
+ *       captchaToken:
+ *         type: string
+ *         description: "Token generado por el widget reCAPTCHA v2 del frontend"
  *       content:
  *         application/json:
  *           schema:
@@ -191,6 +197,17 @@ router.post('/login', login);
  *                 message:
  *                   type: string
  *                   example: "La contraseña debe tener al menos 10 caracteres, incluir mayúscula, minúscula, número y caracter especial."
+ *       403:
+ *         description: Verificación capthca fallido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Captcha verification failed"
+ *
  *       409:
  *         description: El correo electrónico ya se encuentra registrado
  *         content:
@@ -200,11 +217,11 @@ router.post('/login', login);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Unable to register user with the provided email"
+ *                   example: "No se pudo registrar el usuario con el correo proporcionado"
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/register', registerLimiter, register);
+router.post('/register', registerLimiter, verifyCaptcha(), register);
 
 /**
  * POST /api/auth/verify-email
@@ -258,7 +275,6 @@ router.post('/register', registerLimiter, register);
  */
 router.post('/verify-email', verifyEmail);
 
-// TODO
 router.post('/refresh', refreshToken);
 router.post('/logout', logoutUser);
 router.post('/forgot-password', forgotPassword);

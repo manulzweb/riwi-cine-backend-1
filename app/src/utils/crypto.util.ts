@@ -1,3 +1,5 @@
+// app/src/utils/crypto.util.ts
+
 import crypto from 'crypto';
 
 export const generateSecureRandomNumber = (min: number, max: number): number => {

@@ -685,10 +685,10 @@ class AuthService implements IAuthService {
       throw new InvalidTokenError('Refresh token inválido o revocado');
     }
 
-    // Revoke old token
+    // Revocar el token anterior
     await refreshTokenRepository.revoke(existingToken.id);
 
-    // Generate new tokens
+    // Generar nuevos tokens
     const accessToken = tokenService.generateAccessToken(userId);
     const newRefreshToken = tokenService.generateRefreshToken(userId);
 
@@ -726,7 +726,7 @@ class AuthService implements IAuthService {
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-      // Do not reveal if the user exists
+      // No revelar si el usuario existe
       return;
     }
 
@@ -735,7 +735,7 @@ class AuthService implements IAuthService {
 
     const token = randomBytes(32).toString('hex');
     const hash = await bcrypt.hash(token, 10);
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 
     await passwordResetTokenRepository.create({
       userId: user.id,

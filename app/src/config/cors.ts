@@ -1,3 +1,5 @@
+// app/src/config/cors.ts
+
 import { CorsOptions } from 'cors';
 import { envConfig } from './env';
 

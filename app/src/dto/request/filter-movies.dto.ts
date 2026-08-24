@@ -1,4 +1,4 @@
-// app/src/dto/filter-movies.dto.ts
+// app/src/dto/request/filter-movies.dto.ts
 
 /**
  * DTO - Filtros de Películas

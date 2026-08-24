@@ -1,4 +1,4 @@
-// app/src/dto/movie-detail.dto.ts
+// app/src/dto/response/movie-detail.dto.ts
 
 /**
  * DTOs de salida para HU-004 — Consulta del Detalle de una Película.

@@ -1,3 +1,5 @@
+// app/src/seed/seed.ts
+
 import { Role, MembershipLevel, MembershipStatus } from '../models';
 
 export const runSeed = async (): Promise<void> => {

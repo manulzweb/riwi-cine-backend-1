@@ -1,3 +1,5 @@
+// app/src/controllers/user.controller.ts
+
 import { Request, Response } from 'express';
 
 import userService from '../services/user.service';
@@ -79,7 +81,8 @@ import userService from '../services/user.service';
  */
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
   return res.status(400).json({
-    error: 'Para registrar usuarios y crear su membresía digital, utilice el endpoint POST /api/auth/register.',
+    error:
+      'Para registrar usuarios y crear su membresía digital, utilice el endpoint POST /api/auth/register.',
   });
 };
 

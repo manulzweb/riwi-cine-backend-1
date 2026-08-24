@@ -1,4 +1,4 @@
-// ruta_avanzada/proyecto_incremental/app/src/index.ts
+// app/src/index.ts
 
 /**
  * Es el entrypoint real de la aplicación.

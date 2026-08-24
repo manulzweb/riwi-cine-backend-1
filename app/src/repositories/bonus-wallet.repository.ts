@@ -1,8 +1,22 @@
+// app/src/repositories/bonus-wallet.repository.ts
+
 import { Transaction } from 'sequelize';
 import BonusWallet, { BonusWalletCreationAttributes } from '../models/bonus-wallet.model';
 import { IBonusWalletRepository } from './interfaces/bonus-wallet.repository.interface';
 
+/**
+ * Repositorio de Billeteras de Bonos
+ * -----------------------
+ * Implementa el patrón Repository para encapsular todas las operaciones
+ * de persistencia relacionadas con la entidad BonusWallet.
+ *
+ * Esta clase es la única responsable de interactuar con Sequelize.
+ */
+
 class BonusWalletRepository implements IBonusWalletRepository {
+  /**
+   * Crea una nueva billetera de bonos.
+   */
   async create(
     data: BonusWalletCreationAttributes,
     transaction?: Transaction,
@@ -10,6 +24,9 @@ class BonusWalletRepository implements IBonusWalletRepository {
     return await BonusWallet.create(data, { transaction });
   }
 
+  /**
+   * Busca la billetera de bonos de un usuario.
+   */
   async findByUserId(userId: number): Promise<BonusWallet | null> {
     return await BonusWallet.findOne({ where: { userId } });
   }

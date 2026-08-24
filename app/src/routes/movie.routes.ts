@@ -1,3 +1,5 @@
+// app/src/routes/movie.routes.ts
+
 import { Router } from 'express';
 import {
   getMovies,

@@ -1,3 +1,5 @@
+// app/src/repositories/email-verification-token.repository.ts
+
 import { Transaction } from 'sequelize';
 import EmailVerificationToken, {
   EmailVerificationTokenCreationAttributes,

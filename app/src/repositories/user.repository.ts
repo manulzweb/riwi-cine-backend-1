@@ -36,13 +36,27 @@ class UserRepository implements IUserRepository {
     return await User.findOne({ where: { email } });
   }
 
+  /**
+   * Activa la cuenta de un usuario registrando la fecha de activación.
+   */
   async activate(userId: number): Promise<void> {
     await User.update({ isActive: true, activatedAt: new Date() }, { where: { id: userId } });
   }
+
+  /**
+   * Busca un usuario por su identificador.
+   */
   async findById(id: number): Promise<User | null> {
     return await User.findOne({ where: { id } });
   }
 
+  /**
+   * Incrementa el contador de intentos fallidos de inicio de sesión.
+   *
+   * Si el usuario alcanza el máximo de intentos permitidos, bloquea
+   * la cuenta hasta la fecha calculada según el tiempo de bloqueo
+   * configurado.
+   */
   async incrementFailedAttempts(id: number): Promise<User | void> {
     const max = envConfig.LOGIN.MAX_ATTEMPTS;
     const minutes = envConfig.LOGIN.LOCK_TIME_MINUTES;
@@ -56,6 +70,10 @@ class UserRepository implements IUserRepository {
       lockedUntil: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.lockedUntil,
     });
   }
+  /**
+   * Reinicia el contador de intentos fallidos y el bloqueo del usuario,
+   * registrando la fecha del último inicio de sesión exitoso.
+   */
   async resetFailedAttempts(id: number): Promise<void> {
     await User.update(
       {

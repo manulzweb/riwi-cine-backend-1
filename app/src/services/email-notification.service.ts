@@ -10,7 +10,51 @@ import {
   ProcessResult,
 } from './interfaces/email-notification.service.interface';
 
+/**
+ * Servicio encargado de enviar las notificaciones por correo
+ * electrónico de estrenos de películas.
+ *
+ * Responsabilidades:
+ * - Identificar las películas activas cuyo estreno ocurre el día de hoy.
+ * - Localizar las solicitudes de notificación pendientes por película.
+ * - Enviar el correo de próximo estreno a cada usuario interesado.
+ * - Marcar cada notificación como atendida tras su envío.
+ * - Registrar los errores producidos sin interrumpir el procesamiento global.
+ *
+ * El Service consulta los modelos directamente mediante Sequelize
+ * para la lectura de películas, notificaciones y usuarios; la
+ * actualización del estado de cada notificación se realiza sobre el
+ * propio modelo obtenido.
+ *
+ * @class EmailNotificationService
+ *
+ * @business
+ * Una notificación solo se envía si el usuario asociado se encuentra
+ * activo y la solicitud no ha sido atendida previamente
+ * (`notifiedAt` en `null`). Cada envío fallido se acumula en el
+ * resultado para su trazabilidad sin detener el resto de envíos.
+ */
 class EmailNotificationService implements IEmailNotificationService {
+  /**
+   * Procesa las notificaciones de estreno correspondientes al día de hoy.
+   *
+   * El proceso consiste en:
+   *
+   * 1. Buscar las películas activas con fecha de estreno igual a hoy.
+   * 2. Para cada película, obtener las solicitudes de notificación
+   *    pendientes de usuarios activos.
+   * 3. Enviar el correo de próximo estreno y marcar la solicitud como
+   *    atendida con la fecha actual.
+   *
+   * Los errores individuales no abortan el proceso: se registran en
+   * el resultado retornado.
+   *
+   * @returns {Promise<ProcessResult>}
+   * Resumen del procesamiento:
+   * - `moviesProcessed`: cantidad de películas con estreno hoy.
+   * - `emailsSent`: cantidad de correos enviados exitosamente.
+   * - `errors`: lista de mensajes de error ocurridos durante el envío.
+   */
   async processTodayReleases(): Promise<ProcessResult> {
     const result: ProcessResult = { moviesProcessed: 0, emailsSent: 0, errors: [] };
     const today = todayDateOnly();
@@ -46,4 +90,11 @@ class EmailNotificationService implements IEmailNotificationService {
   }
 }
 
+/**
+ * Instancia única del servicio de notificaciones por correo utilizada
+ * por la aplicación.
+ *
+ * @constant
+ * @type {EmailNotificationService}
+ */
 export default new EmailNotificationService();

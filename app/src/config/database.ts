@@ -1,4 +1,4 @@
-// /app/src/config/database.ts
+// app/src/config/database.ts
 
 /**
  * Configuración de Sequelize para PostgreSQL
@@ -27,7 +27,7 @@ import { envConfig } from './env';
  */
 const sequelize = new Sequelize(envConfig.DB.NAME, envConfig.DB.USER, envConfig.DB.PASSWORD, {
   host: envConfig.DB.HOST || 'db', // En docker-compose, el servicio de la BD se llama "db"
-  port: parseInt(envConfig.DB.PORT.toString() || '5432', 10),
+  port: Number.parseInt(envConfig.DB.PORT.toString() || '5432', 10),
   dialect: 'postgres',
   logging: false, // Desactiva logs SQL en consola (útil en producción)
 });

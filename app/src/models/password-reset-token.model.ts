@@ -1,3 +1,5 @@
+// app/src/models/password-reset-token.model.ts
+
 import { createTokenModel } from './common/base-token-schema';
 
 const PasswordResetToken = createTokenModel('password_reset_tokens');

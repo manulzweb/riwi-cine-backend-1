@@ -1,5 +1,7 @@
-import { Router } from "express";
-import { getCities } from "../controllers/city.controller";
+// app/src/routes/city.routes.ts
+
+import { Router } from 'express';
+import { getCities } from '../controllers/city.controller';
 
 const router = Router();
 
@@ -37,6 +39,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener las ciudades"
  */
-router.get("/:departmentId", getCities);
+router.get('/:departmentId', getCities);
 
 export default router;

@@ -1,3 +1,5 @@
+// app/src/types/auth.types.ts
+
 /**
  * Payload del token JWT de acceso
  *

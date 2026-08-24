@@ -1,3 +1,5 @@
+// app/src/config/env.ts
+
 import 'dotenv/config';
 
 const required = (name: string): string => {
@@ -30,6 +32,10 @@ const parseExpiresToMs = (value: string): number => {
   };
 
   return amount * multipliers[unit];
+};
+
+const isTruthy = (value: string | undefined): boolean => {
+  return value === 'true';
 };
 
 export const envConfig = {
@@ -91,5 +97,12 @@ export const envConfig = {
 
   COOKIE: {
     MAXAGE: parseExpiresToMs(process.env.JWT_REFRESH_EXPIRES_IN ?? '7d'),
+  },
+  RECAPTCHA: {
+    ENABLED: process.env.NODE_ENV !== 'test' && isTruthy(process.env.RECAPTCHA_ENABLED),
+    SITE_KEY: process.env.RECAPTCHA_SITE_KEY ?? '',
+    SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY ?? '',
+    TIMEOUT_MS: Number(process.env.RECAPTCHA_TIMEOUT_MS ?? 5000),
+    VERIFY_URL: 'https://www.google.com/recaptcha/api/siteverify',
   },
 };
