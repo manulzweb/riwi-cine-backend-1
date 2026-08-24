@@ -10,15 +10,25 @@ import { FunctionAttributes } from '../models/function.model';
 import { todayDateOnly } from '../utils/date.util';
 
 /**
- * Repositorio de Películas.
- * Única capa que sabe cómo consultar Sequelize para la entidad Movie.
+ * Repositorio de Películas
+ * -----------------------
+ * Implementa el patrón Repository para encapsular todas las operaciones
+ * de persistencia relacionadas con la entidad Movie.
+ *
+ * Esta clase es la única responsable de interactuar con Sequelize.
  */
 class MovieRepository implements IMovieRepository {
   // --- Métodos de HU-004 ---
+  /**
+   * Busca una película activa por su identificador.
+   */
   async findById(id: number): Promise<Movie | null> {
     return await Movie.findOne({ where: { id, active: true } });
   }
 
+  /**
+   * Obtiene todas las funciones de una película, ordenadas por fecha y hora.
+   */
   async findFunctionsByMovieId(movieId: number): Promise<CinemaFunction[]> {
     return await CinemaFunction.findAll({
       where: { movieId },
@@ -26,6 +36,10 @@ class MovieRepository implements IMovieRepository {
     });
   }
 
+  /**
+   * Obtiene películas activas que compartan géneros con la película indicada,
+   * excluyéndola del resultado y ordenadas por calificación promedio.
+   */
   async findByGenres(genres: string[], excludeId: number, limit: number): Promise<Movie[]> {
     return await Movie.findAll({
       where: {
