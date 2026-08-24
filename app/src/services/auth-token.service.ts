@@ -48,6 +48,25 @@ export class TokenService implements ITokenService {
     } as SignOptions);
   }
 
+  /**
+   * Genera un token JWT de refresco para el usuario autenticado.
+   *
+   * El token contiene únicamente el identificador del usuario y el tipo
+   * de token (`refresh`). La configuración de expiración, emisor,
+   * audiencia y secreto se obtiene desde `envConfig`.
+   *
+   * @param {number} userId Identificador único del usuario autenticado.
+   *
+   * @returns {string}
+   * Token JWT firmado que puede utilizarse para obtener nuevos
+   * tokens de acceso.
+   *
+   * @security
+   * El token utiliza el algoritmo `HS256` y se firma mediante
+   * `REFRESH_SECRET`, distinto del secreto de acceso. Su tiempo de
+   * vida es mayor que el del access token y nunca debe exponerse en
+   * almacenamientos accesibles a terceros.
+   */
   generateRefreshToken(userId: number): string {
     return jwt.sign({ sub: String(userId), type: 'refresh' }, envConfig.JWT.REFRESH_SECRET, {
       expiresIn: envConfig.JWT.REFRESH_EXPIRES_IN,
@@ -58,10 +77,17 @@ export class TokenService implements ITokenService {
   }
 
   /**
-   * Verifica y decodifica un token JWT de acceso
+   * Verifica y decodifica un token JWT de acceso.
    *
-   * @param token - Token JWT a verificar
-   * @returns Payload del token si es válido, null si es inválido o está expirado
+   * La verificación incluye firma, emisor, audiencia y algoritmo.
+   * Cualquier fallo se traduce en un retorno `null` para que el
+   * llamador decida cómo rechazar la solicitud.
+   *
+   * @param {string} token
+   * Token JWT a verificar.
+   *
+   * @returns {AccessTokenPayload | null}
+   * Payload del token si es válido; `null` si es inválido o está expirado.
    */
   verifyAccessToken(token: string): AccessTokenPayload | null {
     try {
@@ -75,6 +101,20 @@ export class TokenService implements ITokenService {
     }
   }
 
+  /**
+   * Verifica y decodifica un token JWT de refresco.
+   *
+   * Además de la verificación criptográfica, valida que el claim
+   * `type` corresponda a un token de refresco, impidiendo que un
+   * access token sea utilizado como refresh token.
+   *
+   * @param {string} token
+   * Token JWT a verificar.
+   *
+   * @returns {RefreshTokenPayload | null}
+   * Payload del token si es válido; `null` si es inválido, está
+   * expirado o no es de tipo `refresh`.
+   */
   verifyRefreshToken(token: string): RefreshTokenPayload | null {
     try {
       const decoded = jwt.verify(token, envConfig.JWT.REFRESH_SECRET, {
@@ -92,12 +132,15 @@ export class TokenService implements ITokenService {
   }
 
   /**
-   * Extrae el token del header Authorization
+   * Extrae el token del header Authorization.
    *
-   * Espera un header en formato: "Bearer <token>"
+   * Espera un header en formato: "Bearer <token>".
    *
-   * @param authHeader - Valor del header Authorization
-   * @returns Token extraído o null si el formato es inválido
+   * @param {string} authHeader
+   * Valor del header Authorization.
+   *
+   * @returns {string | null}
+   * Token extraído, o `null` cuando el formato es inválido.
    */
   extractTokenFromHeader(authHeader?: string): string | null {
     if (!authHeader) return null;
@@ -112,12 +155,16 @@ export class TokenService implements ITokenService {
   }
 
   /**
-   * Decodifica un token JWT sin verificar su firma
+   * Decodifica un token JWT sin verificar su firma.
    *
-   * Útil para inspeccionar el contenido de un token sin validar su integridad.
+   * Útil para inspeccionar el contenido de un token sin validar su
+   * integridad.
    *
-   * @param token - Token JWT a decodificar
-   * @returns Payload decodificado o null si el token es inválido
+   * @param {string} token
+   * Token JWT a decodificar.
+   *
+   * @returns {AccessTokenPayload | null}
+   * Payload decodificado, o `null` cuando el token es inválido.
    */
   decodeToken(token: string): AccessTokenPayload | null {
     const decoded = jwt.decode(token);
@@ -130,10 +177,16 @@ export class TokenService implements ITokenService {
   }
 
   /**
-   * Verifica si un token JWT está expirado
+   * Verifica si un token JWT está expirado.
    *
-   * @param token - Token JWT a verificar
-   * @returns true si el token está expirado, false en caso contrario
+   * La comprobación se realiza sobre el claim `exp` sin verificar la
+   * firma del token. Un token sin `exp` se considera expirado.
+   *
+   * @param {string} token
+   * Token JWT a verificar.
+   *
+   * @returns {boolean}
+   * `true` si el token está expirado; `false` en caso contrario.
    */
   isTokenExpired(token: string): boolean {
     const decoded = this.decodeToken(token);
