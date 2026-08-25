@@ -20,7 +20,6 @@ import Movie from './movie.model';
 import RefreshToken from './refresh-token.model';
 import LoginAudit from './login-audit.model';
 import PasswordResetToken from './password-reset-token.model';
-import MovieStatus from './movie-status.model';
 
 // --- Associations ---
 
@@ -102,10 +101,6 @@ LoginAudit.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasMany(PasswordResetToken, { foreignKey: 'user_id', as: 'passwordResetTokens' });
 PasswordResetToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-// MovieStatus - Movie
-MovieStatus.hasMany(Movie, { foreignKey: 'statusId', as: 'movies' });
-Movie.belongsTo(MovieStatus, { foreignKey: 'statusId', as: 'movieStatus' });
-
 export {
   sequelize,
   User,
@@ -127,5 +122,4 @@ export {
   RefreshToken,
   LoginAudit,
   PasswordResetToken,
-  MovieStatus,
 };
