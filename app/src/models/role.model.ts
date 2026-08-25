@@ -12,9 +12,9 @@ export interface RoleAttributes {
 export type RoleCreationAttributes = Optional<RoleAttributes, 'id'>;
 
 class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
+  declare public id: number;
+  declare public name: string;
+  declare public description: string | null;
 }
 
 Role.init(

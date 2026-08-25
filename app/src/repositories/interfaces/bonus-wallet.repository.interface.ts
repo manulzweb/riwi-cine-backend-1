@@ -3,6 +3,7 @@
  *
  * Encapsula el acceso y persistencia de la entidad BonusWallet.
  */
+import { Transaction } from 'sequelize';
 import BonusWallet, { BonusWalletCreationAttributes } from '../../models/bonus-wallet.model';
 
 export interface IBonusWalletRepository {
@@ -10,5 +11,8 @@ export interface IBonusWalletRepository {
   create(data: BonusWalletCreationAttributes): Promise<BonusWallet>;
 
   /** Busca la billetera asociada a un usuario. */
-  findByUserId(userId: number): Promise<BonusWallet | null>;
+  findByUserId(userId: number, transaction?: Transaction): Promise<BonusWallet | null>;
+
+  /** Decrementa el saldo de la billetera de forma transaccional. */
+  decrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void>;
 }

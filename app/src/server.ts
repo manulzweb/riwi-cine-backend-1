@@ -18,7 +18,11 @@ import router from './routes';
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: envConfig.NODE_ENV === 'production' ? undefined : false,
+  }),
+);
 app.use(express.json());
 
 app.use(

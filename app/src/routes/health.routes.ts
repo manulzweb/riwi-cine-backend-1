@@ -6,7 +6,7 @@ import { checkHealth } from '../controllers/health.controller';
 const router = Router();
 /**
  * @swagger
- * /health:
+ * /:
  *   get:
  *     tags:
  *       - Health
@@ -52,6 +52,6 @@ const router = Router();
  *                     database:
  *                       type: string
  *                       example: "DOWN: connection refused"
- */ router.get('/health', checkHealth);
+ */ router.get('/', checkHealth);
 
 export default router;

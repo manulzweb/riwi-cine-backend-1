@@ -24,6 +24,13 @@ jest.mock('../../config/database', () => ({
   },
 }));
 
+jest.mock('../../models/user.model', () => ({
+  __esModule: true,
+  default: {
+    update: jest.fn(),
+  },
+}));
+
 jest.mock('../../repositories/user.repository', () => ({
   __esModule: true,
   default: {

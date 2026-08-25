@@ -26,20 +26,20 @@ class Profile
   extends Model<ProfileAttributes, ProfileCreationAttributes>
   implements ProfileAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public firstName!: string;
-  public lastName!: string;
-  public documentType!: string;
-  public documentNumber!: string;
-  public birthDate!: Date;
-  public gender!: string | null;
-  public phone!: string;
-  public cityId!: number;
-  public favoriteCinemaId!: number | null;
+  declare public id: number;
+  declare public userId: number;
+  declare public firstName: string;
+  declare public lastName: string;
+  declare public documentType: string;
+  declare public documentNumber: string;
+  declare public birthDate: Date;
+  declare public gender: string | null;
+  declare public phone: string;
+  declare public cityId: number;
+  declare public favoriteCinemaId: number | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare public readonly createdAt: Date;
+  declare public readonly updatedAt: Date;
 }
 
 Profile.init(

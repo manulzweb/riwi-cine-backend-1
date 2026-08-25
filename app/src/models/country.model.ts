@@ -14,8 +14,8 @@ class Country
   extends Model<CountryAttributes, CountryCreationAttributes>
   implements CountryAttributes
 {
-  public id!: number;
-  public name!: string;
+  declare public id: number;
+  declare public name: string;
 }
 
 Country.init(

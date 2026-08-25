@@ -13,6 +13,7 @@ import sequelize from './config/database';
 import './models'; // registra todos los modelos y sus asociaciones antes del sync
 import { runSeed } from './seed/seed';
 import { startUpcomingReleaseJob } from './jobs/upcoming-release.job';
+import { startCartExpiryJob } from './jobs/cart-expiry.job';
 
 const PORT = process.env.APP_PORT || 3000;
 
@@ -28,6 +29,7 @@ const start = async () => {
     await runSeed();
 
     startUpcomingReleaseJob();
+    startCartExpiryJob();
 
     app.listen(PORT, () => {
       console.log(`Servidor escuchando en puerto ${PORT}`);

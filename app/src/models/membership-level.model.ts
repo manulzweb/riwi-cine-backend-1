@@ -7,20 +7,22 @@ export interface MembershipLevelAttributes {
   id: number;
   name: string;
   description: string | null;
+  discountPercentage: number;
 }
 
 export type MembershipLevelCreationAttributes = Optional<
   MembershipLevelAttributes,
-  'id' | 'description'
+  'id' | 'description' | 'discountPercentage'
 >;
 
 class MembershipLevel
   extends Model<MembershipLevelAttributes, MembershipLevelCreationAttributes>
   implements MembershipLevelAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
+  declare public id: number;
+  declare public name: string;
+  declare public description: string | null;
+  declare public discountPercentage: number;
 }
 
 MembershipLevel.init(
@@ -38,6 +40,12 @@ MembershipLevel.init(
     description: {
       type: DataTypes.STRING(255),
       allowNull: true,
+    },
+    discountPercentage: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      defaultValue: 0,
+      field: 'discount_percentage',
     },
   },
   {

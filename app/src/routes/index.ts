@@ -10,6 +10,8 @@ import movieRoutes from './movie.routes';
 import membershipRoutes from './membership.routes';
 import notificationRoutes from './notification.routes';
 import healthRoutes from './health.routes';
+import reservationRoutes from './reservation.routes';
+import cartRoutes from './cart.routes';
 const router = Router();
 
 router.use('/users', userRoutes);
@@ -21,5 +23,7 @@ router.use('/membership', membershipRoutes);
 router.use('/movies', movieRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/health', healthRoutes);
+router.use(cartRoutes);
+router.use(reservationRoutes);
 
 export default router as Router;

@@ -9,7 +9,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import Movie from './movie.model';
-import Room from './room.model';
 
 export interface FunctionAttributes {
   id: number;
@@ -48,21 +47,21 @@ class CinemaFunction
   extends Model<FunctionAttributes, FunctionCreationAttributes>
   implements FunctionAttributes
 {
-  public id!: number;
-  public movieId!: number;
-  public roomId!: number;
-  public startTime!: Date;
-  public endTime!: Date;
-  public price!: number;
-  public availableSeats!: number;
-  public isActive!: boolean;
+  declare public id: number;
+  declare public movieId: number;
+  declare public roomId: number;
+  declare public startTime: Date;
+  declare public endTime: Date;
+  declare public price: number;
+  declare public availableSeats: number;
+  declare public isActive: boolean;
 
   // Compatibilidad con HU-004
-  public dateTime!: Date;
-  public format!: string;
-  public room!: string;
-  public totalSeats!: number;
-  public active!: boolean;
+  declare public dateTime: Date;
+  declare public format: string;
+  declare public room: string;
+  declare public totalSeats: number;
+  declare public active: boolean;
 }
 
 CinemaFunction.init(
@@ -132,12 +131,5 @@ CinemaFunction.init(
     timestamps: true,
   },
 );
-
-// Relaciones
-CinemaFunction.belongsTo(Movie, { foreignKey: 'movieId', as: 'movie' });
-Movie.hasMany(CinemaFunction, { foreignKey: 'movieId', as: 'functions' });
-
-CinemaFunction.belongsTo(Room, { foreignKey: 'roomId', as: 'roomRelation' });
-Room.hasMany(CinemaFunction, { foreignKey: 'roomId', as: 'functions' });
 
 export default CinemaFunction;

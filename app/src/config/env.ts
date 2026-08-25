@@ -67,6 +67,12 @@ export const envConfig = {
   BCRYPT: {
     ROUNDS: Number(process.env.BCRYPT_ROUNDS ?? 12),
   },
+
+  CART: {
+    EXPIRY_MINUTES: Number(process.env.CART_EXPIRY_MINUTES ?? 10),
+    TAX_RATE: Number(process.env.CART_TAX_RATE ?? 0.19),
+    COMBINE_PROMOTIONS: process.env.CART_COMBINE_PROMOTIONS === 'true',
+  },
   LOGIN: {
     MAX_ATTEMPTS: Number(process.env.MAX_LOGIN_ATTEMPTS ?? 5),
     LOCK_TIME_MINUTES: Number(process.env.LOCK_TIME_MINUTES ?? 15),

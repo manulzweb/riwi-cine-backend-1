@@ -15,12 +15,12 @@ class BonusWallet
   extends Model<BonusWalletAttributes, BonusWalletCreationAttributes>
   implements BonusWalletAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public balance!: number;
+  declare public id: number;
+  declare public userId: number;
+  declare public balance: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare public readonly createdAt: Date;
+  declare public readonly updatedAt: Date;
 }
 
 BonusWallet.init(

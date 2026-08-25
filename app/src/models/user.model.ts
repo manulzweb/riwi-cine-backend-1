@@ -62,46 +62,46 @@ export type UserCreationAttributes = Optional<
  */
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   /** Identificador único del usuario (clave primaria). */
-  public id!: number;
+  declare public id: number;
 
   /** Identificador del rol asignado. */
-  public roleId!: number;
+  declare public roleId: number;
 
   /** Dirección de correo electrónico única del usuario. */
-  public email!: string;
+  declare public email: string;
 
   /** Hash de la contraseña cifrada. */
-  public passwordHash!: string;
+  declare public passwordHash: string;
 
   /** Indica si el usuario ha sido activado. */
-  public isActive!: boolean;
+  declare public isActive: boolean;
 
   /** Fecha y hora en que la cuenta fue activada. */
-  public activatedAt!: Date | null;
+  declare public activatedAt: Date | null;
 
   /** Fecha y hora en que el correo electrónico fue verificado. */
-  public emailVerifiedAt!: Date | null;
+  declare public emailVerifiedAt: Date | null;
 
   /** Contador de intentos fallidos de inicio de sesión. */
-  public failedLoginAttempts!: number;
+  declare public failedLoginAttempts: number;
 
   /** Fecha y hora hasta la cual la cuenta está bloqueada. */
-  public lockedUntil!: Date | null;
+  declare public lockedUntil: Date | null;
 
   /** Fecha y hora del último inicio de sesión. */
-  public lastLoginAt!: Date | null;
+  declare public lastLoginAt: Date | null;
 
   /** Indica si el usuario dio consentimiento para el tratamiento de datos personales. */
-  public personalDataConsent!: boolean;
+  declare public personalDataConsent: boolean;
 
   /** Indica si el usuario aceptó los términos y condiciones. */
-  public termsConsent!: boolean;
+  declare public termsConsent: boolean;
 
   /** Indica si el usuario aceptó recibir comunicaciones comerciales. */
-  public commercialConsent!: boolean;
+  declare public commercialConsent: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare public readonly createdAt: Date;
+  declare public readonly updatedAt: Date;
 }
 
 /**
