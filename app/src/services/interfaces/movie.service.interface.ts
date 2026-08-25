@@ -3,11 +3,7 @@
 import Movie from '../../models/movie.model';
 import { FilterMoviesDto } from '../../dto/request/filter-movies.dto';
 import { UpcomingMovieDto } from '../../dto/response/upcoming-movie.dto';
-import {
-  MovieDetailDto,
-  MovieFunctionDto,
-  MovieRecommendationDto,
-} from '../../dto/response/movie-detail.dto';
+import { MovieDetailDto, MovieRecommendationDto } from '../../dto/response/movie-detail.dto';
 
 /**
  * Contrato del Servicio de Películas.
@@ -18,7 +14,6 @@ export interface IMovieService {
   getMovieDetail(id: number): Promise<MovieDetailDto | null>;
 
   /** Retorna únicamente las funciones futuras de una película (RN-014), marcando agotadas (RN-015). */
-  getMovieFunctions(id: number): Promise<MovieFunctionDto[] | null>;
 
   /** Retorna películas recomendadas por similitud de género. */
   getMovieRecommendations(id: number): Promise<MovieRecommendationDto[] | null>;

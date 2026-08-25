@@ -136,6 +136,19 @@ export class WeakPasswordError extends Error {
 }
 
 /**
+ * Se lanza cuando la película referenciada no existe o no está activa.
+ * (HU-004 / HU-009)
+ *
+ * El controlador debe traducirlo a HTTP 404 (Not Found).
+ */
+export class MovieNotFoundError extends Error {
+  constructor(message = 'Película no encontrada') {
+    super(message);
+    this.name = 'MovieNotFoundError';
+  }
+}
+
+/**
  * Se lanza cuando la función de cine referenciada no existe.
  * (HU-009)
  *

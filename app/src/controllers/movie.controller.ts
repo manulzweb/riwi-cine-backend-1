@@ -110,69 +110,6 @@ export const getMovieDetail = async (req: Request, res: Response): Promise<Respo
 };
 
 /**
- * Obtiene las funciones (horarios y salas) disponibles para una película.
- *
- * Valida que el parámetro de ruta sea numérico, delega la consulta al servicio
- * y retorna el listado de funciones asociadas a la película.
- *
- * Corresponde a la HU-004 (funciones por película).
- *
- * @async
- *
- * @param {Request} req
- * Objeto de la petición HTTP.
- *
- * Espera recibir en params:
- * @example
- * GET /api/movies/42/functions
- * req.params.id = "42"
- *
- * @param {Response} res
- * Objeto utilizado para construir la respuesta HTTP.
- *
- * @returns {Promise<Response>}
- * Promesa que resuelve una respuesta HTTP.
- *
- * Posibles respuestas:
- *
- * - **200 OK**
- *   Listado de funciones obtenido correctamente.
- *
- * - **400 Bad Request**
- *   El id de la película es inválido (no numérico).
- *
- * - **404 Not Found**
- *   La película no existe.
- *
- * - **500 Internal Server Error**
- *   Error inesperado durante la consulta.
- *
- * @throws {Error}
- * Cualquier excepción generada por la capa de servicios será capturada
- * y retornada como una respuesta HTTP con código 500.
- */
-export const getMovieFunctions = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const id = Number(req.params.id);
-
-    if (Number.isNaN(id)) {
-      return res.status(400).json({ error: 'El id de la película es inválido.' });
-    }
-
-    const functions = await movieService.getMovieFunctions(id);
-
-    if (!functions) {
-      return res.status(404).json({ error: 'Película no encontrada.' });
-    }
-
-    return res.status(200).json(functions);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(500).json({ error: message });
-  }
-};
-
-/**
  * Obtiene recomendaciones de películas similares a una película dada.
  *
  * Valida que el parámetro de ruta sea numérico, delega la consulta al servicio

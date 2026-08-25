@@ -2,16 +2,20 @@
 
 import CinemaFunction from '../models/function.model';
 import repository from '../repositories/function.repository';
+import movieRepository from '../repositories/movie.repository';
 import { IFunctionService } from './interfaces/function.service.interface';
 import {
   FunctionNotFoundError,
   FunctionInactiveError,
   FunctionAlreadyStartedError,
+  MovieNotFoundError,
 } from '../errors/domain-errors';
 import {
   FunctionDetailDto,
   FunctionPriceDto,
   AppliedPromotionDto,
+  FunctionFiltersDto,
+  FunctionSummaryDto,
 } from '../dto/function-detail.dto';
 
 /**
@@ -78,6 +82,26 @@ class FunctionService implements IFunctionService {
     };
   }
 
+  /**
+   * GET /movies/{id}/functions
+   * Lista las funciones seleccionables de una película (RN-035 y RN-036
+   * se aplican desde la query del repositorio) con filtros opcionales
+   * por formato, fecha y complejo. Cada ítem expone la disponibilidad
+   * de sillas en tiempo real (`availableSeats`, `totalSeats`, `soldOut`).
+   */
+  async getFunctionsByMovie(
+    movieId: number,
+    filters: FunctionFiltersDto = {},
+  ): Promise<FunctionSummaryDto[]> {
+    const movie = await movieRepository.findById(movieId);
+    if (!movie) {
+      throw new MovieNotFoundError(`No se encontró la película con id ${movieId}.`);
+    }
+
+    const functions = await repository.findAllByMovie(movie.id, filters);
+    return functions.map((fn) => this.toSummaryDto(fn));
+  }
+
   // ---------------------------------------------------------------------
   // Helpers privados
   // ---------------------------------------------------------------------
@@ -104,6 +128,23 @@ class FunctionService implements IFunctionService {
       // RN-035
       throw new FunctionAlreadyStartedError();
     }
+  }
+
+  private toSummaryDto(fn: CinemaFunction): FunctionSummaryDto {
+    const room = fn.get('roomRelation') as { cinemaId?: number } | undefined;
+
+    return {
+      id: fn.id,
+      movieId: fn.movieId,
+      dateTime: fn.dateTime.toString(),
+      format: fn.format,
+      room: fn.room,
+      cinemaId: room?.cinemaId ?? null,
+      price: Number(fn.price),
+      availableSeats: fn.availableSeats,
+      totalSeats: fn.totalSeats,
+      soldOut: fn.availableSeats <= 0,
+    };
   }
 
   private toDetailDto(fn: FunctionWithMovie): FunctionDetailDto {

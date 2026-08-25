@@ -7,11 +7,13 @@ import {
   getTodayMovies,
   getMoviesByFilter,
   getMovieDetail,
-  getMovieFunctions,
   getMovieRecommendations,
   getUpcomingMovies,
   getUpcomingMovie,
 } from '../controllers/movie.controller';
+import { getFunctionsByMovie } from '../controllers/function.controller';
+import { FunctionListQuerySchema } from '../schemas/function.schemas';
+import { validate } from '../middleware/validate.middleware';
 
 const router = Router();
 
@@ -285,7 +287,11 @@ router.get('/:id', getMovieDetail);
  * @swagger
  * /api/movies/{id}/functions:
  *   get:
- *     summary: Obtener las funciones activas y futuras para una película
+ *     summary: Obtener las funciones disponibles de una película (HU-009)
+ *     description: >
+ *       Lista únicamente funciones activas con fecha futura (RN-035 y RN-036
+ *       aplicadas desde la query). Soporta filtros opcionales para que el
+ *       frontend actualice las opciones sin recargar la página.
  *     tags: [Movies]
  *     parameters:
  *       - in: path
@@ -295,18 +301,49 @@ router.get('/:id', getMovieDetail);
  *           type: integer
  *         description: ID de la película.
  *       - in: query
- *         name: cityId
+ *         name: format
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [2D, 3D, IMAX, VIP]
+ *         description: Formato de proyección.
+ *       - in: query
+ *         name: date
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha exacta de la función (YYYY-MM-DD).
+ *       - in: query
+ *         name: cinemaId
  *         required: false
  *         schema:
  *           type: integer
- *         description: ID de la ciudad para filtrar funciones.
+ *         description: Complejo de cine.
  *     responses:
  *       200:
- *         description: Funciones futuras obtenidas correctamente.
+ *         description: Funciones disponibles obtenidas correctamente (puede ser vacío).
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id: 7
+ *                 movieId: 42
+ *                 dateTime: "2026-08-30T19:30:00.000Z"
+ *                 format: "3D"
+ *                 room: "Sala 4"
+ *                 cinemaId: 1
+ *                 price: 22000
+ *                 availableSeats: 40
+ *                 totalSeats: 100
+ *                 soldOut: false
+ *       400:
+ *         description: Id de la película inválido o filtros mal formados.
+ *       404:
+ *         description: Película no encontrada.
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id/functions', getMovieFunctions);
+router.get('/:id/functions', validate(FunctionListQuerySchema, 'query'), getFunctionsByMovie);
 
 /**
  * @swagger

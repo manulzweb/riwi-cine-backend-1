@@ -37,3 +37,31 @@ export interface FunctionPriceDto {
   appliedPromotions: AppliedPromotionDto[];
   finalPrice: number;
 }
+
+/**
+ * Filtros opcionales del listado de funciones de una película.
+ * Permiten al frontend refrescar opciones sin recargar la página
+ * (AC: "El usuario puede cambiar de formato sin recargar la página").
+ */
+export interface FunctionFiltersDto {
+  /** Formato de proyección: 2D, 3D, IMAX, VIP. */
+  format?: string;
+  /** Fecha exacta de la función (YYYY-MM-DD). */
+  date?: string;
+  /** Identificador del complejo de cine. */
+  cinemaId?: number;
+}
+
+/** GET /movies/{id}/functions */
+export interface FunctionSummaryDto {
+  id: number;
+  movieId: number;
+  dateTime: string;
+  format: string;
+  room: string;
+  cinemaId: number | null;
+  price: number;
+  availableSeats: number;
+  totalSeats: number;
+  soldOut: boolean; // Disponibilidad de sillas en tiempo real
+}

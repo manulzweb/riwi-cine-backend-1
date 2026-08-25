@@ -6,7 +6,9 @@ import {
   FunctionNotFoundError,
   FunctionInactiveError,
   FunctionAlreadyStartedError,
+  MovieNotFoundError,
 } from '../errors/domain-errors';
+import { FunctionListQueryDto } from '../schemas/function.schemas';
 
 /**
  * ============================================================================
@@ -64,6 +66,65 @@ export const getFunctionPrices = async (req: Request, res: Response): Promise<Re
     }
     if (error instanceof FunctionInactiveError || error instanceof FunctionAlreadyStartedError) {
       return res.status(400).json({ error: error.message });
+    }
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(500).json({ error: message });
+  }
+};
+
+/**
+ * GET /movies/:movieId/functions
+ * Lista las funciones disponibles de una película, con filtros
+ * opcionales por formato, fecha y complejo de cine (HU-009).
+ *
+ * @async
+ *
+ * @param {Request} req
+ * Objeto de la petición HTTP.
+ *
+ * Espera recibir en params:
+ * @example
+ * GET /api/v1/movies/42/functions?format=3D&date=2026-08-30&cinemaId=1
+ * req.params.movieId = "42"
+ *
+ * @param {Response} res
+ * Objeto utilizado para construir la respuesta HTTP.
+ *
+ * @returns {Promise<Response>}
+ * Promesa que resuelve una respuesta HTTP.
+ *
+ * Posibles respuestas:
+ *
+ * - **200 OK**
+ *   Listado de funciones disponibles (puede ser vacío).
+ *
+ * - **404 Not Found**
+ *   La película no existe.
+ *
+ * - **500 Internal Server Error**
+ *   Error inesperado durante la consulta.
+ */
+export const getFunctionsByMovie = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const movieId = Number(req.params.movieId);
+
+    if (Number.isNaN(movieId)) {
+      return res.status(400).json({ error: 'El id de la película es inválido.' });
+    }
+
+    // La query ya llega validada y con tipos coercidos por
+    // `validate(FunctionListQuerySchema, 'query')` en la ruta.
+    const { format, date, cinemaId } = req.query as unknown as FunctionListQueryDto;
+
+    const functions = await functionService.getFunctionsByMovie(movieId, {
+      format,
+      date,
+      cinemaId,
+    });
+    return res.status(200).json(functions);
+  } catch (error: unknown) {
+    if (error instanceof MovieNotFoundError) {
+      return res.status(404).json({ error: error.message });
     }
     const message = error instanceof Error ? error.message : 'Error desconocido';
     return res.status(500).json({ error: message });
