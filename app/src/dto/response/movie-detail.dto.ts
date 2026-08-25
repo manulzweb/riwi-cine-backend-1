@@ -34,16 +34,6 @@ export interface MovieDetailDto {
   pricesByFormat: PriceByFormatDto[];
 }
 
-/** Item dentro de GET /movies/{id}/functions */
-export interface MovieFunctionDto {
-  id: number;
-  dateTime: string;
-  format: string;
-  room: string;
-  price: number;
-  soldOut: boolean; // RN-015: los horarios agotados deben identificarse visualmente
-}
-
 /** Item dentro de GET /movies/{id}/recommendations */
 export interface MovieRecommendationDto {
   id: number;

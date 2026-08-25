@@ -134,3 +134,55 @@ export class WeakPasswordError extends Error {
     this.name = 'WeakPasswordError';
   }
 }
+
+/**
+ * Se lanza cuando la película referenciada no existe o no está activa.
+ * (HU-004 / HU-009)
+ *
+ * El controlador debe traducirlo a HTTP 404 (Not Found).
+ */
+export class MovieNotFoundError extends Error {
+  constructor(message = 'Película no encontrada') {
+    super(message);
+    this.name = 'MovieNotFoundError';
+  }
+}
+
+/**
+ * Se lanza cuando la función de cine referenciada no existe.
+ * (HU-009)
+ *
+ * El controlador debe traducirlo a HTTP 404 (Not Found).
+ */
+export class FunctionNotFoundError extends Error {
+  constructor(message = 'Función no encontrada') {
+    super(message);
+    this.name = 'FunctionNotFoundError';
+  }
+}
+
+/**
+ * Se lanza cuando la función existe pero está inactiva. (RN-036)
+ * (HU-009)
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class FunctionInactiveError extends Error {
+  constructor(message = 'La función no se encuentra activa') {
+    super(message);
+    this.name = 'FunctionInactiveError';
+  }
+}
+
+/**
+ * Se lanza cuando la función ya inició y ya no puede seleccionarse. (RN-035)
+ * (HU-009)
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class FunctionAlreadyStartedError extends Error {
+  constructor(message = 'La función ya inició y no puede seleccionarse') {
+    super(message);
+    this.name = 'FunctionAlreadyStartedError';
+  }
+}

@@ -6,7 +6,6 @@ import repository from '../repositories/movie.repository';
 import { IMovieService } from './interfaces/movie.service.interface';
 import {
   MovieDetailDto,
-  MovieFunctionDto,
   MovieRecommendationDto,
   PriceByFormatDto,
 } from '../dto/response/movie-detail.dto';
@@ -91,43 +90,6 @@ class MovieService implements IMovieService {
       averageRating: Number(movie.averageRating),
       pricesByFormat,
     };
-  }
-
-  /**
-   * Obtiene las funciones disponibles de una película (HU-004).
-   *
-   * Aplica las reglas de negocio:
-   * - RN-014: solo se incluyen funciones activas con fecha futura.
-   * - RN-015: se marca como agotada la función sin sillas disponibles.
-   *
-   * @param {number} id
-   * Identificador único de la película.
-   *
-   * @returns {Promise<MovieFunctionDto[] | null>}
-   * Lista de funciones futuras disponibles, o `null` cuando la
-   * película no existe.
-   */
-  async getMovieFunctions(id: number): Promise<MovieFunctionDto[] | null> {
-    const movie = await repository.findById(id);
-    if (!movie) return null;
-
-    const functions = await repository.findFunctionsByMovieId(movie.id);
-    const now = new Date();
-
-    return (
-      functions
-        // RN-014: solo funciones futuras.
-        .filter((fn) => fn.active && new Date(fn.dateTime) > now)
-        .map((fn) => ({
-          id: fn.id,
-          dateTime: fn.dateTime.toString(),
-          format: fn.format,
-          room: fn.room,
-          price: Number(fn.price),
-          // RN-015: horario agotado si no hay sillas disponibles.
-          soldOut: fn.availableSeats <= 0,
-        }))
-    );
   }
 
   /**

@@ -1,4 +1,4 @@
-// app/src/server.ts
+﻿// app/src/server.ts
 
 /**
  * Se encarga únicamente de configurar la aplicación Express: middlewares, rutas, swagger, etc.
