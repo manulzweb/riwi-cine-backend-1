@@ -4,6 +4,11 @@ import CinemaFunction from '../models/function.model';
 import repository from '../repositories/function.repository';
 import { IFunctionService } from './interfaces/function.service.interface';
 import {
+  FunctionNotFoundError,
+  FunctionInactiveError,
+  FunctionAlreadyStartedError,
+} from '../errors/domain-errors';
+import {
   FunctionDetailDto,
   FunctionPriceDto,
   AppliedPromotionDto,
@@ -87,17 +92,17 @@ class FunctionService implements IFunctionService {
    */
   private assertSelectable(fn: CinemaFunction | null, id: number): asserts fn is CinemaFunction {
     if (!fn) {
-      throw new Error(`No se encontró la función con id ${id}.`);
+      throw new FunctionNotFoundError(`No se encontró la función con id ${id}.`);
     }
 
     if (!fn.active) {
       // RN-036
-      throw new Error('La función no se encuentra activa.');
+      throw new FunctionInactiveError();
     }
 
     if (new Date(fn.dateTime) <= new Date()) {
       // RN-035
-      throw new Error('La función ya inició y no puede seleccionarse.');
+      throw new FunctionAlreadyStartedError();
     }
   }
 

@@ -2,6 +2,11 @@
 
 import { Request, Response } from 'express';
 import functionService from '../services/function.service';
+import {
+  FunctionNotFoundError,
+  FunctionInactiveError,
+  FunctionAlreadyStartedError,
+} from '../errors/domain-errors';
 
 /**
  * ============================================================================
@@ -12,13 +17,6 @@ import functionService from '../services/function.service';
  * negocio ni acceso a Sequelize aquí.
  * ============================================================================
  */
-
-/** Traduce el mensaje de negocio del service a un código HTTP. */
-const resolveStatusCode = (message: string): number => {
-  if (message.includes('No se encontró')) return 404;
-  if (message.includes('no se encuentra activa') || message.includes('ya inició')) return 400;
-  return 500;
-};
 
 /**
  * GET /functions/:id
@@ -35,8 +33,14 @@ export const getFunctionById = async (req: Request, res: Response): Promise<Resp
     const fn = await functionService.getFunctionById(id);
     return res.status(200).json(fn);
   } catch (error: unknown) {
+    if (error instanceof FunctionNotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
+    if (error instanceof FunctionInactiveError || error instanceof FunctionAlreadyStartedError) {
+      return res.status(400).json({ error: error.message });
+    }
     const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(resolveStatusCode(message)).json({ error: message });
+    return res.status(500).json({ error: message });
   }
 };
 
@@ -55,7 +59,13 @@ export const getFunctionPrices = async (req: Request, res: Response): Promise<Re
     const prices = await functionService.getFunctionPrices(id);
     return res.status(200).json(prices);
   } catch (error: unknown) {
+    if (error instanceof FunctionNotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
+    if (error instanceof FunctionInactiveError || error instanceof FunctionAlreadyStartedError) {
+      return res.status(400).json({ error: error.message });
+    }
     const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(resolveStatusCode(message)).json({ error: message });
+    return res.status(500).json({ error: message });
   }
 };

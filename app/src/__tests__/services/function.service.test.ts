@@ -3,6 +3,11 @@
 import functionService from '../../services/function.service';
 import repository from '../../repositories/function.repository';
 import CinemaFunction from '../../models/function.model';
+import {
+  FunctionNotFoundError,
+  FunctionInactiveError,
+  FunctionAlreadyStartedError,
+} from '../../errors/domain-errors';
 
 jest.mock('../../repositories/function.repository');
 
@@ -46,25 +51,19 @@ describe('FunctionService · HU-009 Selección de Función y Formato', () => {
     it('lanza 404 si la función no existe', async () => {
       mockedRepository.findById.mockResolvedValue(null);
 
-      await expect(functionService.getFunctionById(999)).rejects.toThrow(
-        'No se encontró la función con id 999.',
-      );
+      await expect(functionService.getFunctionById(999)).rejects.toThrow(FunctionNotFoundError);
     });
 
     it('lanza error si la función no está activa (RN-036)', async () => {
       mockedRepository.findById.mockResolvedValue(buildFunction({ active: false }));
 
-      await expect(functionService.getFunctionById(1)).rejects.toThrow(
-        'La función no se encuentra activa.',
-      );
+      await expect(functionService.getFunctionById(1)).rejects.toThrow(FunctionInactiveError);
     });
 
     it('lanza error si la función ya inició (RN-035)', async () => {
       mockedRepository.findById.mockResolvedValue(buildFunction({ dateTime: yesterday }));
 
-      await expect(functionService.getFunctionById(1)).rejects.toThrow(
-        'La función ya inició y no puede seleccionarse.',
-      );
+      await expect(functionService.getFunctionById(1)).rejects.toThrow(FunctionAlreadyStartedError);
     });
 
     it('retorna el detalle si la función es válida, marcando soldOut correctamente', async () => {
@@ -99,16 +98,14 @@ describe('FunctionService · HU-009 Selección de Función y Formato', () => {
       mockedRepository.findById.mockResolvedValue(buildFunction({ dateTime: yesterday }));
 
       await expect(functionService.getFunctionPrices(1)).rejects.toThrow(
-        'La función ya inició y no puede seleccionarse.',
+        FunctionAlreadyStartedError,
       );
     });
 
     it('lanza error si se intenta calcular el precio de una función inactiva', async () => {
       mockedRepository.findById.mockResolvedValue(buildFunction({ active: false }));
 
-      await expect(functionService.getFunctionPrices(1)).rejects.toThrow(
-        'La función no se encuentra activa.',
-      );
+      await expect(functionService.getFunctionPrices(1)).rejects.toThrow(FunctionInactiveError);
     });
   });
 });
