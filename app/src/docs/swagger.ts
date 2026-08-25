@@ -88,7 +88,7 @@ const options = {
                   itemId: { type: 'integer', example: 1 },
                   snackId: { type: 'integer', example: 12 },
                   name: { type: 'string', example: 'Crispetas Saladas' },
-                  imageUrl: { type: 'string', nullable: true, example: 'http://x' },
+                  imageUrl: { type: 'string', nullable: true, example: 'https://x' },
                   quantity: { type: 'integer', example: 2 },
                   basePrice: { type: 'number', example: 9000 },
                   unitPrice: { type: 'number', example: 9000 },

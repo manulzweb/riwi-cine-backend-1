@@ -208,7 +208,7 @@ class CartService implements ICartService {
   async expireStaleCart(cartId: number): Promise<void> {
     const cart = await cartRepository.findDetailById(cartId);
 
-    if (!cart || cart.status !== 'ACTIVE') return;
+    if (cart?.status !== 'ACTIVE') return;
 
     for (const ticket of cart.tickets ?? []) {
       try {
@@ -386,68 +386,88 @@ class CartService implements ICartService {
     return await this.buildDetail(userId, cart.id);
   }
 
-  async update(userId: number, dto: UpdateCartRequestDto): Promise<CartDetailResponseDto> {
-    const cart = await this.getActiveCartOrThrow(userId);
-
-    if (dto.snacks && dto.snacks.length > 0) {
-      for (const change of dto.snacks) {
-        if (!Number.isInteger(change.quantity) || change.quantity < 0) {
-          throw new NegativeQuantityError();
-        }
-      }
-
-      for (const change of dto.snacks) {
-        const existingItem = await cartRepository.findItemByCartAndSnack(cart.id, change.snackId);
-
-        if (!existingItem && change.quantity === 0) continue;
-
-        if (change.quantity === 0) {
-          if (existingItem) {
-            await cartRepository.removeItem(existingItem.id);
-          }
-          continue;
-        }
-
-        const pricing = await this.effectiveSnackPrice(change.snackId);
-        const snack = await snackRepository.findById(change.snackId);
-
-        if (!snack || snack.stock < change.quantity) {
-          throw new InsufficientStockError(
-            `Stock insuficiente para "${snack?.name ?? 'el producto'}". Disponible: ${snack?.stock ?? 0}.`,
-          );
-        }
-
-        if (existingItem) {
-          await cartRepository.updateItem(existingItem.id, {
-            quantity: change.quantity,
-            unitPrice: pricing.unitPrice,
-          });
-        } else {
-          await cartRepository.createItem({
-            cartId: cart.id,
-            snackId: change.snackId,
-            quantity: change.quantity,
-            unitPrice: pricing.unitPrice,
-          });
-        }
+  private async applySnackChanges(
+    cart: { id: number },
+    snacks: Array<{ snackId: number; quantity: number }>,
+  ): Promise<void> {
+    for (const change of snacks) {
+      if (!Number.isInteger(change.quantity) || change.quantity < 0) {
+        throw new NegativeQuantityError();
       }
     }
 
-    if (dto.removeTicketIds && dto.removeTicketIds.length > 0) {
-      for (const ticketId of dto.removeTicketIds) {
-        const ticket = await cartRepository.findTicketById(ticketId);
+    for (const change of snacks) {
+      await this.applySnackChange(cart, change);
+    }
+  }
 
-        if (!ticket || ticket.cartId !== cart.id) {
-          throw new TicketNotBelongsError();
-        }
+  private async applySnackChange(
+    cart: { id: number },
+    change: { snackId: number; quantity: number },
+  ): Promise<void> {
+    const existingItem = await cartRepository.findItemByCartAndSnack(cart.id, change.snackId);
 
-        await reservationService.releaseSeats({
-          reservationId: ticket.reservationId,
-          userId,
-        });
-
-        await cartRepository.removeTicket(ticketId);
+    if (change.quantity === 0) {
+      if (existingItem) {
+        await cartRepository.removeItem(existingItem.id);
       }
+      return;
+    }
+
+    const pricing = await this.effectiveSnackPrice(change.snackId);
+    const snack = await snackRepository.findById(change.snackId);
+
+    if (!snack || snack.stock < change.quantity) {
+      throw new InsufficientStockError(
+        `Stock insuficiente para "${snack?.name ?? 'el producto'}". Disponible: ${snack?.stock ?? 0}.`,
+      );
+    }
+
+    if (existingItem) {
+      await cartRepository.updateItem(existingItem.id, {
+        quantity: change.quantity,
+        unitPrice: pricing.unitPrice,
+      });
+      return;
+    }
+
+    await cartRepository.createItem({
+      cartId: cart.id,
+      snackId: change.snackId,
+      quantity: change.quantity,
+      unitPrice: pricing.unitPrice,
+    });
+  }
+
+  private async removeTickets(
+    cart: { id: number; userId: number },
+    ticketIds: number[],
+  ): Promise<void> {
+    for (const ticketId of ticketIds) {
+      const ticket = await cartRepository.findTicketById(ticketId);
+
+      if (ticket?.cartId !== cart.id) {
+        throw new TicketNotBelongsError();
+      }
+
+      await reservationService.releaseSeats({
+        reservationId: ticket.reservationId,
+        userId: cart.userId,
+      });
+
+      await cartRepository.removeTicket(ticketId);
+    }
+  }
+
+  async update(userId: number, dto: UpdateCartRequestDto): Promise<CartDetailResponseDto> {
+    const cart = await this.getActiveCartOrThrow(userId);
+
+    if (dto.snacks?.length) {
+      await this.applySnackChanges(cart, dto.snacks);
+    }
+
+    if (dto.removeTicketIds?.length) {
+      await this.removeTickets(cart, dto.removeTicketIds);
     }
 
     await cartRepository.update(cart.id, { expiresAt: this.newExpiry() });

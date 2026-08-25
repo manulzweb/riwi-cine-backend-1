@@ -5,11 +5,11 @@
  * elementos asociados (entradas y productos de confitería).
  */
 import { Transaction } from 'sequelize';
-import Cart, { CartCreationAttributes, CartStatus } from '../../models/cart.model';
-import { CartItem } from '../../models/cart-item.model';
-import { CartTicket } from '../../models/cart-ticket.model';
+import Cart, { CartCreationAttributes } from '../../models/cart.model';
 import Snack from '../../models/snack.model';
 import Promotion from '../../models/promotion.model';
+import type { CartItem } from '../../models/cart-item.model';
+import type { CartTicket } from '../../models/cart-ticket.model';
 
 export interface CartDetailInclude {
   items: boolean;
@@ -96,4 +96,6 @@ export interface ISnackRepository {
   findActivePromotionsBySnackId(snackId: number, now: Date): Promise<Promotion[]>;
 }
 
-export type { CartItem, CartTicket, CartStatus };
+export { type CartStatus } from '../../models/cart.model';
+export { type CartItem } from '../../models/cart-item.model';
+export { type CartTicket } from '../../models/cart-ticket.model';
