@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/membership-status.repository.interface.ts
+
 /**
  * Contrato del repositorio de estados de membresía.
  *

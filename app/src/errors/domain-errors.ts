@@ -134,3 +134,107 @@ export class WeakPasswordError extends Error {
     this.name = 'WeakPasswordError';
   }
 }
+
+/**
+ * Se lanza cuando los consentimientos obligatorios no fueron aceptados.
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class ConsentRequiredError extends Error {
+  constructor(
+    message = 'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
+  ) {
+    super(message);
+    this.name = 'ConsentRequiredError';
+  }
+}
+
+/**
+ * Se lanza cuando los correos electrónicos no coinciden.
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class EmailMismatchError extends Error {
+  constructor(message = 'Los correos no coinciden') {
+    super(message);
+    this.name = 'EmailMismatchError';
+  }
+}
+
+/**
+ * Se lanza cuando los correos electrónicos de confirmación no coinciden
+ * o se confunde con EmailMismatchError para el flujo de registro.
+ */
+export class ConfigurationError extends Error {
+  constructor(message = 'Configuración del sistema faltante o inválida') {
+    super(message);
+    this.name = 'ConfigurationError';
+  }
+}
+
+/**
+ * Se lanza cuando el rol por defecto no existe.
+ */
+export class RoleNotConfiguredError extends ConfigurationError {
+  constructor(message = 'No existe el rol por defecto configurado en el sistema') {
+    super(message);
+    this.name = 'RoleNotConfiguredError';
+  }
+}
+
+/**
+ * Se lanza cuando el nivel de membresía por defecto no existe.
+ */
+export class MembershipLevelNotConfiguredError extends ConfigurationError {
+  constructor(message = 'No existe el nivel de membresía por defecto configurado en el sistema') {
+    super(message);
+    this.name = 'MembershipLevelNotConfiguredError';
+  }
+}
+
+/**
+ * Se lanza cuando el estado de membresía por defecto no existe.
+ */
+export class MembershipStatusNotConfiguredError extends ConfigurationError {
+  constructor(message = 'No existe el estado de membresía por defecto configurado en el sistema') {
+    super(message);
+    this.name = 'MembershipStatusNotConfiguredError';
+  }
+}
+
+/**
+ * Se lanza cuando la ciudad principal seleccionada no existe.
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class CityNotFoundError extends Error {
+  constructor(message = 'La ciudad principal seleccionada no existe') {
+    super(message);
+    this.name = 'CityNotFoundError';
+  }
+}
+
+/**
+ * Se lanza cuando el complejo favorito seleccionado no existe.
+ *
+ * El controlador debe traducirlo a HTTP 400 (Bad Request).
+ */
+export class CinemaNotFoundError extends Error {
+  constructor(message = 'El complejo favorito seleccionado no existe') {
+    super(message);
+    this.name = 'CinemaNotFoundError';
+  }
+}
+
+/**
+ * Se lanza cuando no se pudo generar un código único de membresía tras
+ * agotar los reintentos por colisión de constraint único.
+ *
+ * El controlador debe traducirlo a HTTP 500 (Internal Server Error).
+ */
+export class MembershipCodeGenerationError extends Error {
+  constructor(message = 'No se pudo generar un código único de membresía') {
+    super(message);
+    this.name = 'MembershipCodeGenerationError';
+  }
+}

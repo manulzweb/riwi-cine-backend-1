@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/membership.repository.interface.ts
+
 /**
  * Contrato del repositorio de membresías.
  *

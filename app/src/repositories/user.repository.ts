@@ -38,9 +38,15 @@ class UserRepository implements IUserRepository {
 
   /**
    * Activa la cuenta de un usuario registrando la fecha de activación.
+   *
+   * @param userId Identificador del usuario.
+   * @param transaction Transacción opcional para Unit of Work.
    */
-  async activate(userId: number): Promise<void> {
-    await User.update({ isActive: true, activatedAt: new Date() }, { where: { id: userId } });
+  async activate(userId: number, transaction?: Transaction): Promise<void> {
+    await User.update(
+      { isActive: true, activatedAt: new Date() },
+      { where: { id: userId }, transaction },
+    );
   }
 
   /**
@@ -89,9 +95,13 @@ class UserRepository implements IUserRepository {
 
   /**
    * Actualiza el hash de la contraseña del usuario.
+   *
+   * @param id Identificador del usuario.
+   * @param passwordHash Hash bcrypt de la nueva contraseña.
+   * @param transaction Transacción opcional para Unit of Work.
    */
-  async updatePassword(id: number, passwordHash: string): Promise<void> {
-    await User.update({ passwordHash }, { where: { id } });
+  async updatePassword(id: number, passwordHash: string, transaction?: Transaction): Promise<void> {
+    await User.update({ passwordHash }, { where: { id }, transaction });
   }
 }
 

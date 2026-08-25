@@ -69,8 +69,9 @@ class EmailVerificationTokenRepository implements IEmailVerificationTokenReposit
    * para impedir su reutilización.
    *
    * @param tokenId Identificador del token.
+   * @param transaction Transacción opcional para Unit of Work.
    */
-  async markAsUsed(tokenId: number): Promise<void> {
+  async markAsUsed(tokenId: number, transaction?: Transaction): Promise<void> {
     await EmailVerificationToken.update(
       {
         usedAt: new Date(),
@@ -79,6 +80,7 @@ class EmailVerificationTokenRepository implements IEmailVerificationTokenReposit
         where: {
           id: tokenId,
         },
+        transaction,
       },
     );
   }

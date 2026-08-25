@@ -1,3 +1,5 @@
+// app/src/services/interfaces/auth.service.interface.ts
+
 import { ProfileAttributes } from '../../models/profile.model';
 import { MembershipAttributes } from '../../models/membership.model';
 import { ForgotPasswordRequestDto } from '../../dto/request/forgot-password.dto';

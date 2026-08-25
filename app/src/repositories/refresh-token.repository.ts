@@ -39,9 +39,12 @@ class RefreshTokenRepository {
 
   /**
    * Revoca un token de refresco por su identificador.
+   *
+   * @param id Identificador del token.
+   * @param transaction Transacción opcional para Unit of Work.
    */
-  async revoke(id: number): Promise<void> {
-    await RefreshToken.update({ isRevoked: true }, { where: { id } });
+  async revoke(id: number, transaction?: Transaction): Promise<void> {
+    await RefreshToken.update({ isRevoked: true }, { where: { id }, transaction });
   }
 }
 

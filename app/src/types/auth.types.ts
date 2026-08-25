@@ -16,10 +16,10 @@ export interface AccessTokenPayload {
   /** Tipo de token */
   type: 'access';
 
-  /** Fecha de emisión (added by jwt library) */
+  /** Fecha de emisión (añadida por la librería jwt) */
   iat?: number;
 
-  /** Fecha de expiración (added by jwt library) */
+  /** Fecha de expiración (añadida por la librería jwt) */
   exp?: number;
 }
 
@@ -36,9 +36,9 @@ export interface RefreshTokenPayload {
   /** Tipo de token */
   type: 'refresh';
 
-  /** Fecha de emisión (added by jwt library) */
+  /** Fecha de emisión (añadida por la librería jwt) */
   iat?: number;
 
-  /** Fecha de expiración (added by jwt library) */
+  /** Fecha de expiración (añadida por la librería jwt) */
   exp?: number;
 }

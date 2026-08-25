@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/notification-preference.repository.interface.ts
+
 /**
  * Contrato del repositorio de preferencias de notificación.
  *

@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/purchase-history.repository.interface.ts
+
 /**
  * Contrato del repositorio de historiales de compras.
  *

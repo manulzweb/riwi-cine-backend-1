@@ -1,10 +1,11 @@
+// app/src/repositories/interfaces/role.repository.interface.ts
+
 /**
  * Contrato del repositorio de roles.
  *
  * Define las operaciones de persistencia para la entidad Role.
  */
-import Role from '../../models/role.model';
-import { RoleCreationAttributes } from '../../models/role.model';
+import Role, { RoleCreationAttributes } from '../../models/role.model';
 
 export interface IRoleRepository {
   /** Crea un rol. */

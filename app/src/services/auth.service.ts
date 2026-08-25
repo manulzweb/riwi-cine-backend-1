@@ -1,7 +1,7 @@
 // app/src/services/auth.service.ts
 
-import sequelize from '../config/database';
 import { Transaction, UniqueConstraintError } from 'sequelize';
+import { unitOfWork } from '../utils/unit-of-work';
 
 import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
 import { LoginUserRequestDto } from '../dto/request/login-user.dto';
@@ -16,6 +16,12 @@ import {
 import { isValidPassword } from '../utils/password.util';
 import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer';
 import { generateMembershipCode } from '../utils/crypto.util';
+import {
+  generateResetToken,
+  getResetTokenExpiry,
+  hashResetToken,
+  verifyResetToken,
+} from '../utils/reset-token.util';
 
 import userRepository from '../repositories/user.repository';
 import roleRepository from '../repositories/role.repository';
@@ -42,11 +48,19 @@ import {
   AccountAlreadyActivatedError,
   AccountLockedError,
   AccountNotActivatedError,
+  CinemaNotFoundError,
+  CityNotFoundError,
+  ConsentRequiredError,
   EmailAlreadyExistsError,
+  EmailMismatchError,
   ExpiredTokenError,
   InvalidCredentialsError,
   InvalidTokenError,
+  MembershipCodeGenerationError,
+  MembershipLevelNotConfiguredError,
+  MembershipStatusNotConfiguredError,
   PasswordMismatchError,
+  RoleNotConfiguredError,
   UserNotFoundError,
   WeakPasswordError,
 } from '../errors/domain-errors';
@@ -137,30 +151,28 @@ class AuthService implements IAuthService {
      * cualquier operación de persistencia.
      */
     if (!dto.personalDataConsent || !dto.termsConsent) {
-      throw new Error(
-        'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
-      );
+      throw new ConsentRequiredError();
     }
 
     /**
      * Validar que ambos correos electrónicos coincidan.
      */
     if (email !== confirmEmail) {
-      throw new Error('Los correos no coinciden');
+      throw new EmailMismatchError();
     }
 
     /**
      * Validar que ambas contraseñas coincidan.
      */
     if (dto.password !== dto.confirmPassword) {
-      throw new Error('Las contraseñas no coinciden');
+      throw new PasswordMismatchError('Las contraseñas no coinciden');
     }
 
     /**
      * Validar las reglas de seguridad de la contraseña.
      */
     if (!dto.password || !isValidPassword(dto.password)) {
-      throw new Error(
+      throw new WeakPasswordError(
         'La contraseña debe tener al menos 10 caracteres, incluir mayúscula, minúscula, número y caracter especial.',
       );
     }
@@ -186,7 +198,7 @@ class AuthService implements IAuthService {
     const defaultRole = await roleRepository.findByName(roleName);
 
     if (!defaultRole) {
-      throw new Error('No existe el rol por defecto configurado en el sistema');
+      throw new RoleNotConfiguredError();
     }
 
     /**
@@ -196,7 +208,7 @@ class AuthService implements IAuthService {
     const defaultLevel = await membershipLevelRepository.findByName(membershipLevelName);
 
     if (!defaultLevel) {
-      throw new Error('No existe el nivel de membresía por defecto configurado en el sistema');
+      throw new MembershipLevelNotConfiguredError();
     }
 
     /**
@@ -205,7 +217,7 @@ class AuthService implements IAuthService {
     const defaultStatus = await membershipStatusRepository.findByName(membershipStatusName);
 
     if (!defaultStatus) {
-      throw new Error('No existe el estado de membresía por defecto configurado en el sistema');
+      throw new MembershipStatusNotConfiguredError();
     }
 
     /**
@@ -214,7 +226,7 @@ class AuthService implements IAuthService {
     const city = await cityRepository.findById(dto.cityId);
 
     if (!city) {
-      throw new Error('La ciudad principal seleccionada no existe');
+      throw new CityNotFoundError();
     }
 
     /**
@@ -225,7 +237,7 @@ class AuthService implements IAuthService {
       const cinema = await cinemaRepository.findById(dto.favoriteCinemaId);
 
       if (!cinema) {
-        throw new Error('El complejo favorito seleccionado no existe');
+        throw new CinemaNotFoundError();
       }
     }
 
@@ -355,9 +367,7 @@ class AuthService implements IAuthService {
            * la violación de unicidad del correo.
            */
           if (attempt === maxMembershipCodeAttempts) {
-            throw new Error('No se pudo generar un código único de membresía', {
-              cause: error,
-            });
+            throw new MembershipCodeGenerationError();
           }
         }
       }
@@ -417,14 +427,20 @@ class AuthService implements IAuthService {
     let result: Awaited<ReturnType<typeof persistRegistration>>;
 
     try {
-      result = await sequelize.transaction(persistRegistration);
+      result = await unitOfWork.run(persistRegistration);
     } catch (error) {
       /**
        * Si dos registros concurrentes superan la verificación previa,
        * el constraint único de la base de datos protege la integridad
        * del correo. El error de persistencia se traduce a un error de
        * dominio para que el controlador responda HTTP 409.
+       *
+       * `MembershipCodeGenerationError` ya es de dominio y se propaga
+       * para que el controlador responda 500 sin confundirlo con 409.
        */
+      if (error instanceof MembershipCodeGenerationError) {
+        throw error;
+      }
       if (error instanceof UniqueConstraintError) {
         throw new EmailAlreadyExistsError();
       }
@@ -543,15 +559,14 @@ class AuthService implements IAuthService {
     }
 
     /**
-     * Activar la cuenta del usuario.
+     * Activar la cuenta y marcar el token como usado de forma atómica
+     * mediante Unit of Work. Evita que la cuenta quede activa sin
+     * invalidar el token (o viceversa) ante un fallo intermedio.
      */
-    await userRepository.activate(user.id);
-
-    /**
-     * Marcar el token como utilizado para impedir
-     * su reutilización.
-     */
-    await emailVerificationTokenRepository.markAsUsed(verificationRecord.id);
+    await unitOfWork.run(async (tx) => {
+      await userRepository.activate(user.id, tx);
+      await emailVerificationTokenRepository.markAsUsed(verificationRecord.id, tx);
+    });
   }
 
   /**
@@ -649,17 +664,26 @@ class AuthService implements IAuthService {
 
     const accessToken = tokenService.generateAccessToken(user.id);
     const refreshToken = tokenService.generateRefreshToken(user.id);
-
-    await refreshTokenRepository.revokeAllByUserId(user.id);
-
     const decodedRefresh = tokenService.verifyRefreshToken(refreshToken);
-    if (decodedRefresh?.exp) {
-      await refreshTokenRepository.create({
-        userId: user.id,
-        tokenHash: refreshToken,
-        expiresAt: new Date(decodedRefresh.exp * 1000),
-      });
-    }
+
+    /**
+     * Invalida refresh anteriores y persiste el nuevo de forma atómica
+     * mediante Unit of Work. Garantiza que no quede el usuario sin
+     * refresh válido ante un fallo intermedio (RN-030).
+     */
+    await unitOfWork.run(async (tx) => {
+      await refreshTokenRepository.revokeAllByUserId(user.id, tx);
+      if (decodedRefresh?.exp) {
+        await refreshTokenRepository.create(
+          {
+            userId: user.id,
+            tokenHash: refreshToken,
+            expiresAt: new Date(decodedRefresh.exp * 1000),
+          },
+          tx,
+        );
+      }
+    });
 
     const profile = await profileRepository.findByUserId(user.id);
     const membership = await membershipRepository.findByUserId(user.id);
@@ -685,21 +709,28 @@ class AuthService implements IAuthService {
       throw new InvalidTokenError('Refresh token inválido o revocado');
     }
 
-    // Revocar el token anterior
-    await refreshTokenRepository.revoke(existingToken.id);
-
-    // Generar nuevos tokens
+    // Generar nuevos tokens fuera de la transacción (no requieren DB)
     const accessToken = tokenService.generateAccessToken(userId);
     const newRefreshToken = tokenService.generateRefreshToken(userId);
-
     const newDecoded = tokenService.verifyRefreshToken(newRefreshToken);
-    if (newDecoded?.exp) {
-      await refreshTokenRepository.create({
-        userId,
-        tokenHash: newRefreshToken,
-        expiresAt: new Date(newDecoded.exp * 1000),
-      });
-    }
+
+    /**
+     * Revoca el refresh anterior y persiste el nuevo de forma atómica
+     * mediante Unit of Work. Evita ventana donde ambos tokens sean válidos.
+     */
+    await unitOfWork.run(async (tx) => {
+      await refreshTokenRepository.revoke(existingToken.id, tx);
+      if (newDecoded?.exp) {
+        await refreshTokenRepository.create(
+          {
+            userId,
+            tokenHash: newRefreshToken,
+            expiresAt: new Date(newDecoded.exp * 1000),
+          },
+          tx,
+        );
+      }
+    });
 
     const profile = await profileRepository.findByUserId(userId);
     const membership = await membershipRepository.findByUserId(userId);
@@ -730,12 +761,9 @@ class AuthService implements IAuthService {
       return;
     }
 
-    const { randomBytes } = await import('node:crypto');
-    const bcrypt = await import('bcryptjs');
-
-    const token = randomBytes(32).toString('hex');
-    const hash = await bcrypt.hash(token, 10);
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+    const token = generateResetToken();
+    const hash = await hashResetToken(token);
+    const expiresAt = getResetTokenExpiry();
 
     await passwordResetTokenRepository.create({
       userId: user.id,
@@ -776,8 +804,7 @@ class AuthService implements IAuthService {
       throw new ExpiredTokenError();
     }
 
-    const bcrypt = await import('bcryptjs');
-    const isMatch = await bcrypt.compare(dto.token, tokenRecord.tokenHash);
+    const isMatch = await verifyResetToken(dto.token, tokenRecord.tokenHash);
 
     if (!isMatch) {
       throw new InvalidTokenError();
@@ -785,9 +812,15 @@ class AuthService implements IAuthService {
 
     const { hash: newPasswordHash } = await passwordService.hash(dto.newPassword);
 
-    await userRepository.updatePassword(user.id, newPasswordHash);
-
-    await passwordResetTokenRepository.markAsUsed(tokenRecord.id);
+    /**
+     * Actualiza la contraseña y marca el token como usado de forma atómica
+     * mediante Unit of Work. Evita que la contraseña cambie sin invalidar
+     * el token (o viceversa).
+     */
+    await unitOfWork.run(async (tx) => {
+      await userRepository.updatePassword(user.id, newPasswordHash, tx);
+      await passwordResetTokenRepository.markAsUsed(tokenRecord.id, tx);
+    });
   }
 }
 

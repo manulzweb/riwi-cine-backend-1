@@ -1,6 +1,6 @@
 // app/src/utils/crypto.util.ts
 
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 export const generateSecureRandomNumber = (min: number, max: number): number => {
   const range = max - min + 1;

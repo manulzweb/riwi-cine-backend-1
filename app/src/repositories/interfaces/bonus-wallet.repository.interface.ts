@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/bonus-wallet.repository.interface.ts
+
 /**
  * Contrato del repositorio de billeteras de bonos.
  *

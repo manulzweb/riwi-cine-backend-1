@@ -13,9 +13,14 @@ import {
   AccountAlreadyActivatedError,
   AccountLockedError,
   AccountNotActivatedError,
+  CityNotFoundError,
+  CinemaNotFoundError,
+  ConsentRequiredError,
   EmailAlreadyExistsError,
+  EmailMismatchError,
   InvalidCredentialsError,
   InvalidTokenError,
+  MembershipCodeGenerationError,
   PasswordMismatchError,
   UserNotFoundError,
   WeakPasswordError,
@@ -147,6 +152,31 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         message: 'Unable to register user with the provided email',
       } as RegisterUserResponseDto);
 
+      return;
+    }
+
+    /**
+     * Errores de validación de dominio (400). El mensaje del dominio es
+     * seguro para el cliente y no expone detalles de infraestructura.
+     */
+    if (
+      e instanceof ConsentRequiredError ||
+      e instanceof EmailMismatchError ||
+      e instanceof PasswordMismatchError ||
+      e instanceof WeakPasswordError ||
+      e instanceof CityNotFoundError ||
+      e instanceof CinemaNotFoundError
+    ) {
+      res.status(400).json({ message: e.message } as RegisterUserResponseDto);
+      return;
+    }
+
+    /**
+     * Error de generación de código único (500). No se expone causa interna.
+     */
+    if (e instanceof MembershipCodeGenerationError) {
+      console.error('Membership code generation error:', e);
+      res.status(500).json({ message: 'Internal server error' } as RegisterUserResponseDto);
       return;
     }
 

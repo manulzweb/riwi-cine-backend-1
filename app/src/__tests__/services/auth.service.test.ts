@@ -20,7 +20,13 @@ import { UniqueConstraintError } from 'sequelize';
 jest.mock('../../config/database', () => ({
   __esModule: true,
   default: {
-    transaction: jest.fn((cb) => cb({})),
+    transaction: jest.fn((arg1: unknown, arg2?: unknown) => {
+      const cb =
+        typeof arg2 === 'function'
+          ? (arg2 as (tx: unknown) => unknown)
+          : (arg1 as (tx: unknown) => unknown);
+      return cb({});
+    }),
   },
 }));
 

@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/city.repository.interface.ts
+
 import City from '../../models/city.model';
 
 /**
