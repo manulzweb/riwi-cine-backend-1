@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/membership-level.repository.interface.ts
+
 /**
  * Contrato del repositorio de niveles de membresía.
  *

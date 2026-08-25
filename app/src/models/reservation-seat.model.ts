@@ -1,3 +1,5 @@
+// app/src/models/reservation-seat.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
@@ -19,14 +21,14 @@ class ReservationSeat
   extends Model<ReservationSeatAttributes, ReservationSeatCreationAttributes>
   implements ReservationSeatAttributes
 {
-  declare public id: number;
-  declare public reservationId: number;
-  declare public seatId: number;
-  declare public status: ReservationSeatStatus;
-  declare public price: number;
+  public id!: number;
+  public reservationId!: number;
+  public seatId!: number;
+  public status!: ReservationSeatStatus;
+  public price!: number;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 ReservationSeat.init(

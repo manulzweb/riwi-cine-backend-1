@@ -1,3 +1,5 @@
+// app/src/services/email-verification-token.service.ts
+
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { envConfig } from '../config/env';

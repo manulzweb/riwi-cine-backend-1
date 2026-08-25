@@ -1,3 +1,5 @@
+// app/src/middleware/auth.middleware.ts
+
 import { NextFunction, Request, Response } from 'express';
 import tokenService from '../services/auth-token.service';
 

@@ -1,8 +1,37 @@
+// app/src/controllers/reservation.controller.ts
+
 import { Request, Response } from 'express';
 import reservationService from '../services/reservation.service';
-import { LockSeatsDto } from '../dto/lock-seats.dto';
-import { ReleaseSeatsDto } from '../dto/release-seats.dto';
+import { LockSeatsDto } from '../dto/request/lock-seats.dto';
+import { ReleaseSeatsDto } from '../dto/request/release-seats.dto';
 
+/**
+ * ============================================================================
+ * Controlador de Reservas (HU-001)
+ * ============================================================================
+ *
+ * Gestiona las solicitudes HTTP relacionadas con la reserva de sillas para
+ * las funciones de cine: consulta de disponibilidad, bloqueo temporal de
+ * sillas durante el armado del carrito y liberación de sillas reservadas.
+ *
+ * Arquitectura:
+ *
+ * Cliente HTTP
+ *      │
+ * ReservationController
+ *      │
+ * ReservationService
+ *      │
+ * ReservationRepository ─┐
+ *      │                 ├─ SeatRepository (disponibilidad de sillas)
+ * SeatRepository         ┘
+ *      │
+ * Sequelize → PostgreSQL
+ *
+ * Convenciones de errores:
+ * Los errores de negocio se traducen aquí a su código HTTP correspondiente
+ * (400/404/409/500) en lugar de inspeccionar cadenas de texto.
+ */
 class ReservationController {
   /**
    * GET /api/functions/:id/seats

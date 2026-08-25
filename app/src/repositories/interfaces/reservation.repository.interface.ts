@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/reservation.repository.interface.ts
+
 import { Transaction } from 'sequelize';
 import Reservation from '../../models/reservation.model';
 import ReservationSeat from '../../models/reservation-seat.model';

@@ -1,3 +1,5 @@
+// app/src/services/interfaces/password.service.interface.ts
+
 /**
  * Resultado generado durante el proceso de protección de una contraseña.
  *

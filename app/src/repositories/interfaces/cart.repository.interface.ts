@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/cart.repository.interface.ts
+
 /**
  * Contrato del repositorio de carrito de compras.
  *

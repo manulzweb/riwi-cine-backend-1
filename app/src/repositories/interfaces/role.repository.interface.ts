@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/role.repository.interface.ts
+
 /**
  * Contrato del repositorio de roles.
  *

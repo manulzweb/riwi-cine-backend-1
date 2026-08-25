@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/seat.repository.interface.ts
+
 import Seat from '../../models/seat.model';
 
 export interface ISeatRepository {

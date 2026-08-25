@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/profile.repository.interface.ts
+
 /**
  * Contrato del repositorio de perfiles.
  *

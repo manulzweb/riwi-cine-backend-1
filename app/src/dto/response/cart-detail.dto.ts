@@ -1,3 +1,5 @@
+// app/src/dto/response/cart-detail.dto.ts
+
 /**
  * DTO de salida con el detalle completo del carrito de compras (HU-011).
  *

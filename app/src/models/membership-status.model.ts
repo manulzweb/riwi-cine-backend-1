@@ -18,9 +18,9 @@ class MembershipStatus
   extends Model<MembershipStatusAttributes, MembershipStatusCreationAttributes>
   implements MembershipStatusAttributes
 {
-  declare public id: number;
-  declare public name: string;
-  declare public description: string | null;
+  public id!: number;
+  public name!: string;
+  public description!: string | null;
 }
 
 MembershipStatus.init(

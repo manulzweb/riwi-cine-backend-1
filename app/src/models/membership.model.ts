@@ -18,15 +18,15 @@ class Membership
   extends Model<MembershipAttributes, MembershipCreationAttributes>
   implements MembershipAttributes
 {
-  declare public id: number;
-  declare public userId: number;
-  declare public code: string;
-  declare public levelId: number;
-  declare public statusId: number;
-  declare public pointsBalance: number;
+  public id!: number;
+  public userId!: number;
+  public code!: string;
+  public levelId!: number;
+  public statusId!: number;
+  public pointsBalance!: number;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Membership.init(

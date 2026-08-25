@@ -47,14 +47,14 @@ export function createTokenModel(tableName: string) {
     extends Model<BaseTokenAttributes, BaseTokenCreationAttributes>
     implements BaseTokenAttributes
   {
-    declare public id: number;
-    declare public userId: number;
-    declare public tokenHash: string;
-    declare public expiresAt: Date;
-    declare public usedAt: Date | null;
+    public id!: number;
+    public userId!: number;
+    public tokenHash!: string;
+    public expiresAt!: Date;
+    public usedAt!: Date | null;
 
-    declare public readonly createdAt: Date;
-    declare public readonly updatedAt: Date;
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
   }
 
   TokenModel.init(baseTokenFields, {

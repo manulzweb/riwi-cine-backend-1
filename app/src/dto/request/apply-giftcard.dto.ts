@@ -1,3 +1,5 @@
+// app/src/dto/request/apply-giftcard.dto.ts
+
 /**
  * DTO de entrada para aplicar bonos (giftcards) al carrito.
  *

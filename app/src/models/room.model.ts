@@ -44,22 +44,22 @@ export type RoomCreationAttributes = Optional<RoomAttributes, 'id'>;
  */
 class Room extends Model<RoomAttributes, RoomCreationAttributes> implements RoomAttributes {
   /** Identificador único de la sala (clave primaria). */
-  declare public id: number;
+  public id!: number;
 
   /** Nombre de la sala (ej. Sala 1, Sala IMAX). */
-  declare public name: string;
+  public name!: string;
 
   /** Formato de la sala (2D, 3D, IMAX, VIP). */
-  declare public format: string;
+  public format!: string;
 
   /** Capacidad máxima de personas. */
-  declare public capacity: number;
+  public capacity!: number;
 
   /** Identificador del complejo de cine al que pertenece la sala. */
-  declare public cinemaId: number;
+  public cinemaId!: number;
 
   /** Indica si la sala está activa. */
-  declare public isActive: boolean;
+  public isActive!: boolean;
 }
 
 /**

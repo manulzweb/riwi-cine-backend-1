@@ -1,3 +1,5 @@
+// app/src/services/interfaces/email-verification-token.service.interface.ts
+
 export interface EmailVerificationTokenResult {
   token: string;
   hash: string;

@@ -1,3 +1,5 @@
+// app/src/services/reservation.service.ts
+
 import { Transaction } from 'sequelize';
 import sequelize from '../config/database';
 import CinemaFunction from '../models/function.model';
@@ -7,13 +9,28 @@ import Seat from '../models/seat.model';
 import SeatType from '../models/seat-type.model';
 import seatRepository from '../repositories/seat.repository';
 import reservationRepository from '../repositories/reservation.repository';
-import { LockSeatsDto } from '../dto/lock-seats.dto';
-import { ReleaseSeatsDto } from '../dto/release-seats.dto';
+import { LockSeatsDto } from '../dto/request/lock-seats.dto';
+import { ReleaseSeatsDto } from '../dto/request/release-seats.dto';
 import { IReservationService } from '../services/interfaces/reservation.service.interface';
 
 const RESERVATION_DURATION_MINUTES = 10;
 const DEFAULT_MAX_SEATS = 10;
 
+/**
+ * Servicio encargado de la gestión de reservas de sillas (HU-001).
+ *
+ * Responsabilidades:
+ * - Consultar la disponibilidad de sillas de una función.
+ * - Bloquear sillas temporalmente mientras el usuario arma su carrito,
+ *   retornando la información de precios por tipo de silla.
+ * - Liberar sillas reservadas (por cancelación, expiración o conversión
+ *   del carrito a compra).
+ *
+ * Reglas de negocio:
+ * - Una reserva tiene una duración limitada (RESERVATION_DURATION_MINUTES)
+ *   tras la cual las sillas vuelven a quedar disponibles.
+ * - El número máximo de sillas por reserva es DEFAULT_MAX_SEATS.
+ */
 class ReservationService implements IReservationService {
   /**
    * HU-001/SPRINT3

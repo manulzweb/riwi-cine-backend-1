@@ -1,3 +1,5 @@
+// app/src/repositories/interfaces/cinema.repository.interface.ts
+
 /**
  * Contrato del repositorio de complejos de cine.
  *

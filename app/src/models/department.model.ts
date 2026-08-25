@@ -15,9 +15,9 @@ class Department
   extends Model<DepartmentAttributes, DepartmentCreationAttributes>
   implements DepartmentAttributes
 {
-  declare public id: number;
-  declare public name: string;
-  declare public countryId: number;
+  public id!: number;
+  public name!: string;
+  public countryId!: number;
 }
 
 Department.init(

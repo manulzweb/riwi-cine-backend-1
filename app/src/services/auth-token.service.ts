@@ -1,3 +1,5 @@
+// app/src/services/auth-token.service.ts
+
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envConfig } from '../config/env';
 import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types';

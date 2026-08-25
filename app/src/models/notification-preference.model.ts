@@ -20,14 +20,14 @@ class NotificationPreference
   extends Model<NotificationPreferenceAttributes, NotificationPreferenceCreationAttributes>
   implements NotificationPreferenceAttributes
 {
-  declare public id: number;
-  declare public userId: number;
-  declare public emailEnabled: boolean;
-  declare public smsEnabled: boolean;
-  declare public pushEnabled: boolean;
+  public id!: number;
+  public userId!: number;
+  public emailEnabled!: boolean;
+  public smsEnabled!: boolean;
+  public pushEnabled!: boolean;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 NotificationPreference.init(

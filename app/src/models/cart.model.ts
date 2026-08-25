@@ -50,20 +50,20 @@ export interface CartCreationAttributes extends Optional<
  * Clase que representa la entidad `Cart` mapeada en PostgreSQL.
  */
 export class Cart extends Model<CartAttributes, CartCreationAttributes> implements CartAttributes {
-  declare public id: number;
-  declare public userId: number;
-  declare public status: CartStatus;
-  declare public expiresAt: Date | null;
-  declare public giftcardAmount: number;
+  public id!: number;
+  public userId!: number;
+  public status!: CartStatus;
+  public expiresAt!: Date | null;
+  public giftcardAmount!: number;
 
   /** Ítems de confitería del carrito (asociación cargada mediante `include`). */
-  declare public items?: CartItem[];
+  public items?: CartItem[];
 
   /** Entradas del carrito (asociación cargada mediante `include`). */
-  declare public tickets?: CartTicket[];
+  public tickets?: CartTicket[];
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Cart.init(

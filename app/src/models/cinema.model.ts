@@ -42,19 +42,19 @@ export type CinemaCreationAttributes = Optional<CinemaAttributes, 'id'>;
  */
 class Cinema extends Model<CinemaAttributes, CinemaCreationAttributes> implements CinemaAttributes {
   /** Identificador único del complejo de cine (clave primaria). */
-  declare public id: number;
+  public id!: number;
 
   /** Nombre del complejo de cine. */
-  declare public name: string;
+  public name!: string;
 
   /** Ciudad donde se encuentra el complejo. */
-  declare public city: string;
+  public city!: string;
 
   /** Dirección física del complejo. */
-  declare public address: string;
+  public address!: string;
 
   /** Indica si el complejo está activo. */
-  declare public isActive: boolean;
+  public isActive!: boolean;
 }
 
 /**

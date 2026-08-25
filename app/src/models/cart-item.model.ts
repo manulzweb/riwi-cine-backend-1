@@ -40,17 +40,17 @@ export class CartItem
   extends Model<CartItemAttributes, CartItemCreationAttributes>
   implements CartItemAttributes
 {
-  declare public id: number;
-  declare public cartId: number;
-  declare public snackId: number;
-  declare public quantity: number;
-  declare public unitPrice: number;
+  public id!: number;
+  public cartId!: number;
+  public snackId!: number;
+  public quantity!: number;
+  public unitPrice!: number;
 
   /** Producto de confitería asociado (asociación cargada mediante `include`). */
-  declare public snack?: Snack;
+  public snack?: Snack;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 CartItem.init(

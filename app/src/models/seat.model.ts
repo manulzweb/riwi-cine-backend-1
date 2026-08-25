@@ -1,3 +1,5 @@
+// app/src/models/seat.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
@@ -13,16 +15,16 @@ export interface SeatAttributes {
 
 export type SeatCreationAttributes = Optional<SeatAttributes, 'id' | 'isAvailable' | 'isActive'>;
 class Seat extends Model<SeatAttributes, SeatCreationAttributes> implements SeatAttributes {
-  declare public id: number;
-  declare public roomId: number;
-  declare public seatTypeId: number;
-  declare public row: string;
-  declare public number: number;
-  declare public isAvailable: boolean;
-  declare public isActive: boolean;
+  public id!: number;
+  public roomId!: number;
+  public seatTypeId!: number;
+  public row!: string;
+  public number!: number;
+  public isAvailable!: boolean;
+  public isActive!: boolean;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Seat.init(

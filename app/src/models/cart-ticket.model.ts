@@ -53,23 +53,23 @@ export class CartTicket
   extends Model<CartTicketAttributes, CartTicketCreationAttributes>
   implements CartTicketAttributes
 {
-  declare public id: number;
-  declare public cartId: number;
-  declare public functionId: number;
-  declare public reservationId: number;
-  declare public quantity: number;
-  declare public unitPrice: number;
-  declare public discountAmount: number;
-  declare public total: number;
+  public id!: number;
+  public cartId!: number;
+  public functionId!: number;
+  public reservationId!: number;
+  public quantity!: number;
+  public unitPrice!: number;
+  public discountAmount!: number;
+  public total!: number;
 
   /** Función asociada (asociación cargada mediante `include`). */
-  declare public function?: CinemaFunction;
+  public function?: CinemaFunction;
 
   /** Reserva asociada con sus sillas (asociación cargada mediante `include`). */
-  declare public reservation?: Reservation;
+  public reservation?: Reservation;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 CartTicket.init(

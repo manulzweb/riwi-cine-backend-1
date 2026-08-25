@@ -1,3 +1,5 @@
+// app/src/dto/request/create-cart.dto.ts
+
 /**
  * DTO de entrada para la creación del carrito de compras.
  *

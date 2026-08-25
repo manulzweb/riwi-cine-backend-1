@@ -1,3 +1,5 @@
+// app/src/repositories/seat.repository.ts
+
 import { Op } from 'sequelize';
 import { ISeatRepository } from './interfaces/seat.repository.interface';
 import Seat from '../models/seat.model';

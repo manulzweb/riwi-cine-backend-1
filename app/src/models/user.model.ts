@@ -62,46 +62,46 @@ export type UserCreationAttributes = Optional<
  */
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   /** Identificador único del usuario (clave primaria). */
-  declare public id: number;
+  public id!: number;
 
   /** Identificador del rol asignado. */
-  declare public roleId: number;
+  public roleId!: number;
 
   /** Dirección de correo electrónico única del usuario. */
-  declare public email: string;
+  public email!: string;
 
   /** Hash de la contraseña cifrada. */
-  declare public passwordHash: string;
+  public passwordHash!: string;
 
   /** Indica si el usuario ha sido activado. */
-  declare public isActive: boolean;
+  public isActive!: boolean;
 
   /** Fecha y hora en que la cuenta fue activada. */
-  declare public activatedAt: Date | null;
+  public activatedAt!: Date | null;
 
   /** Fecha y hora en que el correo electrónico fue verificado. */
-  declare public emailVerifiedAt: Date | null;
+  public emailVerifiedAt!: Date | null;
 
   /** Contador de intentos fallidos de inicio de sesión. */
-  declare public failedLoginAttempts: number;
+  public failedLoginAttempts!: number;
 
   /** Fecha y hora hasta la cual la cuenta está bloqueada. */
-  declare public lockedUntil: Date | null;
+  public lockedUntil!: Date | null;
 
   /** Fecha y hora del último inicio de sesión. */
-  declare public lastLoginAt: Date | null;
+  public lastLoginAt!: Date | null;
 
   /** Indica si el usuario dio consentimiento para el tratamiento de datos personales. */
-  declare public personalDataConsent: boolean;
+  public personalDataConsent!: boolean;
 
   /** Indica si el usuario aceptó los términos y condiciones. */
-  declare public termsConsent: boolean;
+  public termsConsent!: boolean;
 
   /** Indica si el usuario aceptó recibir comunicaciones comerciales. */
-  declare public commercialConsent: boolean;
+  public commercialConsent!: boolean;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 /**

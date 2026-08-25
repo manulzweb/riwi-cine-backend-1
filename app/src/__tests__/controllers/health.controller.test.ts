@@ -1,3 +1,5 @@
+// app/src/__tests__/controllers/health.controller.test.ts
+
 import { Request, Response } from 'express';
 import { checkHealth } from '../../controllers/health.controller';
 import sequelize from '../../config/database';

@@ -1,3 +1,5 @@
+// app/src/services/interfaces/cart.service.interface.ts
+
 /**
  * Contrato del servicio de carrito de compras (HU-011).
  *

@@ -1,3 +1,5 @@
+// app/src/models/reservation.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import User from './user.model';
@@ -19,14 +21,14 @@ class Reservation
   extends Model<ReservationAttributes, ReservationCreationAttributes>
   implements ReservationAttributes
 {
-  declare public id: number;
-  declare public userId: number;
-  declare public functionId: number;
-  declare public status: ReservationStatus;
-  declare public expiresAt: Date | null;
+  public id!: number;
+  public userId!: number;
+  public functionId!: number;
+  public status!: ReservationStatus;
+  public expiresAt!: Date | null;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Reservation.init(

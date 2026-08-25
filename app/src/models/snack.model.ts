@@ -54,17 +54,17 @@ export class Snack
   extends Model<SnackAttributes, SnackCreationAttributes>
   implements SnackAttributes
 {
-  declare public id: number;
-  declare public name: string;
-  declare public description: string | null;
-  declare public price: number;
-  declare public category: string;
-  declare public stock: number;
-  declare public imageUrl: string | null;
-  declare public discountPercentage: number;
+  public id!: number;
+  public name!: string;
+  public description!: string | null;
+  public price!: number;
+  public category!: string;
+  public stock!: number;
+  public imageUrl!: string | null;
+  public discountPercentage!: number;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Snack.init(

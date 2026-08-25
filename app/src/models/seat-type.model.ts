@@ -1,3 +1,5 @@
+// app/src/models/seat-type.model.ts
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
@@ -17,13 +19,13 @@ class SeatType
   extends Model<SeatTypeAttributes, SeatTypeCreationAttributes>
   implements SeatTypeAttributes
 {
-  declare public id: number;
-  declare public name: string;
-  declare public description: string | null;
-  declare public priceFactor: number;
+  public id!: number;
+  public name!: string;
+  public description!: string | null;
+  public priceFactor!: number;
 
-  declare public readonly createdAt: Date;
-  declare public readonly updatedAt: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 SeatType.init(

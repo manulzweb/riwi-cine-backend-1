@@ -47,21 +47,21 @@ class CinemaFunction
   extends Model<FunctionAttributes, FunctionCreationAttributes>
   implements FunctionAttributes
 {
-  declare public id: number;
-  declare public movieId: number;
-  declare public roomId: number;
-  declare public startTime: Date;
-  declare public endTime: Date;
-  declare public price: number;
-  declare public availableSeats: number;
-  declare public isActive: boolean;
+  public id!: number;
+  public movieId!: number;
+  public roomId!: number;
+  public startTime!: Date;
+  public endTime!: Date;
+  public price!: number;
+  public availableSeats!: number;
+  public isActive!: boolean;
 
   // Compatibilidad con HU-004
-  declare public dateTime: Date;
-  declare public format: string;
-  declare public room: string;
-  declare public totalSeats: number;
-  declare public active: boolean;
+  public dateTime!: Date;
+  public format!: string;
+  public room!: string;
+  public totalSeats!: number;
+  public active!: boolean;
 }
 
 CinemaFunction.init(
