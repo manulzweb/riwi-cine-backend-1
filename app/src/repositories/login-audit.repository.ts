@@ -1,7 +1,7 @@
 // app/src/repositories/login-audit.repository.ts
 
 import { Transaction } from 'sequelize';
-import LoginAudit, { LoginAuditCreationAttributes } from '../models/login-audit.model';
+import LoginAudit, { LoginAuditCreationAttributes } from '../models/login-audit.model.js';
 
 /**
  * Repositorio de Auditoría de Inicios de Sesión

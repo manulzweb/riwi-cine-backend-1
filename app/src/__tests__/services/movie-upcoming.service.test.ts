@@ -1,9 +1,9 @@
 // app/src/__tests__/services/movie-upcoming.service.test.ts
 
-import movieService from '../../services/movie.service';
-import movieRepository from '../../repositories/movie.repository';
+import movieService from '../../services/movie.service.js';
+import movieRepository from '../../repositories/movie.repository.js';
 
-jest.mock('../../repositories/movie.repository', () => ({
+jest.mock('../../repositories/movie.repository.js', () => ({
   __esModule: true,
   default: {
     findUpcomingById: jest.fn(),

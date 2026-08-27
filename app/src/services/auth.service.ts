@@ -1,43 +1,43 @@
 // app/src/services/auth.service.ts
 
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 import { Transaction, UniqueConstraintError } from 'sequelize';
 
-import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
-import { LoginUserRequestDto } from '../dto/request/login-user.dto';
-import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto';
+import { RegisterUserRequestDto } from '../dto/request/register-user.dto.js';
+import { LoginUserRequestDto } from '../dto/request/login-user.dto.js';
+import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto.js';
 
 import {
   IAuthService,
   LoginUserResult,
   RegisterUserResult,
-} from './interfaces/auth.service.interface';
+} from './interfaces/auth.service.interface.js';
 
-import { isValidPassword } from '../utils/password.util';
-import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer';
-import { generateMembershipCode } from '../utils/crypto.util';
+import { isValidPassword } from '../utils/password.util.js';
+import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer.js';
+import { generateMembershipCode } from '../utils/crypto.util.js';
 
-import userRepository from '../repositories/user.repository';
-import roleRepository from '../repositories/role.repository';
-import profileRepository from '../repositories/profile.repository';
-import membershipRepository from '../repositories/membership.repository';
-import membershipLevelRepository from '../repositories/membership-level.repository';
-import membershipStatusRepository from '../repositories/membership-status.repository';
-import bonusWalletRepository from '../repositories/bonus-wallet.repository';
-import purchaseHistoryRepository from '../repositories/purchase-history.repository';
-import notificationPreferenceRepository from '../repositories/notification-preference.repository';
-import cityRepository from '../repositories/city.repository';
-import cinemaRepository from '../repositories/cinema.repository';
-import emailVerificationTokenRepository from '../repositories/email-verification-token.repository';
-import refreshTokenRepository from '../repositories/refresh-token.repository';
-import loginAuditRepository from '../repositories/login-audit.repository';
+import userRepository from '../repositories/user.repository.js';
+import roleRepository from '../repositories/role.repository.js';
+import profileRepository from '../repositories/profile.repository.js';
+import membershipRepository from '../repositories/membership.repository.js';
+import membershipLevelRepository from '../repositories/membership-level.repository.js';
+import membershipStatusRepository from '../repositories/membership-status.repository.js';
+import bonusWalletRepository from '../repositories/bonus-wallet.repository.js';
+import purchaseHistoryRepository from '../repositories/purchase-history.repository.js';
+import notificationPreferenceRepository from '../repositories/notification-preference.repository.js';
+import cityRepository from '../repositories/city.repository.js';
+import cinemaRepository from '../repositories/cinema.repository.js';
+import emailVerificationTokenRepository from '../repositories/email-verification-token.repository.js';
+import refreshTokenRepository from '../repositories/refresh-token.repository.js';
+import loginAuditRepository from '../repositories/login-audit.repository.js';
 
-import passwordService from './password.service';
-import tokenService from './auth-token.service';
-import emailVerificationTokenService from './email-verification-token.service';
-import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto';
-import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository';
-import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto';
+import passwordService from './password.service.js';
+import tokenService from './auth-token.service.js';
+import emailVerificationTokenService from './email-verification-token.service.js';
+import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto.js';
+import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository.js';
+import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto.js';
 import {
   AccountAlreadyActivatedError,
   AccountLockedError,
@@ -49,7 +49,7 @@ import {
   PasswordMismatchError,
   UserNotFoundError,
   WeakPasswordError,
-} from '../errors/domain-errors';
+} from '../errors/domain-errors.js';
 
 const roleName = 'cliente';
 const membershipLevelName = 'BÁSICA';

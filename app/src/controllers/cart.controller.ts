@@ -1,11 +1,11 @@
 // app/src/controllers/cart.controller.ts
 
 import { Request, Response } from 'express';
-import { CartDomainError } from '../errors/cart.errors';
-import cartService from '../services/cart.service';
-import { CreateCartRequestDto } from '../dto/request/create-cart.dto';
-import { UpdateCartRequestDto } from '../dto/request/update-cart.dto';
-import { ApplyGiftcardRequestDto } from '../dto/request/apply-giftcard.dto';
+import { CartDomainError } from '../errors/cart.errors.js';
+import cartService from '../services/cart.service.js';
+import { CreateCartRequestDto } from '../dto/request/create-cart.dto.js';
+import { UpdateCartRequestDto } from '../dto/request/update-cart.dto.js';
+import { ApplyGiftcardRequestDto } from '../dto/request/apply-giftcard.dto.js';
 
 /**
  * ============================================================================

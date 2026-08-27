@@ -1,10 +1,10 @@
 // app/src/__tests__/controllers/membership.controller.test.ts
 
 import { Request, Response } from 'express';
-import { createMembership } from '../../controllers/membership.controller';
-import { User, Membership, MembershipLevel, MembershipStatus } from '../../models';
+import { createMembership } from '../../controllers/membership.controller.js';
+import { User, Membership, MembershipLevel, MembershipStatus } from '../../models/index.js';
 
-jest.mock('../../models', () => {
+jest.mock('../../models/index.js', () => {
   return {
     User: {
       findByPk: jest.fn(),
@@ -60,7 +60,9 @@ describe('MembershipController · HU-006 Create Membership', () => {
 
     await createMembership(mockRequest as Request, mockResponse as Response);
     expect(statusFn).toHaveBeenCalledWith(400);
-    expect(jsonFn).toHaveBeenCalledWith({ error: 'El usuario ya cuenta con una membresía digital activa' });
+    expect(jsonFn).toHaveBeenCalledWith({
+      error: 'El usuario ya cuenta con una membresía digital activa',
+    });
   });
 
   it('should return 201 and membership details on success', async () => {
@@ -89,7 +91,7 @@ describe('MembershipController · HU-006 Create Membership', () => {
           level: 'BÁSICA',
           status: 'Activa',
         }),
-      })
+      }),
     );
   });
 });

@@ -1,19 +1,19 @@
 // app/src/__tests__/services/upcoming-notification.service.test.ts
 
-import upcomingNotificationService from '../../services/upcoming-notification.service';
-import Movie from '../../models/movie.model';
-import userRepository from '../../repositories/user.repository';
-import notificationRepository from '../../repositories/upcoming-notification.repository';
+import upcomingNotificationService from '../../services/upcoming-notification.service.js';
+import Movie from '../../models/movie.model.js';
+import userRepository from '../../repositories/user.repository.js';
+import notificationRepository from '../../repositories/upcoming-notification.repository.js';
 
-jest.mock('../../models/movie.model', () => ({
+jest.mock('../../models/movie.model.js', () => ({
   __esModule: true,
   default: {
     findOne: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/user.repository');
-jest.mock('../../repositories/upcoming-notification.repository');
+jest.mock('../../repositories/user.repository.js');
+jest.mock('../../repositories/upcoming-notification.repository.js');
 
 describe('UpcomingNotificationService · HU-005', () => {
   const activeUser = { id: 12, isActive: true };

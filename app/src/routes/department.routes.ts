@@ -1,13 +1,13 @@
 // app/src/routes/department.routes.ts
 
 import { Router } from 'express';
-import { getDepartments } from '../controllers/department.controller';
+import { getDepartments } from '../controllers/department.controller.js';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/departments/{countryId}:
+ * /departments/{countryId}:
  *   get:
  *     summary: Obtener departamentos por país
  *     tags: [Departments]

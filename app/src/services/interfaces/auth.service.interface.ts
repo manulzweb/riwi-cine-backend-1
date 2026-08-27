@@ -1,12 +1,12 @@
 // app/src/services/interfaces/auth.service.interface.ts
 
-import { ProfileAttributes } from '../../models/profile.model';
-import { MembershipAttributes } from '../../models/membership.model';
-import { ForgotPasswordRequestDto } from '../../dto/request/forgot-password.dto';
-import { LoginUserRequestDto } from '../../dto/request/login-user.dto';
-import { RegisterUserRequestDto } from '../../dto/request/register-user.dto';
-import { ResetPasswordRequestDto } from '../../dto/request/reset-password.dto';
-import { VerifyEmailRequestDto } from '../../dto/request/verify-email.dto';
+import { ProfileAttributes } from '../../models/profile.model.js';
+import { MembershipAttributes } from '../../models/membership.model.js';
+import { ForgotPasswordRequestDto } from '../../dto/request/forgot-password.dto.js';
+import { LoginUserRequestDto } from '../../dto/request/login-user.dto.js';
+import { RegisterUserRequestDto } from '../../dto/request/register-user.dto.js';
+import { ResetPasswordRequestDto } from '../../dto/request/reset-password.dto.js';
+import { VerifyEmailRequestDto } from '../../dto/request/verify-email.dto.js';
 
 export interface LoginUserResult {
   userId: number;

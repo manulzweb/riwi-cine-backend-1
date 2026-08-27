@@ -1,10 +1,10 @@
 // app/src/models/cart.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import User from './user.model';
-import { CartItem } from './cart-item.model';
-import { CartTicket } from './cart-ticket.model';
+import sequelize from '../config/database.js';
+import User from './user.model.js';
+import { CartItem } from './cart-item.model.js';
+import { CartTicket } from './cart-ticket.model.js';
 
 /**
  * Modelo de Carrito de Compras

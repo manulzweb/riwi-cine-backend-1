@@ -1,9 +1,9 @@
 // app/src/repositories/reservation.repository.ts
 
 import { Op, Transaction } from 'sequelize';
-import { IReservationRepository } from './interfaces/reservation.repository.interface';
-import Reservation from '../models/reservation.model';
-import ReservationSeat from '../models/reservation-seat.model';
+import { IReservationRepository } from './interfaces/reservation.repository.interface.js';
+import Reservation from '../models/reservation.model.js';
+import ReservationSeat from '../models/reservation-seat.model.js';
 
 class ReservationRepository implements IReservationRepository {
   async createReservation(

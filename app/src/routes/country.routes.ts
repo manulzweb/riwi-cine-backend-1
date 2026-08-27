@@ -1,13 +1,13 @@
 // app/src/routes/country.routes.ts
 
 import { Router } from 'express';
-import { getCountries } from '../controllers/country.controller';
+import { getCountries } from '../controllers/country.controller.js';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/countries:
+ * /countries:
  *   get:
  *     summary: Obtener todos los países
  *     tags: [Countries]

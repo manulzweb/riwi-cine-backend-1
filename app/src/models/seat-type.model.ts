@@ -1,7 +1,7 @@
 // app/src/models/seat-type.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface SeatTypeAttributes {
   id: number;

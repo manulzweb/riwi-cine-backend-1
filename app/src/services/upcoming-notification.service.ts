@@ -1,14 +1,14 @@
 // app/src/services/upcoming-notification.service.ts
 
-import Movie from '../models/movie.model';
-import { NotificationUpcomingDto } from '../schemas/notification.schemas';
-import userRepository from '../repositories/user.repository';
-import notificationRepository from '../repositories/upcoming-notification.repository';
+import Movie from '../models/movie.model.js';
+import { NotificationUpcomingDto } from '../schemas/notification.schemas.js';
+import userRepository from '../repositories/user.repository.js';
+import notificationRepository from '../repositories/upcoming-notification.repository.js';
 import {
   IUpcomingNotificationService,
   UpcomingNotificationResult,
-} from './interfaces/upcoming-notification.service.interface';
-import { todayDateOnly } from '../utils/date.util';
+} from './interfaces/upcoming-notification.service.interface.js';
+import { todayDateOnly } from '../utils/date.util.js';
 
 /**
  * Servicio encargado de gestionar las solicitudes de notificación

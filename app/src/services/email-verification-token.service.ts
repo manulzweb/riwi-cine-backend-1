@@ -1,12 +1,12 @@
 // app/src/services/email-verification-token.service.ts
 
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import { envConfig } from '../config/env';
+import crypto from 'node:crypto';
+import { envConfig } from '../config/env.js';
 import {
   IEmailVerificationTokenService,
   EmailVerificationTokenResult,
-} from './interfaces/email-verification-token.service.interface';
+} from './interfaces/email-verification-token.service.interface.js';
 
 /**
  * Servicio encargado de generar y verificar tokens de activación

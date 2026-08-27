@@ -1,7 +1,7 @@
 // app/src/types/express.d.ts
 
 import 'express';
-import type { AccessTokenPayload } from './auth.types';
+import type { AccessTokenPayload } from './auth.types.js';
 
 /**
  * Ampliación de tipos de Express para exponer el usuario autenticado

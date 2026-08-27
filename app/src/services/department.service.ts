@@ -1,8 +1,8 @@
 // app/src/services/department.service.ts
 
-import Department from '../models/department.model';
-import repository from '../repositories/department.repository';
-import { IDepartmentService } from './interfaces/department.service.interface';
+import Department from '../models/department.model.js';
+import repository from '../repositories/department.repository.js';
+import { IDepartmentService } from './interfaces/department.service.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada

@@ -22,8 +22,8 @@ import {
   deleteCart,
   getCart,
   updateCart,
-} from '../controllers/cart.controller';
-import { requireAuth } from '../middleware/auth.middleware';
+} from '../controllers/cart.controller.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -36,7 +36,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/cart:
+ * /cart:
  *   post:
  *     summary: Crea el carrito a partir de las sillas seleccionadas
  *     tags: [Cart]
@@ -90,7 +90,7 @@ router.post('/cart', requireAuth, createCart);
 
 /**
  * @swagger
- * /api/v1/cart:
+ * /cart:
  *   get:
  *     summary: Obtiene el detalle completo del carrito activo
  *     tags: [Cart]
@@ -126,7 +126,7 @@ router.get('/cart', requireAuth, getCart);
 
 /**
  * @swagger
- * /api/v1/cart:
+ * /cart:
  *   put:
  *     summary: Modifica cantidades de confitería y/o quita entradas del carrito
  *     tags: [Cart]
@@ -193,7 +193,7 @@ router.put('/cart', requireAuth, updateCart);
 
 /**
  * @swagger
- * /api/v1/cart:
+ * /cart:
  *   delete:
  *     summary: Cancela el carrito activo y libera las sillas reservadas
  *     tags: [Cart]
@@ -233,7 +233,7 @@ router.delete('/cart', requireAuth, deleteCart);
 
 /**
  * @swagger
- * /api/v1/cart/apply-membership:
+ * /cart/apply-membership:
  *   post:
  *     summary: Aplica el descuento automático por membresía (RN-047)
  *     tags: [Cart]
@@ -276,7 +276,7 @@ router.post('/cart/apply-membership', requireAuth, applyMembership);
 
 /**
  * @swagger
- * /api/v1/cart/apply-giftcard:
+ * /cart/apply-giftcard:
  *   post:
  *     summary: Aplica bonos del wallet del usuario al total del carrito
  *     tags: [Cart]

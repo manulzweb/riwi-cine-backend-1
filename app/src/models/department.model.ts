@@ -1,7 +1,7 @@
 // app/src/models/department.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface DepartmentAttributes {
   id: number;
@@ -34,6 +34,7 @@ Department.init(
     countryId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'country_id',
     },
   },
   {

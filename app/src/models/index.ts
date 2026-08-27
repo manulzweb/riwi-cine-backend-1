@@ -1,36 +1,36 @@
 // app/src/models/index.ts
 
-import sequelize from '../config/database';
-import User from './user.model';
-import Role from './role.model';
-import EmailVerificationToken from './email-verification-token.model';
-import Profile from './profile.model';
-import Room from './room.model';
-import CinemaFunction from './function.model';
-import SeatType from './seat-type.model';
-import Seat from './seat.model';
-import Reservation from './reservation.model';
-import ReservationSeat from './reservation-seat.model';
-import Membership from './membership.model';
-import MembershipLevel from './membership-level.model';
-import MembershipStatus from './membership-status.model';
-import BonusWallet from './bonus-wallet.model';
-import PurchaseHistory from './purchase-history.model';
-import NotificationPreference from './notification-preference.model';
-import UpcomingMovieNotification from './upcoming-movie-notification.model';
-import City from './city.model';
-import Cinema from './cinema.model';
-import Department from './department.model';
-import Country from './country.model';
-import Movie from './movie.model';
-import RefreshToken from './refresh-token.model';
-import LoginAudit from './login-audit.model';
-import PasswordResetToken from './password-reset-token.model';
-import Cart from './cart.model';
-import { CartItem } from './cart-item.model';
-import { CartTicket } from './cart-ticket.model';
-import Snack from './snack.model';
-import Promotion from './promotion.model';
+import sequelize from '../config/database.js';
+import User from './user.model.js';
+import Role from './role.model.js';
+import EmailVerificationToken from './email-verification-token.model.js';
+import Profile from './profile.model.js';
+import Room from './room.model.js';
+import CinemaFunction from './function.model.js';
+import SeatType from './seat-type.model.js';
+import Seat from './seat.model.js';
+import Reservation from './reservation.model.js';
+import ReservationSeat from './reservation-seat.model.js';
+import Membership from './membership.model.js';
+import MembershipLevel from './membership-level.model.js';
+import MembershipStatus from './membership-status.model.js';
+import BonusWallet from './bonus-wallet.model.js';
+import PurchaseHistory from './purchase-history.model.js';
+import NotificationPreference from './notification-preference.model.js';
+import UpcomingMovieNotification from './upcoming-movie-notification.model.js';
+import City from './city.model.js';
+import Cinema from './cinema.model.js';
+import Department from './department.model.js';
+import Country from './country.model.js';
+import Movie from './movie.model.js';
+import RefreshToken from './refresh-token.model.js';
+import LoginAudit from './login-audit.model.js';
+import PasswordResetToken from './password-reset-token.model.js';
+import Cart from './cart.model.js';
+import { CartItem } from './cart-item.model.js';
+import { CartTicket } from './cart-ticket.model.js';
+import Snack from './snack.model.js';
+import Promotion from './promotion.model.js';
 
 // --- Associations ---
 
@@ -99,6 +99,10 @@ Department.belongsTo(Country, { foreignKey: 'country_id', as: 'country' });
 // Department - City
 Department.hasMany(City, { foreignKey: 'department_id', as: 'cities' });
 City.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
+
+// City - Cinema
+City.hasMany(Cinema, { foreignKey: 'city_id', as: 'cinemas' });
+Cinema.belongsTo(City, { foreignKey: 'city_id', as: 'cityRef' });
 
 // User - RefreshToken
 User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens' });

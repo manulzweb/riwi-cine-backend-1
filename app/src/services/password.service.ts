@@ -1,8 +1,8 @@
 // app/src/services/password.service.ts
 
 import bcrypt from 'bcryptjs';
-import { envConfig } from '../config/env';
-import { IPasswordService, PasswordHashResult } from './interfaces/password.service.interface';
+import { envConfig } from '../config/env.js';
+import { IPasswordService, PasswordHashResult } from './interfaces/password.service.interface.js';
 
 /**
  * Servicio encargado de proteger y verificar contraseñas.

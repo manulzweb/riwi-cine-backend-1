@@ -1,8 +1,8 @@
 // app/src/repositories/profile.repository.ts
 
 import { Transaction } from 'sequelize';
-import Profile, { ProfileCreationAttributes } from '../models/profile.model';
-import { IProfileRepository } from './interfaces/profile.repository.interface';
+import Profile, { ProfileCreationAttributes } from '../models/profile.model.js';
+import { IProfileRepository } from './interfaces/profile.repository.interface.js';
 
 /**
  * Repositorio de Perfiles

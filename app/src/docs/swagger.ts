@@ -11,7 +11,8 @@
  *
  * Acceso a la documentación:
  *  - La especificación generada es consumida por `swagger-ui-express`.
- *  - Disponible en `/api/docs` (ver `server.ts`).
+ *  - Disponible en `/api/docs` y `/api/v1/docs` (ver `server.ts`).
+ *  - Todos los endpoints están versionados bajo `/api/v1` (RN-113).
  */
 
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -35,6 +36,16 @@ const options = {
       version: '1.0.0',
       description: 'Documentación generada automáticamente con Swagger para la API de Riwi Cine.',
     },
+    servers: [
+      {
+        url: 'http://localhost:3000/api/v1',
+        description: 'Servidor local versionado (RN-113)',
+      },
+      {
+        url: 'http://localhost:3000/api',
+        description: 'Legacy sin versionar (compatibilidad)',
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {

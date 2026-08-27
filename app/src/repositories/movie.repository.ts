@@ -1,13 +1,13 @@
 // app/src/repositories/movie.repository.ts
 
 import { Op, WhereOptions } from 'sequelize';
-import Movie from '../models/movie.model';
-import CinemaFunction from '../models/function.model';
-import Room from '../models/room.model';
-import { IMovieRepository } from './interfaces/movie.repository.interface';
-import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
-import { FunctionAttributes } from '../models/function.model';
-import { todayDateOnly } from '../utils/date.util';
+import Movie from '../models/movie.model.js';
+import CinemaFunction from '../models/function.model.js';
+import Room from '../models/room.model.js';
+import { IMovieRepository } from './interfaces/movie.repository.interface.js';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto.js';
+import { FunctionAttributes } from '../models/function.model.js';
+import { todayDateOnly } from '../utils/date.util.js';
 
 /**
  * Repositorio de Películas

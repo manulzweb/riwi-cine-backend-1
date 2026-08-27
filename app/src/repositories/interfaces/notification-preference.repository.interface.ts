@@ -7,7 +7,7 @@
  */
 import NotificationPreference, {
   NotificationPreferenceCreationAttributes,
-} from '../../models/notification-preference.model';
+} from '../../models/notification-preference.model.js';
 
 export interface INotificationPreferenceRepository {
   /** Crea la preferencia de notificación del usuario. */

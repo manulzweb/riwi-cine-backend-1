@@ -5,7 +5,7 @@
  *
  * Encapsula la persistencia de los datos del perfil del usuario.
  */
-import Profile, { ProfileCreationAttributes } from '../../models/profile.model';
+import Profile, { ProfileCreationAttributes } from '../../models/profile.model.js';
 
 export interface IProfileRepository {
   /** Crea el perfil del usuario. */

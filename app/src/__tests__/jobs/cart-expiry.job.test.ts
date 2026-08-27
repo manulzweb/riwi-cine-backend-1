@@ -1,14 +1,14 @@
 // app/src/__tests__/jobs/cart-expiry.job.test.ts
 
 import cron from 'node-cron';
-import { startCartExpiryJob } from '../../jobs/cart-expiry.job';
-import cartService from '../../services/cart.service';
+import { startCartExpiryJob } from '../../jobs/cart-expiry.job.js';
+import cartService from '../../services/cart.service.js';
 
 jest.mock('node-cron', () => ({
   schedule: jest.fn(),
 }));
 
-jest.mock('../../services/cart.service');
+jest.mock('../../services/cart.service.js');
 
 const mockedSchedule = cron.schedule as jest.Mock;
 const mockedCartService = cartService as jest.Mocked<typeof cartService>;

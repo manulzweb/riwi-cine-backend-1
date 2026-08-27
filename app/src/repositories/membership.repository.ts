@@ -1,8 +1,8 @@
 // app/src/repositories/membership.repository.ts
 
 import { Transaction } from 'sequelize';
-import Membership, { MembershipCreationAttributes } from '../models/membership.model';
-import { IMembershipRepository } from './interfaces/membership.repository.interface';
+import Membership, { MembershipCreationAttributes } from '../models/membership.model.js';
+import { IMembershipRepository } from './interfaces/membership.repository.interface.js';
 
 /**
  * Repositorio de Membresías

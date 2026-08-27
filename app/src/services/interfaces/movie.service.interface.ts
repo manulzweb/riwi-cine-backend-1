@@ -1,13 +1,13 @@
 // app/src/services/interfaces/movie.service.interface.ts
 
-import Movie from '../../models/movie.model';
-import { FilterMoviesDto } from '../../dto/request/filter-movies.dto';
-import { UpcomingMovieDto } from '../../dto/response/upcoming-movie.dto';
+import Movie from '../../models/movie.model.js';
+import { FilterMoviesDto } from '../../dto/request/filter-movies.dto.js';
+import { UpcomingMovieDto } from '../../dto/response/upcoming-movie.dto.js';
 import {
   MovieDetailDto,
   MovieFunctionDto,
   MovieRecommendationDto,
-} from '../../dto/response/movie-detail.dto';
+} from '../../dto/response/movie-detail.dto.js';
 
 /**
  * Contrato del Servicio de Películas.

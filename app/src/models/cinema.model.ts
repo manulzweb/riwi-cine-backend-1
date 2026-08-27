@@ -16,7 +16,8 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
+import City from './city.model.js';
 
 /**
  * Atributos principales de la entidad `Cinema`.
@@ -24,7 +25,7 @@ import sequelize from '../config/database';
 export interface CinemaAttributes {
   id: number;
   name: string;
-  city: string;
+  cityId: number;
   address: string;
   isActive: boolean;
 }
@@ -48,7 +49,7 @@ class Cinema extends Model<CinemaAttributes, CinemaCreationAttributes> implement
   public name!: string;
 
   /** Ciudad donde se encuentra el complejo. */
-  public city!: string;
+  public cityId!: number;
 
   /** Dirección física del complejo. */
   public address!: string;
@@ -71,9 +72,14 @@ Cinema.init(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
-    city: {
-      type: DataTypes.STRING(100),
+    cityId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'city_id',
+      references: {
+        model: City,
+        key: 'id',
+      },
     },
     address: {
       type: DataTypes.STRING(300),

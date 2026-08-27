@@ -1,20 +1,20 @@
 // app/src/routes/membership.routes.ts
 
 import { Router } from 'express';
-import { createMembership } from '../controllers/membership.controller';
+import { createMembership } from '../controllers/membership.controller.js';
 
 const router = Router();
 
 /**
- * POST /api/membership/create
+ * POST /membership/create
  * ----------------------------
  * Crea manualmente una membresía digital para un usuario específico.
- * Nota: El proceso de registro de usuario (POST /api/auth/register) ya crea
+ * Nota: El proceso de registro de usuario (POST /auth/register) ya crea
  * automáticamente la membresía digital. Este endpoint sirve para creación manual
  * o casos de contingencia.
  *
  * @swagger
- * /api/membership/create:
+ * /membership/create:
  *   post:
  *     summary: Crear membresía digital manualmente para un usuario
  *     tags: [Membership]

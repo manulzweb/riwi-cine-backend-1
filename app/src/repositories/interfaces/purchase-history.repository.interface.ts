@@ -7,7 +7,7 @@
  */
 import PurchaseHistory, {
   PurchaseHistoryCreationAttributes,
-} from '../../models/purchase-history.model';
+} from '../../models/purchase-history.model.js';
 import { Transaction } from 'sequelize';
 
 export interface IPurchaseHistoryRepository {

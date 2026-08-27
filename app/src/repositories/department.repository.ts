@@ -1,7 +1,7 @@
 // app/src/repositories/department.repository.ts
 
-import Department from '../models/department.model';
-import { IDepartmentRepository } from './interfaces/department.repository.interface';
+import Department from '../models/department.model.js';
+import { IDepartmentRepository } from './interfaces/department.repository.interface.js';
 
 /**
  * Repositorio de Departamentos

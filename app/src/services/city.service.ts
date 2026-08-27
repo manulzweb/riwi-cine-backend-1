@@ -1,8 +1,8 @@
 // app/src/services/city.service.ts
 
-import City from '../models/city.model';
-import repository from '../repositories/city.repository';
-import { ICityService } from './interfaces/city.service.interface';
+import City from '../models/city.model.js';
+import repository from '../repositories/city.repository.js';
+import { ICityService } from './interfaces/city.service.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada

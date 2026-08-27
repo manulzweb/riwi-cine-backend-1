@@ -1,8 +1,8 @@
 // app/src/services/country.service.ts
 
-import Country from '../models/country.model';
-import repository from '../repositories/country.repository';
-import { ICountryService } from './interfaces/country.service.interface';
+import Country from '../models/country.model.js';
+import repository from '../repositories/country.repository.js';
+import { ICountryService } from './interfaces/country.service.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada

@@ -1,7 +1,7 @@
 // app/src/services/interfaces/reservation.service.interface.ts
 
-import { LockSeatsDto } from '../../dto/request/lock-seats.dto';
-import { ReleaseSeatsDto } from '../../dto/request/release-seats.dto';
+import { LockSeatsDto } from '../../dto/request/lock-seats.dto.js';
+import { ReleaseSeatsDto } from '../../dto/request/release-seats.dto.js';
 
 export interface IReservationService {
   /**

@@ -1,11 +1,12 @@
 // app/src/models/country.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface CountryAttributes {
   id: number;
   name: string;
+  isActive: boolean;
 }
 
 export type CountryCreationAttributes = Optional<CountryAttributes, 'id'>;
@@ -16,6 +17,7 @@ class Country
 {
   public id!: number;
   public name!: string;
+  public isActive!: boolean;
 }
 
 Country.init(
@@ -29,12 +31,17 @@ Country.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     sequelize,
     modelName: 'Country',
     tableName: 'countries',
-    timestamps: false,
+    timestamps: true,
   },
 );
 

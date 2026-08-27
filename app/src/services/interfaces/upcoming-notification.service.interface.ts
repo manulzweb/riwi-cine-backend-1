@@ -1,6 +1,6 @@
 // app/src/services/interfaces/upcoming-notification.service.interface.ts
 
-import { NotificationUpcomingDto } from '../../schemas/notification.schemas';
+import { NotificationUpcomingDto } from '../../schemas/notification.schemas.js';
 
 export interface UpcomingNotificationResult {
   id: number;

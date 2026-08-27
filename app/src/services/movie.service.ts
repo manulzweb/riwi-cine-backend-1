@@ -1,16 +1,16 @@
 // app/src/services/movie.service.ts
 
-import Movie from '../models/movie.model';
-import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
-import repository from '../repositories/movie.repository';
-import { IMovieService } from './interfaces/movie.service.interface';
+import Movie from '../models/movie.model.js';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto.js';
+import repository from '../repositories/movie.repository.js';
+import { IMovieService } from './interfaces/movie.service.interface.js';
 import {
   MovieDetailDto,
   MovieFunctionDto,
   MovieRecommendationDto,
   PriceByFormatDto,
-} from '../dto/response/movie-detail.dto';
-import { UpcomingMovieDto } from '../dto/response/upcoming-movie.dto';
+} from '../dto/response/movie-detail.dto.js';
+import { UpcomingMovieDto } from '../dto/response/upcoming-movie.dto.js';
 
 /**
  * Límite máximo de películas similares devueltas como recomendaciones.

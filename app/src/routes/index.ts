@@ -1,17 +1,17 @@
 // app/src/routes/index.ts
 
 import { Router } from 'express';
-import userRoutes from './user.routes';
-import countryRoutes from './country.routes';
-import departmentRoutes from './department.routes';
-import cityRoutes from './city.routes';
-import authRoutes from './auth.routes';
-import movieRoutes from './movie.routes';
-import membershipRoutes from './membership.routes';
-import notificationRoutes from './notification.routes';
-import healthRoutes from './health.routes';
-import reservationRoutes from './reservation.routes';
-import cartRoutes from './cart.routes';
+import userRoutes from './user.routes.js';
+import countryRoutes from './country.routes.js';
+import departmentRoutes from './department.routes.js';
+import cityRoutes from './city.routes.js';
+import authRoutes from './auth.routes.js';
+import movieRoutes from './movie.routes.js';
+import membershipRoutes from './membership.routes.js';
+import notificationRoutes from './notification.routes.js';
+import healthRoutes from './health.routes.js';
+import reservationRoutes from './reservation.routes.js';
+import cartRoutes from './cart.routes.js';
 const router = Router();
 
 router.use('/users', userRoutes);

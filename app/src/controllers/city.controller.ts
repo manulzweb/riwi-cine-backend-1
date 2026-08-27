@@ -1,7 +1,7 @@
 // app/src/controllers/city.controller.ts
 
 import { Request, Response } from 'express';
-import cityService from '../services/city.service';
+import cityService from '../services/city.service.js';
 
 /**
  * ============================================================================
@@ -79,6 +79,11 @@ import cityService from '../services/city.service';
 export const getCities = async (req: Request, res: Response): Promise<Response> => {
   try {
     const departmentId = Number.parseInt(req.params.departmentId, 10);
+
+    if (Number.isNaN(departmentId)) {
+      return res.status(400).json({ error: 'ID de departamento inválido.' });
+    }
+
     const cities = await cityService.findByDepartmentId(departmentId);
     return res.status(200).json(cities);
   } catch (error: unknown) {

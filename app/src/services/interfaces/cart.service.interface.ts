@@ -6,10 +6,10 @@
  * Coordina la creación y administración del carrito temporal que centraliza
  * entradas y productos de confitería antes del pago.
  */
-import { CartDetailResponseDto } from '../../dto/response/cart-detail.dto';
-import { CreateCartRequestDto } from '../../dto/request/create-cart.dto';
-import { UpdateCartRequestDto } from '../../dto/request/update-cart.dto';
-import { ApplyGiftcardRequestDto } from '../../dto/request/apply-giftcard.dto';
+import { CartDetailResponseDto } from '../../dto/response/cart-detail.dto.js';
+import { CreateCartRequestDto } from '../../dto/request/create-cart.dto.js';
+import { UpdateCartRequestDto } from '../../dto/request/update-cart.dto.js';
+import { ApplyGiftcardRequestDto } from '../../dto/request/apply-giftcard.dto.js';
 
 export interface IMembershipDiscountResult {
   discountPercentage: number;

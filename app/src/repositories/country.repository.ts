@@ -1,7 +1,7 @@
 // app/src/repositories/country.repository.ts
 
-import Country from '../models/country.model';
-import { ICountryRepository } from './interfaces/country.repository.interface';
+import Country from '../models/country.model.js';
+import { ICountryRepository } from './interfaces/country.repository.interface.js';
 
 /**
  * Repositorio de Países

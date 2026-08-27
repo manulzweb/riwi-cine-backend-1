@@ -7,7 +7,7 @@
  */
 import MembershipLevel, {
   MembershipLevelCreationAttributes,
-} from '../../models/membership-level.model';
+} from '../../models/membership-level.model.js';
 
 export interface IMembershipLevelRepository {
   /** Crea un nivel de membresía. */

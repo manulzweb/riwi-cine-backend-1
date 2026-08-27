@@ -2,7 +2,7 @@
 
 import UpcomingMovieNotification, {
   UpcomingMovieNotificationCreationAttributes,
-} from '../../models/upcoming-movie-notification.model';
+} from '../../models/upcoming-movie-notification.model.js';
 
 export interface IUpcomingNotificationRepository {
   /** Busca una solicitud de aviso por usuario y película (RN-019). */

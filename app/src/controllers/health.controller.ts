@@ -1,7 +1,7 @@
 // app/src/controllers/health.controller.ts
 
 import { Request, Response } from 'express';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 /**
  * ============================================================================

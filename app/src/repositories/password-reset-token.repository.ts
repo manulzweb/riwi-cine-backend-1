@@ -4,7 +4,7 @@ import { Transaction } from 'sequelize';
 import PasswordResetToken, {
   PasswordResetTokenCreationAttributes,
   PasswordResetTokenInstance,
-} from '../models/password-reset-token.model';
+} from '../models/password-reset-token.model.js';
 
 /**
  * Repositorio de Tokens de Restablecimiento de Contraseña

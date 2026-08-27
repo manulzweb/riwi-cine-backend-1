@@ -16,8 +16,8 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import Cinema from './cinema.model';
+import sequelize from '../config/database.js';
+import Cinema from './cinema.model.js';
 
 /**
  * Atributos principales de la entidad `Room`.

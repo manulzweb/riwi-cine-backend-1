@@ -3,8 +3,8 @@
 import { Transaction } from 'sequelize';
 import MembershipStatus, {
   MembershipStatusCreationAttributes,
-} from '../models/membership-status.model';
-import { IMembershipStatusRepository } from './interfaces/membership-status.repository.interface';
+} from '../models/membership-status.model.js';
+import { IMembershipStatusRepository } from './interfaces/membership-status.repository.interface.js';
 
 /**
  * Repositorio de Estados de Membresía

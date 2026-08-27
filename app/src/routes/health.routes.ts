@@ -1,12 +1,12 @@
 // app/src/routes/health.routes.ts
 
 import { Router } from 'express';
-import { checkHealth } from '../controllers/health.controller';
+import { checkHealth } from '../controllers/health.controller.js';
 
 const router = Router();
 /**
  * @swagger
- * /:
+ * /health:
  *   get:
  *     tags:
  *       - Health

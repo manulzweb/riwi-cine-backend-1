@@ -1,10 +1,10 @@
 // app/src/repositories/seat.repository.ts
 
 import { Op } from 'sequelize';
-import { ISeatRepository } from './interfaces/seat.repository.interface';
-import Seat from '../models/seat.model';
-import SeatType from '../models/seat-type.model';
-import CinemaFunction from '../models/function.model';
+import { ISeatRepository } from './interfaces/seat.repository.interface.js';
+import Seat from '../models/seat.model.js';
+import SeatType from '../models/seat-type.model.js';
+import CinemaFunction from '../models/function.model.js';
 
 class SeatRepository implements ISeatRepository {
   /**

@@ -1,17 +1,17 @@
 // app/src/services/reservation.service.ts
 
 import { Transaction } from 'sequelize';
-import sequelize from '../config/database';
-import CinemaFunction from '../models/function.model';
-import ReservationSeat from '../models/reservation-seat.model';
-import Reservation from '../models/reservation.model';
-import Seat from '../models/seat.model';
-import SeatType from '../models/seat-type.model';
-import seatRepository from '../repositories/seat.repository';
-import reservationRepository from '../repositories/reservation.repository';
-import { LockSeatsDto } from '../dto/request/lock-seats.dto';
-import { ReleaseSeatsDto } from '../dto/request/release-seats.dto';
-import { IReservationService } from '../services/interfaces/reservation.service.interface';
+import sequelize from '../config/database.js';
+import CinemaFunction from '../models/function.model.js';
+import ReservationSeat from '../models/reservation-seat.model.js';
+import Reservation from '../models/reservation.model.js';
+import Seat from '../models/seat.model.js';
+import SeatType from '../models/seat-type.model.js';
+import seatRepository from '../repositories/seat.repository.js';
+import reservationRepository from '../repositories/reservation.repository.js';
+import { LockSeatsDto } from '../dto/request/lock-seats.dto.js';
+import { ReleaseSeatsDto } from '../dto/request/release-seats.dto.js';
+import { IReservationService } from '../services/interfaces/reservation.service.interface.js';
 
 const RESERVATION_DURATION_MINUTES = 10;
 const DEFAULT_MAX_SEATS = 10;

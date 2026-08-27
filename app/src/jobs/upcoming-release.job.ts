@@ -1,7 +1,7 @@
 // app/src/jobs/upcoming-release.job.ts
 
 import cron, { ScheduledTask } from 'node-cron';
-import emailNotificationService from '../services/email-notification.service';
+import emailNotificationService from '../services/email-notification.service.js';
 
 const CRON_SCHEDULE = '0 0 * * *';
 

@@ -3,8 +3,8 @@
 import { Transaction } from 'sequelize';
 import NotificationPreference, {
   NotificationPreferenceCreationAttributes,
-} from '../models/notification-preference.model';
-import { INotificationPreferenceRepository } from './interfaces/notification-preference.repository.interface';
+} from '../models/notification-preference.model.js';
+import { INotificationPreferenceRepository } from './interfaces/notification-preference.repository.interface.js';
 
 /**
  * Repositorio de Preferencias de Notificación

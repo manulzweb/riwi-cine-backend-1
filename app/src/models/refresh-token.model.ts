@@ -1,7 +1,7 @@
 // app/src/models/refresh-token.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface RefreshTokenAttributes {
   id: number;

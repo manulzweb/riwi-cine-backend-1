@@ -6,7 +6,7 @@
  * Encapsula el acceso y persistencia de la entidad BonusWallet.
  */
 import { Transaction } from 'sequelize';
-import BonusWallet, { BonusWalletCreationAttributes } from '../../models/bonus-wallet.model';
+import BonusWallet, { BonusWalletCreationAttributes } from '../../models/bonus-wallet.model.js';
 
 export interface IBonusWalletRepository {
   /** Crea la billetera de bonos del usuario. */

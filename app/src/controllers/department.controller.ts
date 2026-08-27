@@ -1,7 +1,7 @@
 // app/src/controllers/department.controller.ts
 
 import { Request, Response } from 'express';
-import departmentService from '../services/department.service';
+import departmentService from '../services/department.service.js';
 
 /**
  * ============================================================================
@@ -79,6 +79,11 @@ import departmentService from '../services/department.service';
 export const getDepartments = async (req: Request, res: Response): Promise<Response> => {
   try {
     const countryId = Number.parseInt(req.params.countryId, 10);
+
+    if (Number.isNaN(countryId)) {
+      return res.status(400).json({ error: 'ID de país inválido.' });
+    }
+
     const departments = await departmentService.findByCountryId(countryId);
     return res.status(200).json(departments);
   } catch (error: unknown) {

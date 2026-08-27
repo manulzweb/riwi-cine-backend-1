@@ -1,8 +1,8 @@
 // app/src/repositories/role.repository.ts
 
 import { Transaction } from 'sequelize';
-import Role, { RoleCreationAttributes } from '../models/role.model';
-import { IRoleRepository } from './interfaces/role.repository.interface';
+import Role, { RoleCreationAttributes } from '../models/role.model.js';
+import { IRoleRepository } from './interfaces/role.repository.interface.js';
 
 /**
  * Repositorio de Roles

@@ -1,37 +1,37 @@
 // app/src/__tests__/services/auth.service.test.ts
 
-import authService from '../../services/auth.service';
-import userRepository from '../../repositories/user.repository';
-import roleRepository from '../../repositories/role.repository';
-import profileRepository from '../../repositories/profile.repository';
-import membershipRepository from '../../repositories/membership.repository';
-import membershipLevelRepository from '../../repositories/membership-level.repository';
-import membershipStatusRepository from '../../repositories/membership-status.repository';
-import bonusWalletRepository from '../../repositories/bonus-wallet.repository';
-import purchaseHistoryRepository from '../../repositories/purchase-history.repository';
-import notificationPreferenceRepository from '../../repositories/notification-preference.repository';
-import cityRepository from '../../repositories/city.repository';
-import cinemaRepository from '../../repositories/cinema.repository';
-import emailVerificationTokenRepository from '../../repositories/email-verification-token.repository';
-import { sendActivationEmail } from '../../config/mailer';
-import { EmailAlreadyExistsError } from '../../errors/domain-errors';
+import authService from '../../services/auth.service.js';
+import userRepository from '../../repositories/user.repository.js';
+import roleRepository from '../../repositories/role.repository.js';
+import profileRepository from '../../repositories/profile.repository.js';
+import membershipRepository from '../../repositories/membership.repository.js';
+import membershipLevelRepository from '../../repositories/membership-level.repository.js';
+import membershipStatusRepository from '../../repositories/membership-status.repository.js';
+import bonusWalletRepository from '../../repositories/bonus-wallet.repository.js';
+import purchaseHistoryRepository from '../../repositories/purchase-history.repository.js';
+import notificationPreferenceRepository from '../../repositories/notification-preference.repository.js';
+import cityRepository from '../../repositories/city.repository.js';
+import cinemaRepository from '../../repositories/cinema.repository.js';
+import emailVerificationTokenRepository from '../../repositories/email-verification-token.repository.js';
+import { sendActivationEmail } from '../../config/mailer.js';
+import { EmailAlreadyExistsError } from '../../errors/domain-errors.js';
 import { UniqueConstraintError } from 'sequelize';
 
-jest.mock('../../config/database', () => ({
+jest.mock('../../config/database.js', () => ({
   __esModule: true,
   default: {
     transaction: jest.fn((cb) => cb({})),
   },
 }));
 
-jest.mock('../../models/user.model', () => ({
+jest.mock('../../models/user.model.js', () => ({
   __esModule: true,
   default: {
     update: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/user.repository', () => ({
+jest.mock('../../repositories/user.repository.js', () => ({
   __esModule: true,
   default: {
     findByEmail: jest.fn(),
@@ -40,21 +40,21 @@ jest.mock('../../repositories/user.repository', () => ({
   },
 }));
 
-jest.mock('../../repositories/role.repository', () => ({
+jest.mock('../../repositories/role.repository.js', () => ({
   __esModule: true,
   default: {
     findByName: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/profile.repository', () => ({
+jest.mock('../../repositories/profile.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/membership.repository', () => ({
+jest.mock('../../repositories/membership.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
@@ -62,56 +62,56 @@ jest.mock('../../repositories/membership.repository', () => ({
   },
 }));
 
-jest.mock('../../repositories/membership-level.repository', () => ({
+jest.mock('../../repositories/membership-level.repository.js', () => ({
   __esModule: true,
   default: {
     findByName: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/membership-status.repository', () => ({
+jest.mock('../../repositories/membership-status.repository.js', () => ({
   __esModule: true,
   default: {
     findByName: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/bonus-wallet.repository', () => ({
+jest.mock('../../repositories/bonus-wallet.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/purchase-history.repository', () => ({
+jest.mock('../../repositories/purchase-history.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/notification-preference.repository', () => ({
+jest.mock('../../repositories/notification-preference.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/city.repository', () => ({
+jest.mock('../../repositories/city.repository.js', () => ({
   __esModule: true,
   default: {
     findById: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/cinema.repository', () => ({
+jest.mock('../../repositories/cinema.repository.js', () => ({
   __esModule: true,
   default: {
     findById: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/email-verification-token.repository', () => ({
+jest.mock('../../repositories/email-verification-token.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
@@ -120,7 +120,7 @@ jest.mock('../../repositories/email-verification-token.repository', () => ({
   },
 }));
 
-jest.mock('../../repositories/refresh-token.repository', () => ({
+jest.mock('../../repositories/refresh-token.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
@@ -130,14 +130,14 @@ jest.mock('../../repositories/refresh-token.repository', () => ({
   },
 }));
 
-jest.mock('../../repositories/login-audit.repository', () => ({
+jest.mock('../../repositories/login-audit.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
   },
 }));
 
-jest.mock('../../repositories/password-reset-token.repository', () => ({
+jest.mock('../../repositories/password-reset-token.repository.js', () => ({
   __esModule: true,
   default: {
     create: jest.fn(),
@@ -151,7 +151,7 @@ jest.mock('../../repositories/password-reset-token.repository', () => ({
   },
 }));
 
-jest.mock('../../config/mailer');
+jest.mock('../../config/mailer.js');
 
 describe('AuthService · HU-006 Registration', () => {
   const validDto = {

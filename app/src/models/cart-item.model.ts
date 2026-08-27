@@ -1,8 +1,8 @@
 // app/src/models/cart-item.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import { Snack } from './snack.model';
+import sequelize from '../config/database.js';
+import { Snack } from './snack.model.js';
 
 /**
  * Modelo de Ítem de Carrito

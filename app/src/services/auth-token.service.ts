@@ -1,9 +1,9 @@
 // app/src/services/auth-token.service.ts
 
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import { envConfig } from '../config/env';
-import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types';
-import { ITokenService } from './interfaces/token.service.interface';
+import { envConfig } from '../config/env.js';
+import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types.js';
+import { ITokenService } from './interfaces/token.service.interface.js';
 
 /**
  * Servicio encargado de generar y verificar tokens JWT de acceso.

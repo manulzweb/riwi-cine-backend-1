@@ -1,7 +1,7 @@
 // app/src/repositories/refresh-token.repository.ts
 
 import { Transaction } from 'sequelize';
-import RefreshToken, { RefreshTokenCreationAttributes } from '../models/refresh-token.model';
+import RefreshToken, { RefreshTokenCreationAttributes } from '../models/refresh-token.model.js';
 
 /**
  * Repositorio de Tokens de Refresco

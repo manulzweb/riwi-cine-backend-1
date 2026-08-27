@@ -1,7 +1,7 @@
 // app/src/controllers/country.controller.ts
 
 import { Request, Response } from 'express';
-import countryService from '../services/country.service';
+import countryService from '../services/country.service.js';
 
 /**
  * ============================================================================

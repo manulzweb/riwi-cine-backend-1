@@ -1,10 +1,10 @@
 // app/src/services/user.service.ts
 
-import User from '../models/user.model';
-import { City, Department, Country, Profile } from '../models';
-import { UserLocationDto } from '../dto/request/user-location.dto';
-import repository from '../repositories/user.repository';
-import { IUserService } from './interfaces/user.service.interface';
+import User from '../models/user.model.js';
+import { City, Department, Country, Profile, Cinema } from '../models/index.js';
+import { UserLocationDto } from '../dto/request/user-location.dto.js';
+import repository from '../repositories/user.repository.js';
+import { IUserService } from './interfaces/user.service.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -116,7 +116,16 @@ class UserService implements IUserService {
       throw new Error('La ciudad no pertenece al departamento seleccionado.');
     }
 
-    // 4. Actualizar el perfil del usuario
+    // 4. Validar RN-006: la ciudad debe tener al menos un cine activo
+    const activeCinema = await Cinema.findOne({
+      where: { cityId: city.id, isActive: true },
+    });
+
+    if (!activeCinema) {
+      throw new Error('La ciudad seleccionada no cuenta con cines activos.');
+    }
+
+    // 5. Actualizar el perfil del usuario
     if (userId) {
       const profile = await Profile.findOne({
         where: { userId },

@@ -7,7 +7,7 @@
  */
 import MembershipStatus, {
   MembershipStatusCreationAttributes,
-} from '../../models/membership-status.model';
+} from '../../models/membership-status.model.js';
 
 export interface IMembershipStatusRepository {
   /** Crea un estado de membresía. */

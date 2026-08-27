@@ -8,13 +8,13 @@
 
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './docs/swagger';
+import { swaggerSpec } from './docs/swagger.js';
 import cors from 'cors';
-import { corsOptions } from './config/cors';
+import { corsOptions } from './config/cors.js';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
-import { envConfig } from './config/env';
-import router from './routes';
+import { envConfig } from './config/env.js';
+import router from './routes/index.js';
 
 const app = express();
 
@@ -39,7 +39,8 @@ app.use(cors(corsOptions));
 
 app.use('/api/v1', router);
 
-// Swagger
+// Swagger - disponible en /api/docs y /api/v1/docs para no romper con versionado RN-113
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;

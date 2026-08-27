@@ -1,10 +1,10 @@
 // app/src/__tests__/controllers/upcoming-notification.controller.test.ts
 
 import { Request, Response } from 'express';
-import { registerUpcomingNotification } from '../../controllers/upcoming-notification.controller';
-import upcomingNotificationService from '../../services/upcoming-notification.service';
+import { registerUpcomingNotification } from '../../controllers/upcoming-notification.controller.js';
+import upcomingNotificationService from '../../services/upcoming-notification.service.js';
 
-jest.mock('../../services/upcoming-notification.service', () => ({
+jest.mock('../../services/upcoming-notification.service.js', () => ({
   __esModule: true,
   default: { register: jest.fn() },
 }));

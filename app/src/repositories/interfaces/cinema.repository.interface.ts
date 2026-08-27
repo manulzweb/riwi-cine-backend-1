@@ -5,7 +5,7 @@
  *
  * Encapsula la consulta de cines y la validación de la relación con la ciudad.
  */
-import Cinema, { CinemaCreationAttributes } from '../../models/cinema.model';
+import Cinema, { CinemaCreationAttributes } from '../../models/cinema.model.js';
 
 export interface ICinemaRepository {
   /** Crea un complejo de cine. */

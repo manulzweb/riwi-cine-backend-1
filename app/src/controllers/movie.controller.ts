@@ -1,8 +1,8 @@
 // app/src/controllers/movie.controller.ts
 
 import { Request, Response } from 'express';
-import movieService from '../services/movie.service';
-import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
+import movieService from '../services/movie.service.js';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto.js';
 
 /**
  * ============================================================================

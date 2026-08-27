@@ -1,15 +1,15 @@
 // app/src/repositories/cart.repository.ts
 
 import { Op, Transaction } from 'sequelize';
-import Cart from '../models/cart.model';
-import { CartItem } from '../models/cart-item.model';
-import { CartTicket } from '../models/cart-ticket.model';
-import Snack from '../models/snack.model';
-import Promotion from '../models/promotion.model';
-import Membership from '../models/membership.model';
-import MembershipLevel from '../models/membership-level.model';
-import MembershipStatus from '../models/membership-status.model';
-import { ICartRepository, ISnackRepository } from './interfaces/cart.repository.interface';
+import Cart from '../models/cart.model.js';
+import { CartItem } from '../models/cart-item.model.js';
+import { CartTicket } from '../models/cart-ticket.model.js';
+import Snack from '../models/snack.model.js';
+import Promotion from '../models/promotion.model.js';
+import Membership from '../models/membership.model.js';
+import MembershipLevel from '../models/membership-level.model.js';
+import MembershipStatus from '../models/membership-status.model.js';
+import { ICartRepository, ISnackRepository } from './interfaces/cart.repository.interface.js';
 
 /**
  * Repositorio del carrito de compras.

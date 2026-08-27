@@ -1,10 +1,10 @@
 // app/src/__tests__/controllers/movie-upcoming.controller.test.ts
 
 import { Request, Response } from 'express';
-import { getUpcomingMovies, getUpcomingMovie } from '../../controllers/movie.controller';
-import movieService from '../../services/movie.service';
+import { getUpcomingMovies, getUpcomingMovie } from '../../controllers/movie.controller.js';
+import movieService from '../../services/movie.service.js';
 
-jest.mock('../../services/movie.service', () => ({
+jest.mock('../../services/movie.service.js', () => ({
   __esModule: true,
   default: {
     findUpcoming: jest.fn(),

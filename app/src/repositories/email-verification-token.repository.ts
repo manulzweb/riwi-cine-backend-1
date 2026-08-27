@@ -4,8 +4,8 @@ import { Transaction } from 'sequelize';
 import EmailVerificationToken, {
   EmailVerificationTokenCreationAttributes,
   EmailVerificationTokenInstance,
-} from '../models/email-verification-token.model';
-import { IEmailVerificationTokenRepository } from './interfaces/email-verification-token.repository.interface';
+} from '../models/email-verification-token.model.js';
+import { IEmailVerificationTokenRepository } from './interfaces/email-verification-token.repository.interface.js';
 
 /**
  * Repositorio encargado de gestionar la persistencia de los

@@ -1,8 +1,8 @@
 // app/src/services/captcha/index.ts
 
-import { envConfig } from '../../config/env';
-import { CaptchaResult, ICaptchaAdapter } from './interfaces/captcha.adapter';
-import { RecaptchaV2Adapter } from './recaptcha-v2.adapter';
+import { envConfig } from '../../config/env.js';
+import { CaptchaResult, ICaptchaAdapter } from './interfaces/captcha.adapter.js';
+import { RecaptchaV2Adapter } from './recaptcha-v2.adapter.js';
 
 /**
  * Adaptador "no-op": acepta todo.

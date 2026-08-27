@@ -1,10 +1,10 @@
 // app/src/models/cart-ticket.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import Cart from './cart.model';
-import CinemaFunction from './function.model';
-import Reservation from './reservation.model';
+import sequelize from '../config/database.js';
+import Cart from './cart.model.js';
+import CinemaFunction from './function.model.js';
+import Reservation from './reservation.model.js';
 
 /**
  * Modelo de Entrada de Carrito

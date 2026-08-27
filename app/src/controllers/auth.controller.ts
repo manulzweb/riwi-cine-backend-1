@@ -1,14 +1,14 @@
 // app/src/controllers/auth.controller.ts
 
 import { CookieOptions, Request, Response } from 'express';
-import authService from '../services/auth.service';
-import { validateCredentials } from '../utils/auth.utils';
-import { LoginUserRequestDto } from '../dto/request/login-user.dto';
-import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
-import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto';
-import { RegisterUserResponseDto } from '../dto/response/register.user.dto';
-import { envConfig } from '../config/env';
-import { COOKIE_NAMES } from '../constant/auth.constant';
+import authService from '../services/auth.service.js';
+import { validateCredentials } from '../utils/auth.utils.js';
+import { LoginUserRequestDto } from '../dto/request/login-user.dto.js';
+import { RegisterUserRequestDto } from '../dto/request/register-user.dto.js';
+import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto.js';
+import { RegisterUserResponseDto } from '../dto/response/register.user.dto.js';
+import { envConfig } from '../config/env.js';
+import { COOKIE_NAMES } from '../constant/auth.constant.js';
 import {
   AccountAlreadyActivatedError,
   AccountLockedError,
@@ -19,7 +19,7 @@ import {
   PasswordMismatchError,
   UserNotFoundError,
   WeakPasswordError,
-} from '../errors/domain-errors';
+} from '../errors/domain-errors.js';
 
 /**
  * ============================================================================
@@ -333,6 +333,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       userId: userId,
       profile: profile,
       membership: membership,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      tokenType: 'Bearer',
     });
   } catch (e) {
     if (e instanceof InvalidCredentialsError) {
@@ -399,7 +402,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  * Capturada internamente y retornada como HTTP 401.
  */
 export const refreshToken = async (req: Request, res: Response): Promise<void> => {
-  const token = req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN];
+  const token =
+    req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN] ??
+    (req.body as { refreshToken?: string } | undefined)?.refreshToken;
 
   if (!token) {
     res.status(400).json({ message: 'Refresh token is required' });
@@ -430,6 +435,9 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
       userId,
       profile,
       membership,
+      accessToken,
+      refreshToken: newRefreshToken,
+      tokenType: 'Bearer',
     });
   } catch (e) {
     if (e instanceof InvalidTokenError) {
@@ -474,7 +482,9 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
  *   Error inesperado durante el procesamiento.
  */
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
-  const token = req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN];
+  const token =
+    req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN] ??
+    (req.body as { refreshToken?: string } | undefined)?.refreshToken;
 
   if (!token) {
     res.status(400).json({ message: 'Refresh token is required for logout' });
@@ -591,7 +601,8 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
  * Capturadas internamente y retornadas como HTTP 400.
  */
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
-  const dto: import('../dto/request/reset-password.dto').ResetPasswordRequestDto = req.body ?? {};
+  const dto: import('../dto/request/reset-password.dto.js').ResetPasswordRequestDto =
+    req.body ?? {};
 
   if (!dto.token || !dto.email || !dto.newPassword || !dto.confirmPassword) {
     res.status(400).json({ message: 'All fields are required' });

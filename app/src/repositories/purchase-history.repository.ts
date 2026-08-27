@@ -3,8 +3,8 @@
 import { Transaction } from 'sequelize';
 import PurchaseHistory, {
   PurchaseHistoryCreationAttributes,
-} from '../models/purchase-history.model';
-import { IPurchaseHistoryRepository } from './interfaces/purchase-history.repository.interface';
+} from '../models/purchase-history.model.js';
+import { IPurchaseHistoryRepository } from './interfaces/purchase-history.repository.interface.js';
 
 /**
  * Repositorio de Historial de Compras

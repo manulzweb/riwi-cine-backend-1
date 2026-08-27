@@ -1,8 +1,8 @@
 // app/src/routes/reservation.routes.ts
 
 import { Router } from 'express';
-import reservationController from '../controllers/reservation.controller';
-import { requireAuth } from '../middleware/auth.middleware';
+import reservationController from '../controllers/reservation.controller.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/functions/{id}/seats:
+ * /functions/{id}/seats:
  *   get:
  *     summary: Obtener mapa de sillas de una función
  *     tags: [Reservations]
@@ -54,7 +54,7 @@ router.get('/functions/:id/seats', requireAuth, reservationController.getFunctio
 
 /**
  * @swagger
- * /api/v1/reservations/lock-seats:
+ * /reservations/lock-seats:
  *   post:
  *     summary: Bloquear temporalmente las sillas seleccionadas
  *     tags: [Reservations]
@@ -114,7 +114,7 @@ router.post('/reservations/lock-seats', requireAuth, reservationController.lockS
 
 /**
  * @swagger
- * /api/v1/reservations/release-seats:
+ * /reservations/release-seats:
  *   delete:
  *     summary: Liberar las sillas de una reserva
  *     tags: [Reservations]
@@ -172,7 +172,7 @@ router.delete('/reservations/release-seats', requireAuth, reservationController.
 
 /**
  * @swagger
- * /api/v1/reservations/summary:
+ * /reservations/summary:
  *   get:
  *     summary: Obtener el resumen de una reserva
  *     tags: [Reservations]

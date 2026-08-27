@@ -1,7 +1,7 @@
 // app/src/models/city.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface CityAttributes {
   id: number;
@@ -33,6 +33,7 @@ City.init(
     departmentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'department_id',
     },
     isActive: {
       type: DataTypes.BOOLEAN,

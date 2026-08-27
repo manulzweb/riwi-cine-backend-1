@@ -5,7 +5,7 @@
  *
  * Define las operaciones de persistencia para la entidad Membership.
  */
-import Membership, { MembershipCreationAttributes } from '../../models/membership.model';
+import Membership, { MembershipCreationAttributes } from '../../models/membership.model.js';
 
 export interface IMembershipRepository {
   /** Crea una membresía. */

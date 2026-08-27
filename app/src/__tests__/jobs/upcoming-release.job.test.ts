@@ -1,9 +1,10 @@
 // app/src/__tests__/jobs/upcoming-release.job.test.ts
 
-import emailNotificationService from '../../services/email-notification.service';
-import { startUpcomingReleaseJob } from '../../jobs/upcoming-release.job';
+import cron from 'node-cron';
+import emailNotificationService from '../../services/email-notification.service.js';
+import { startUpcomingReleaseJob } from '../../jobs/upcoming-release.job.js';
 
-jest.mock('../../services/email-notification.service', () => ({
+jest.mock('../../services/email-notification.service.js', () => ({
   __esModule: true,
   default: { processTodayReleases: jest.fn() },
 }));
@@ -13,10 +14,7 @@ jest.mock('node-cron', () => ({
   default: { schedule: jest.fn() },
 }));
 
-const cronMock = jest.mocked(
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  (require('node-cron') as { default: { schedule: jest.Mock } }).default,
-);
+const cronMock = jest.mocked(cron as unknown as { schedule: jest.Mock });
 
 describe('UpcomingReleaseJob', () => {
   beforeEach(() => {

@@ -1,8 +1,9 @@
 // app/src/repositories/cinema.repository.ts
 
 import { Transaction } from 'sequelize';
-import Cinema, { CinemaCreationAttributes } from '../models/cinema.model';
-import { ICinemaRepository } from './interfaces/cinema.repository.interface';
+import Cinema, { CinemaCreationAttributes } from '../models/cinema.model.js';
+import City from '../models/city.model.js';
+import { ICinemaRepository } from './interfaces/cinema.repository.interface.js';
 
 /**
  * Repositorio de Cines
@@ -31,8 +32,18 @@ class CinemaRepository implements ICinemaRepository {
   /**
    * Obtiene todos los cines de una ciudad.
    */
+  async findByCityId(cityId: number): Promise<Cinema[]> {
+    return await Cinema.findAll({ where: { cityId } });
+  }
+
+  /**
+   * Obtiene todos los cines de una ciudad (legado por nombre, deprecated).
+   * @deprecated usar findByCityId
+   */
   async findByCity(city: string): Promise<Cinema[]> {
-    return await Cinema.findAll({ where: { city } });
+    const cityRecord = await City.findOne({ where: { name: city } });
+    if (!cityRecord) return [];
+    return await Cinema.findAll({ where: { cityId: cityRecord.id } });
   }
 }
 

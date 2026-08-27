@@ -1,20 +1,20 @@
 // app/src/services/cart.service.ts
 
-import sequelize from '../config/database';
-import { envConfig } from '../config/env';
-import cartRepository, { snackRepository } from '../repositories/cart.repository';
-import bonusWalletRepository from '../repositories/bonus-wallet.repository';
-import reservationService from './reservation.service';
+import sequelize from '../config/database.js';
+import { envConfig } from '../config/env.js';
+import cartRepository, { snackRepository } from '../repositories/cart.repository.js';
+import bonusWalletRepository from '../repositories/bonus-wallet.repository.js';
+import reservationService from './reservation.service.js';
 import {
   ICartService,
   IExpireCartsResult,
   IGiftcardResult,
   IMembershipDiscountResult,
-} from './interfaces/cart.service.interface';
-import { CartDetailResponseDto } from '../dto/response/cart-detail.dto';
-import { CreateCartRequestDto } from '../dto/request/create-cart.dto';
-import { UpdateCartRequestDto } from '../dto/request/update-cart.dto';
-import { ApplyGiftcardRequestDto } from '../dto/request/apply-giftcard.dto';
+} from './interfaces/cart.service.interface.js';
+import { CartDetailResponseDto } from '../dto/response/cart-detail.dto.js';
+import { CreateCartRequestDto } from '../dto/request/create-cart.dto.js';
+import { UpdateCartRequestDto } from '../dto/request/update-cart.dto.js';
+import { ApplyGiftcardRequestDto } from '../dto/request/apply-giftcard.dto.js';
 import {
   CartExpiredError,
   CartNotFoundError,
@@ -27,7 +27,7 @@ import {
   SnackNotFoundError,
   TicketNotBelongsError,
   WalletNotFoundError,
-} from '../errors/cart.errors';
+} from '../errors/cart.errors.js';
 
 /** Resultado mínimo esperado del servicio de reservas al bloquear sillas. */
 interface LockSeatsResult {

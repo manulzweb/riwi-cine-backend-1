@@ -1,8 +1,8 @@
 // app/src/controllers/membership.controller.ts
 
 import { Request, Response } from 'express';
-import { User, Membership, MembershipLevel, MembershipStatus } from '../models';
-import { generateMembershipCode } from '../utils/crypto.util';
+import { User, Membership, MembershipLevel, MembershipStatus } from '../models/index.js';
+import { generateMembershipCode } from '../utils/crypto.util.js';
 
 /**
  * ============================================================================

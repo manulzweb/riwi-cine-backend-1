@@ -1,7 +1,7 @@
 // app/src/middleware/auth.middleware.ts
 
 import { NextFunction, Request, Response } from 'express';
-import tokenService from '../services/auth-token.service';
+import tokenService from '../services/auth-token.service.js';
 
 /**
  * Middleware de autenticación con control de roles (desarrollado en develop).

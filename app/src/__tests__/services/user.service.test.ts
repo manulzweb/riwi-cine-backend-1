@@ -1,9 +1,9 @@
 // app/src/__tests__/services/user.service.test.ts
 
-import userService from '../../services/user.service';
-import { City, Department, Country, Profile } from '../../models';
+import userService from '../../services/user.service.js';
+import { City, Department, Country, Cinema, Profile } from '../../models/index.js';
 
-jest.mock('../../models', () => {
+jest.mock('../../models/index.js', () => {
   return {
     City: {
       findByPk: jest.fn(),
@@ -13,6 +13,9 @@ jest.mock('../../models', () => {
     },
     Country: {
       findByPk: jest.fn(),
+    },
+    Cinema: {
+      findOne: jest.fn(),
     },
     Profile: {
       findOne: jest.fn(),
@@ -127,6 +130,24 @@ describe('UserService · HU-002 Location Selection', () => {
     );
   });
 
+  it('should throw error if city has no active cinema (RN-006)', async () => {
+    (Country.findByPk as jest.Mock).mockResolvedValue({ id: 1, name: 'Colombia' });
+    (Department.findByPk as jest.Mock).mockResolvedValue({
+      id: 10,
+      countryId: 1,
+    });
+    (City.findByPk as jest.Mock).mockResolvedValue({
+      id: 100,
+      isActive: true,
+      departmentId: 10,
+    });
+    (Cinema.findOne as jest.Mock).mockResolvedValue(null);
+
+    await expect(userService.updateLocation(validDto)).rejects.toThrow(
+      'La ciudad seleccionada no cuenta con cines activos.',
+    );
+  });
+
   it('should successfully validate location and update profile if user exists', async () => {
     const mockProfileUpdate = jest.fn();
     (City.findByPk as jest.Mock).mockResolvedValue({
@@ -142,6 +163,7 @@ describe('UserService · HU-002 Location Selection', () => {
       id: 1,
       name: 'Colombia',
     });
+    (Cinema.findOne as jest.Mock).mockResolvedValue({ id: 1, cityId: 100, isActive: true });
     (Profile.findOne as jest.Mock).mockResolvedValue({
       userId: 5,
       update: mockProfileUpdate,
@@ -152,6 +174,7 @@ describe('UserService · HU-002 Location Selection', () => {
     expect(City.findByPk).toHaveBeenCalledWith(100);
     expect(Department.findByPk).toHaveBeenCalledWith(10);
     expect(Country.findByPk).toHaveBeenCalledWith(1);
+    expect(Cinema.findOne).toHaveBeenCalledWith({ where: { cityId: 100, isActive: true } });
     expect(Profile.findOne).toHaveBeenCalledWith({ where: { userId: 5 } });
     expect(mockProfileUpdate).toHaveBeenCalledWith({ cityId: 100 });
   });

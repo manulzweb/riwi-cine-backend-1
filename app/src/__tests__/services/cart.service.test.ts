@@ -1,18 +1,18 @@
 // app/src/__tests__/services/cart.service.test.ts
 
-import cartService from '../../services/cart.service';
-import cartRepository, { snackRepository } from '../../repositories/cart.repository';
-import bonusWalletRepository from '../../repositories/bonus-wallet.repository';
-import reservationService from '../../services/reservation.service';
+import cartService from '../../services/cart.service.js';
+import cartRepository, { snackRepository } from '../../repositories/cart.repository.js';
+import bonusWalletRepository from '../../repositories/bonus-wallet.repository.js';
+import reservationService from '../../services/reservation.service.js';
 
-jest.mock('../../config/database', () => ({
+jest.mock('../../config/database.js', () => ({
   __esModule: true,
   default: {
     transaction: jest.fn((cb) => cb({})),
   },
 }));
 
-jest.mock('../../repositories/cart.repository', () => ({
+jest.mock('../../repositories/cart.repository.js', () => ({
   __esModule: true,
   default: {
     findActiveByUserId: jest.fn(),
@@ -37,7 +37,7 @@ jest.mock('../../repositories/cart.repository', () => ({
   },
 }));
 
-jest.mock('../../repositories/bonus-wallet.repository', () => ({
+jest.mock('../../repositories/bonus-wallet.repository.js', () => ({
   __esModule: true,
   default: {
     findByUserId: jest.fn(),
@@ -45,7 +45,7 @@ jest.mock('../../repositories/bonus-wallet.repository', () => ({
   },
 }));
 
-jest.mock('../../services/reservation.service', () => ({
+jest.mock('../../services/reservation.service.js', () => ({
   __esModule: true,
   default: {
     lockSeats: jest.fn(),

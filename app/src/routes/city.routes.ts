@@ -1,13 +1,13 @@
 // app/src/routes/city.routes.ts
 
 import { Router } from 'express';
-import { getCities } from '../controllers/city.controller';
+import { getCities } from '../controllers/city.controller.js';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/cities/{departmentId}:
+ * /cities/{departmentId}:
  *   get:
  *     summary: Obtener ciudades activas por departamento (solo con cine activo)
  *     tags: [Cities]

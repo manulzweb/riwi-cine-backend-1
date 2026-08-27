@@ -1,8 +1,8 @@
 // app/src/controllers/upcoming-notification.controller.ts
 
 import { Request, Response } from 'express';
-import upcomingNotificationService from '../services/upcoming-notification.service';
-import { NotificationUpcomingDto } from '../schemas/notification.schemas';
+import upcomingNotificationService from '../services/upcoming-notification.service.js';
+import { NotificationUpcomingDto } from '../schemas/notification.schemas.js';
 
 /**
  * ============================================================================

@@ -1,8 +1,8 @@
 // app/src/repositories/bonus-wallet.repository.ts
 
 import { Transaction } from 'sequelize';
-import BonusWallet, { BonusWalletCreationAttributes } from '../models/bonus-wallet.model';
-import { IBonusWalletRepository } from './interfaces/bonus-wallet.repository.interface';
+import BonusWallet, { BonusWalletCreationAttributes } from '../models/bonus-wallet.model.js';
+import { IBonusWalletRepository } from './interfaces/bonus-wallet.repository.interface.js';
 
 /**
  * Repositorio de Billeteras de Bonos

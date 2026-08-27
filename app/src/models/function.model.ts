@@ -7,8 +7,8 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import Movie from './movie.model';
+import sequelize from '../config/database.js';
+import Movie from './movie.model.js';
 
 export interface FunctionAttributes {
   id: number;

@@ -2,8 +2,8 @@
 
 import UpcomingMovieNotification, {
   UpcomingMovieNotificationCreationAttributes,
-} from '../models/upcoming-movie-notification.model';
-import { IUpcomingNotificationRepository } from './interfaces/upcoming-notification.repository.interface';
+} from '../models/upcoming-movie-notification.model.js';
+import { IUpcomingNotificationRepository } from './interfaces/upcoming-notification.repository.interface.js';
 
 /**
  * Repositorio de Notificaciones de Próximos Estrenos

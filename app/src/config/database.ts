@@ -19,7 +19,7 @@
  */
 
 import { Sequelize } from 'sequelize';
-import { envConfig } from './env';
+import { envConfig } from './env.js';
 
 /**
  * Instancia de Sequelize configurada para PostgreSQL.

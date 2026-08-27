@@ -1,7 +1,7 @@
 // app/src/middleware/captcha.middleware.ts
 
 import { Request, Response, NextFunction } from 'express';
-import captchaAdapter from '../services/captcha';
+import captchaAdapter from '../services/captcha/index.js';
 
 /**
  * Factory de middleware: permite declarar la acción esperada por ruta.

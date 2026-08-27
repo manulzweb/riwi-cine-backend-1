@@ -1,9 +1,9 @@
 // app/src/repositories/city.repository.ts
 
-import City from '../models/city.model';
-import Cinema from '../models/cinema.model';
+import City from '../models/city.model.js';
+import Cinema from '../models/cinema.model.js';
 import { Op } from 'sequelize';
-import { ICityRepository } from './interfaces/city.repository.interface';
+import { ICityRepository } from './interfaces/city.repository.interface.js';
 
 /**
  * Repositorio de Ciudades
@@ -28,22 +28,20 @@ class CityRepository implements ICityRepository {
    */
   async findByDepartmentId(departmentId: number): Promise<City[]> {
     const activeCinemaCityNames = await Cinema.findAll({
+      attributes: ['cityId'],
       where: { isActive: true },
-      attributes: ['city'],
-      group: ['city'],
+      group: ['cityId'],
     });
 
-    const cityNames = activeCinemaCityNames.map((c: Cinema) => c.city);
+    const cityIds = activeCinemaCityNames.map((c: Cinema) => c.cityId);
 
-    if (cityNames.length === 0) {
-      return [];
-    }
+    if (cityIds.length === 0) return [];
 
     return await City.findAll({
       where: {
         departmentId,
         isActive: true,
-        name: { [Op.in]: cityNames },
+        id: { [Op.in]: cityIds },
       },
     });
   }

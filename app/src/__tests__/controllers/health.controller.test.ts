@@ -1,10 +1,10 @@
 // app/src/__tests__/controllers/health.controller.test.ts
 
 import { Request, Response } from 'express';
-import { checkHealth } from '../../controllers/health.controller';
-import sequelize from '../../config/database';
+import { checkHealth } from '../../controllers/health.controller.js';
+import sequelize from '../../config/database.js';
 
-jest.mock('../../config/database', () => ({
+jest.mock('../../config/database.js', () => ({
   __esModule: true,
   default: {
     authenticate: jest.fn(),

@@ -1,9 +1,9 @@
 // app/src/__tests__/repositories/user.repository.test.ts
 
-import User from '../../models/user.model';
-import userRepository from '../../repositories/user.repository';
+import User from '../../models/user.model.js';
+import userRepository from '../../repositories/user.repository.js';
 
-jest.mock('../../models/user.model');
+jest.mock('../../models/user.model.js');
 
 const UserMock = User as jest.Mocked<typeof User>;
 const now = new Date('2026-01-01T00:00:00.000Z');

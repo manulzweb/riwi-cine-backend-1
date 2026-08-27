@@ -1,27 +1,27 @@
 // app/src/__tests__/services/email-notification.service.test.ts
 
-import emailNotificationService from '../../services/email-notification.service';
-import Movie from '../../models/movie.model';
-import UpcomingMovieNotification from '../../models/upcoming-movie-notification.model';
-import User from '../../models/user.model';
-import { sendUpcomingReleaseEmail } from '../../config/mailer';
+import emailNotificationService from '../../services/email-notification.service.js';
+import Movie from '../../models/movie.model.js';
+import UpcomingMovieNotification from '../../models/upcoming-movie-notification.model.js';
+import User from '../../models/user.model.js';
+import { sendUpcomingReleaseEmail } from '../../config/mailer.js';
 
-jest.mock('../../models/movie.model', () => ({
+jest.mock('../../models/movie.model.js', () => ({
   __esModule: true,
   default: { findAll: jest.fn() },
 }));
 
-jest.mock('../../models/upcoming-movie-notification.model', () => ({
+jest.mock('../../models/upcoming-movie-notification.model.js', () => ({
   __esModule: true,
   default: { findAll: jest.fn() },
 }));
 
-jest.mock('../../models/user.model', () => ({
+jest.mock('../../models/user.model.js', () => ({
   __esModule: true,
   default: { findByPk: jest.fn() },
 }));
 
-jest.mock('../../config/mailer', () => ({
+jest.mock('../../config/mailer.js', () => ({
   __esModule: true,
   sendUpcomingReleaseEmail: jest.fn(),
 }));

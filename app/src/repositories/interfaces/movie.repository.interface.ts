@@ -1,8 +1,8 @@
 // app/src/repositories/interfaces/movie.repository.interface.ts
 
-import Movie from '../../models/movie.model';
-import CinemaFunction from '../../models/function.model';
-import { FilterMoviesDto } from '../../dto/request/filter-movies.dto';
+import Movie from '../../models/movie.model.js';
+import CinemaFunction from '../../models/function.model.js';
+import { FilterMoviesDto } from '../../dto/request/filter-movies.dto.js';
 
 /**
  * Contrato del Repositorio de Películas.

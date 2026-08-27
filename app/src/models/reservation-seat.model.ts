@@ -1,7 +1,7 @@
 // app/src/models/reservation-seat.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export type ReservationSeatStatus = 'LOCKED' | 'RELEASED' | 'SOLD';
 

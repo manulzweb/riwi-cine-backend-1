@@ -1,9 +1,9 @@
 // app/src/models/reservation.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
-import User from './user.model';
-import CinemaFunction from './function.model';
+import sequelize from '../config/database.js';
+import User from './user.model.js';
+import CinemaFunction from './function.model.js';
 
 export type ReservationStatus = 'ACTIVE' | 'EXPIRED' | 'RELEASED' | 'CONFIRMED';
 
