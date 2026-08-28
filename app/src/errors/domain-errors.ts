@@ -8,15 +8,33 @@
  * de controladores los traduzca a las respuestas HTTP apropiadas.
  */
 
+export class AppError extends Error {
+  constructor(
+    public readonly statusCode: number,
+    public readonly code: string,
+    message: string,
+    options?: { cause?: unknown },
+  ) {
+    super(message, options);
+    this.name = 'AppError';
+  }
+
+  toResponse() {
+    return {
+      status: this.statusCode,
+      error: this.code,
+      message: this.message,
+    };
+  }
+}
+
 /**
  * Se lanza cuando el correo electrónico proporcionado durante el registro
  * ya se encuentra asociado a una cuenta existente.
- *
- * El controlador debe traducirlo a HTTP 409 (Conflict).
  */
-export class EmailAlreadyExistsError extends Error {
+export class EmailAlreadyExistsError extends AppError {
   constructor(message = 'El correo ya se encuentra registrado') {
-    super(message);
+    super(409, 'EMAIL_ALREADY_EXISTS', message);
     this.name = 'EmailAlreadyExistsError';
   }
 }
@@ -24,12 +42,10 @@ export class EmailAlreadyExistsError extends Error {
 /**
  * Se lanza cuando las credenciales proporcionadas durante el inicio
  * de sesión no son válidas.
- *
- * El controlador debe traducirlo a HTTP 401 (Unauthorized).
  */
-export class InvalidCredentialsError extends Error {
+export class InvalidCredentialsError extends AppError {
   constructor(message = 'Credenciales inválidas') {
-    super(message);
+    super(401, 'INVALID_CREDENTIALS', message);
     this.name = 'InvalidCredentialsError';
   }
 }
@@ -37,12 +53,10 @@ export class InvalidCredentialsError extends Error {
 /**
  * Se lanza cuando la cuenta se encuentra temporalmente bloqueada
  * por intentos fallidos repetidos.
- *
- * El controlador debe traducirlo a HTTP 403 (Forbidden).
  */
-export class AccountLockedError extends Error {
+export class AccountLockedError extends AppError {
   constructor(message = 'La cuenta está temporalmente bloqueada. Intente más tarde.') {
-    super(message);
+    super(403, 'ACCOUNT_LOCKED', message);
     this.name = 'AccountLockedError';
   }
 }
@@ -50,87 +64,70 @@ export class AccountLockedError extends Error {
 /**
  * Se lanza cuando la cuenta todavía no ha sido activada mediante
  * la verificación del correo electrónico.
- *
- * El controlador debe traducirlo a HTTP 403 (Forbidden).
  */
-export class AccountNotActivatedError extends Error {
+export class AccountNotActivatedError extends AppError {
   constructor(message = 'La cuenta no está activada') {
-    super(message);
+    super(403, 'ACCOUNT_NOT_ACTIVATED', message);
     this.name = 'AccountNotActivatedError';
   }
 }
 
 /**
  * Se lanza cuando la cuenta ya fue activada previamente.
- *
- * El controlador debe traducirlo a HTTP 409 (Conflict).
  */
-export class AccountAlreadyActivatedError extends Error {
+export class AccountAlreadyActivatedError extends AppError {
   constructor(message = 'La cuenta ya se encuentra activada') {
-    super(message);
+    super(409, 'ACCOUNT_ALREADY_ACTIVATED', message);
     this.name = 'AccountAlreadyActivatedError';
   }
 }
 
 /**
- * Clase base para errores de tokens inválidos o expirados
- * (verificación de correo, refresh y restablecimiento de contraseña).
- *
- * El controlador debe traducirla a HTTP 400/401 según el flujo.
+ * Clase base para errores de tokens inválidos o expirados.
  */
-export class InvalidTokenError extends Error {
-  constructor(message = 'Token inválido o expirado') {
-    super(message);
+export class InvalidTokenError extends AppError {
+  constructor(message = 'Token inválido o expirado', statusCode = 400, code = 'INVALID_TOKEN') {
+    super(statusCode, code, message);
     this.name = 'InvalidTokenError';
   }
 }
 
 /**
  * Se lanza cuando el token proporcionado ya expiró.
- *
- * Extiende `InvalidTokenError`, por lo que cualquier manejo de
- * `InvalidTokenError` también lo captura.
  */
 export class ExpiredTokenError extends InvalidTokenError {
   constructor(message = 'El token ha expirado, solicita uno nuevo') {
-    super(message);
+    super(message, 400, 'EXPIRED_TOKEN');
     this.name = 'ExpiredTokenError';
   }
 }
 
 /**
  * Se lanza cuando el usuario referenciado no existe.
- *
- * El controlador debe traducirlo a HTTP 404 (Not Found) o
- * a una respuesta genérica que no revele la existencia del correo.
  */
-export class UserNotFoundError extends Error {
+export class UserNotFoundError extends AppError {
   constructor(message = 'Usuario no encontrado') {
-    super(message);
+    super(404, 'USER_NOT_FOUND', message);
     this.name = 'UserNotFoundError';
   }
 }
 
 /**
  * Se lanza cuando las contraseñas proporcionadas no coinciden.
- *
- * El controlador debe traducirlo a HTTP 400 (Bad Request).
  */
-export class PasswordMismatchError extends Error {
+export class PasswordMismatchError extends AppError {
   constructor(message = 'Las contraseñas no coinciden o están vacías') {
-    super(message);
+    super(400, 'PASSWORD_MISMATCH', message);
     this.name = 'PasswordMismatchError';
   }
 }
 
 /**
  * Se lanza cuando la contraseña no cumple las reglas de seguridad.
- *
- * El controlador debe traducirlo a HTTP 400 (Bad Request).
  */
-export class WeakPasswordError extends Error {
+export class WeakPasswordError extends AppError {
   constructor(message = 'La contraseña no cumple con los requisitos de seguridad') {
-    super(message);
+    super(400, 'WEAK_PASSWORD', message);
     this.name = 'WeakPasswordError';
   }
 }
