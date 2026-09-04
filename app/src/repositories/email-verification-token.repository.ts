@@ -29,7 +29,7 @@ export class EmailVerificationTokenRepository implements IEmailVerificationToken
     });
   }
 
-  async markAsUsed(tokenId: number): Promise<void> {
+  async markAsUsed(tokenId: number, transaction?: Transaction): Promise<void> {
     await EmailVerificationToken.update(
       {
         usedAt: new Date(),

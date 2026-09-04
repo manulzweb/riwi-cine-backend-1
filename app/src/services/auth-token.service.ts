@@ -3,7 +3,7 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envConfig } from '../config/env.js';
 import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types.js';
-import { ITokenService } from './interfaces/token.service.interface.js';
+import { ITokenService } from './interfaces/auth-token.service.interface.js';
 
 /**
  * Servicio encargado de generar y verificar tokens JWT de acceso.

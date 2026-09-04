@@ -33,7 +33,7 @@ import { ILoginAuditRepository } from '../repositories/interfaces/login-audit.re
 import { IPasswordResetTokenRepository } from '../repositories/interfaces/password-reset-token.repository.interface.js';
 
 import { IPasswordService } from './interfaces/password.service.interface.js';
-import { ITokenService } from './interfaces/token.service.interface.js';
+import { ITokenService } from './interfaces/auth-token.service.interface.js';
 import { IEmailVerificationTokenService } from './interfaces/email-verification-token.service.interface.js';
 
 import { isValidPassword } from '../utils/password.util.js';
@@ -44,19 +44,11 @@ import {
   AccountAlreadyActivatedError,
   AccountLockedError,
   AccountNotActivatedError,
-  CinemaNotFoundError,
-  CityNotFoundError,
-  ConsentRequiredError,
   EmailAlreadyExistsError,
-  EmailMismatchError,
   ExpiredTokenError,
   InvalidCredentialsError,
   InvalidTokenError,
-  MembershipCodeGenerationError,
-  MembershipLevelNotConfiguredError,
-  MembershipStatusNotConfiguredError,
   PasswordMismatchError,
-  RoleNotConfiguredError,
   UserNotFoundError,
   WeakPasswordError,
 } from '../errors/auth.errors.js';
