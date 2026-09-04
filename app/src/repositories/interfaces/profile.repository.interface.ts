@@ -5,9 +5,14 @@ import Profile, { ProfileCreationAttributes } from '../../models/profile.model.j
 
 export interface IProfileRepository {
   create(data: ProfileCreationAttributes, transaction?: Transaction): Promise<Profile>;
-  findByUserId(userId: number): Promise<Profile | null>;
+  findByUserId(userId: number, transaction?: Transaction): Promise<Profile | null>;
   update(
     id: number,
+    newData: Partial<ProfileCreationAttributes>,
+    transaction?: Transaction,
+  ): Promise<Profile | null>;
+  updateByUserId(
+    userId: number,
     newData: Partial<ProfileCreationAttributes>,
     transaction?: Transaction,
   ): Promise<Profile | null>;

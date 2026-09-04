@@ -4,8 +4,12 @@ import { Op, Transaction } from 'sequelize';
 import { IReservationRepository } from './interfaces/reservation.repository.interface.js';
 import Reservation from '../models/reservation.model.js';
 import ReservationSeat from '../models/reservation-seat.model.js';
+import Seat from '../models/seat.model.js';
+import SeatType from '../models/seat-type.model.js';
+import CinemaFunction from '../models/function.model.js';
+import Movie from '../models/movie.model.js';
 
-class ReservationRepository implements IReservationRepository {
+export class ReservationRepository implements IReservationRepository {
   async createReservation(
     userId: number,
     functionId: number,
@@ -72,12 +76,76 @@ class ReservationRepository implements IReservationRepository {
     });
   }
 
+  async findActiveReservedSeatsByFunction(
+    functionId: number,
+    transaction?: Transaction,
+  ): Promise<ReservationSeat[]> {
+    return await ReservationSeat.findAll({
+      where: {
+        status: {
+          [Op.in]: ['LOCKED', 'SOLD'],
+        },
+      },
+      include: [
+        {
+          model: Reservation,
+          as: 'reservation',
+          where: {
+            functionId,
+            status: 'ACTIVE',
+            expiresAt: {
+              [Op.gt]: new Date(),
+            },
+          },
+        },
+      ],
+      transaction,
+    });
+  }
+
   async findById(reservationId: number, transaction?: Transaction): Promise<Reservation | null> {
     return await Reservation.findByPk(reservationId, {
       include: [
         {
           model: ReservationSeat,
           as: 'reservationSeats',
+        },
+      ],
+      transaction,
+    });
+  }
+
+  async findByIdWithDetails(
+    reservationId: number,
+    transaction?: Transaction,
+  ): Promise<Reservation | null> {
+    return await Reservation.findByPk(reservationId, {
+      include: [
+        {
+          model: ReservationSeat,
+          as: 'reservationSeats',
+          include: [
+            {
+              model: Seat,
+              as: 'seat',
+              include: [
+                {
+                  model: SeatType,
+                  as: 'seatType',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: CinemaFunction,
+          as: 'function',
+          include: [
+            {
+              model: Movie,
+              as: 'movie',
+            },
+          ],
         },
       ],
       transaction,
@@ -150,4 +218,4 @@ class ReservationRepository implements IReservationRepository {
   }
 }
 
-export default new ReservationRepository();
+export default ReservationRepository;

@@ -27,7 +27,17 @@ export interface IReservationRepository {
     transaction?: Transaction,
   ): Promise<ReservationSeat | null>;
 
+  findActiveReservedSeatsByFunction(
+    functionId: number,
+    transaction?: Transaction,
+  ): Promise<ReservationSeat[]>;
+
   findById(reservationId: number, transaction?: Transaction): Promise<Reservation | null>;
+
+  findByIdWithDetails(
+    reservationId: number,
+    transaction?: Transaction,
+  ): Promise<Reservation | null>;
 
   findByUserId(
     reservationId: number,

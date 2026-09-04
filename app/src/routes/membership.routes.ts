@@ -1,18 +1,51 @@
 // app/src/routes/membership.routes.ts
 
 import { Router } from 'express';
-import { createMembership } from '../controllers/membership.controller.js';
+import { membershipController } from '../containers/membership.container.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
 /**
- * POST /membership/create
- * ----------------------------
- * Crea manualmente una membresía digital para un usuario específico.
- * Nota: El proceso de registro de usuario (POST /auth/register) ya crea
- * automáticamente la membresía digital. Este endpoint sirve para creación manual
- * o casos de contingencia.
- *
+ * @swagger
+ * tags:
+ *   name: Membership
+ *   description: Gestión de membresía digital y beneficios (HU-008)
+ */
+
+/**
+ * @swagger
+ * /membership:
+ *   get:
+ *     summary: Consultar membresía digital del usuario autenticado
+ *     tags: [Membership]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Detalle de membresía con código QR
+ *       401:
+ *         description: No autenticado
+ */
+router.get('/', requireAuth, membershipController.getMembership);
+
+/**
+ * @swagger
+ * /membership/benefits:
+ *   get:
+ *     summary: Consultar beneficios y descuentos vigentes por nivel de membresía (RN-032)
+ *     tags: [Membership]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de beneficios y porcentaje de descuento calculado
+ *       401:
+ *         description: No autenticado
+ */
+router.get('/benefits', requireAuth, membershipController.getBenefits);
+
+/**
  * @swagger
  * /membership/create:
  *   post:
@@ -33,58 +66,11 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Membresía digital creada exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Membresía digital creada exitosamente"
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 5
- *                     userId:
- *                       type: integer
- *                       example: 1
- *                     code:
- *                       type: string
- *                       example: "MC-738291-102938"
- *                     pointsBalance:
- *                       type: integer
- *                       example: 0
- *                     level:
- *                       type: string
- *                       example: "BÁSICA"
- *                     status:
- *                       type: string
- *                       example: "Activa"
  *       400:
- *         description: El ID de usuario es obligatorio o el usuario ya cuenta con una membresía activa
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "El usuario ya cuenta con una membresía digital activa"
+ *         description: El ID de usuario es obligatorio o el usuario ya cuenta con membresía activa
  *       404:
  *         description: Usuario no encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Usuario no encontrado"
- *       500:
- *         description: Error interno del servidor o configuración faltante (nivel o estado por defecto)
  */
-router.post('/create', createMembership);
+router.post('/create', membershipController.createMembership);
 
 export default router;

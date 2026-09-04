@@ -1,136 +1,96 @@
 // app/src/controllers/reservation.controller.ts
 
 import { Request, Response } from 'express';
-import reservationService from '../services/reservation.service.js';
-import { LockSeatsDto } from '../dto/request/lock-seats.dto.js';
-import { ReleaseSeatsDto } from '../dto/request/release-seats.dto.js';
+import { IReservationService } from '../services/interfaces/reservation.service.interface.js';
+import { asyncHandler } from '../middleware/async-handler.js';
+import { InvalidFunctionIdError } from '../errors/movie.errors.js';
+import { InvalidReservationIdError } from '../errors/reservation.errors.js';
 
 /**
  * ============================================================================
- * Controlador de Reservas (HU-001)
+ * Controlador de Selección y Reserva de Sillas (HU-010)
  * ============================================================================
  *
- * Gestiona las solicitudes HTTP relacionadas con la reserva de sillas para
- * las funciones de cine: consulta de disponibilidad, bloqueo temporal de
- * sillas durante el armado del carrito y liberación de sillas reservadas.
+ * Gestiona las peticiones HTTP relacionadas con la consulta interactiva del
+ * mapa de la sala, bloqueo temporal de sillas y liberación de reservas.
  *
  * Arquitectura:
- *
- * Cliente HTTP
- *      │
- * ReservationController
- *      │
- * ReservationService
- *      │
- * ReservationRepository ─┐
- *      │                 ├─ SeatRepository (disponibilidad de sillas)
- * SeatRepository         ┘
- *      │
- * Sequelize → PostgreSQL
- *
- * Convenciones de errores:
- * Los errores de negocio se traducen aquí a su código HTTP correspondiente
- * (400/404/409/500) en lugar de inspeccionar cadenas de texto.
+ * Cliente HTTP → Container (wiring) → ReservationController → ReservationService → Repositories → PostgreSQL
+ * ============================================================================
  */
-class ReservationController {
-  /**
-   * GET /api/functions/:id/seats
-   * HU-001/SPRINT3
-   */
-  async getFunctionSeats(req: Request, res: Response): Promise<void> {
-    try {
-      const functionId = Number(req.params.id);
-
-      if (!functionId) {
-        res.status(400).json({
-          message: 'El ID de la función es obligatorio.',
-        });
-        return;
-      }
-
-      const result = await reservationService.getFunctionSeats(functionId);
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({
-        message: error instanceof Error ? error.message : 'Error al obtener las sillas.',
-      });
-    }
-  }
+export class ReservationController {
+  constructor(private readonly reservationService: IReservationService) {}
 
   /**
-   * POST /api/reservations/lock-seats
-   * HU-001/SPRINT3
+   * GET /functions/:id/seats
+   * Obtiene el mapa interactivo de sillas y disponibilidad en tiempo real.
    */
-  async lockSeats(req: Request, res: Response): Promise<void> {
-    try {
-      const userId = req.userId as number;
-      const dto: LockSeatsDto = {
-        userId,
-        functionId: req.body.functionId,
-        seatIds: req.body.seatIds,
-      };
-
-      const result = await reservationService.lockSeats(dto);
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({
-        message: error instanceof Error ? error.message : 'Error al bloquear las sillas.',
-      });
+  public getFunctionSeats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const functionId = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(functionId) || functionId <= 0) {
+      throw new InvalidFunctionIdError();
     }
-  }
+
+    const data = await this.reservationService.getFunctionSeats(functionId);
+    res.status(200).json(data);
+  });
 
   /**
-   * DELETE /api/reservations/release-seats
-   * HU-001/SPRINT3
+   * POST /reservations/lock-seats
+   * Bloquea temporalmente las sillas seleccionadas durante 10 minutos (RN-039).
    */
-  async releaseSeats(req: Request, res: Response): Promise<void> {
-    try {
-      const userId = req.userId as number;
-      const dto: ReleaseSeatsDto = {
-        reservationId: req.body.reservationId,
-        userId,
-      };
+  public lockSeats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.userId ?? req.body.userId;
+    const { functionId, seatIds } = req.body;
 
-      await reservationService.releaseSeats(dto);
+    const data = await this.reservationService.lockSeats({
+      userId: Number(userId),
+      functionId: Number(functionId),
+      seatIds: Array.isArray(seatIds) ? seatIds.map(Number) : [],
+    });
 
-      res.status(200).json({
-        message: 'Las sillas fueron liberadas correctamente.',
-      });
-    } catch (error) {
-      res.status(400).json({
-        message: error instanceof Error ? error.message : 'Error al liberar las sillas.',
-      });
-    }
-  }
+    res.status(201).json(data);
+  });
 
   /**
-   * GET /api/reservations/summary
-   * HU-001/SPRINT3
+   * DELETE /reservations/release-seats
+   * Libera voluntariamente las sillas de una reserva activa.
    */
-  async getReservationSummary(req: Request, res: Response): Promise<void> {
-    try {
-      const reservationId = Number(req.query.reservationId);
+  public releaseSeats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.userId ?? req.body.userId ?? req.query.userId;
+    const reservationId = req.body.reservationId ?? req.query.reservationId;
 
-      const userId = Number(req.query.userId);
-
-      if (!reservationId || !userId) {
-        res.status(400).json({
-          message: 'reservationId y userId son obligatorios.',
-        });
-        return;
-      }
-
-      const result = await reservationService.getReservationSummary(reservationId, userId);
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({
-        message: error instanceof Error ? error.message : 'Error al obtener el resumen.',
-      });
+    if (!reservationId || Number.isNaN(Number(reservationId))) {
+      throw new InvalidReservationIdError();
     }
-  }
+
+    await this.reservationService.releaseSeats(Number(reservationId), Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: 'Las sillas fueron liberadas exitosamente.',
+    });
+  });
+
+  /**
+   * GET /reservations/summary o GET /reservations/:id/summary
+   * Obtiene el resumen de una reserva activa para transferir al carrito.
+   */
+  public getReservationSummary = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.userId ?? req.query.userId;
+    const reservationId = req.params.id ?? req.query.reservationId;
+
+    if (!reservationId || Number.isNaN(Number(reservationId))) {
+      throw new InvalidReservationIdError();
+    }
+
+    const data = await this.reservationService.getReservationSummary(
+      Number(reservationId),
+      Number(userId),
+    );
+
+    res.status(200).json(data);
+  });
 }
 
-export default new ReservationController();
+export default ReservationController;

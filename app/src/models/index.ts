@@ -127,6 +127,17 @@ Seat.belongsTo(Room, {
   as: 'room',
 });
 
+// Room - Function
+Room.hasMany(CinemaFunction, {
+  foreignKey: 'roomId',
+  as: 'functions',
+});
+
+CinemaFunction.belongsTo(Room, {
+  foreignKey: 'roomId',
+  as: 'roomRelation',
+});
+
 // SeatType - Seat
 SeatType.hasMany(Seat, {
   foreignKey: 'seatTypeId',

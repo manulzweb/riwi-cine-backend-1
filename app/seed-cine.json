@@ -168,5 +168,55 @@
       "documentNumber": "1098765432",
       "cityName": "bogotá"
     }
+  ],
+  "functions": [
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 1 - IMAX",
+      "format": "IMAX",
+      "startTime": "2026-10-15T18:00:00.000Z",
+      "endTime": "2026-10-15T20:50:00.000Z",
+      "price": 25000,
+      "availableSeats": 120,
+      "totalSeats": 120,
+      "room": "Sala 1 - IMAX",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 2 - VIP",
+      "format": "VIP",
+      "startTime": "2026-10-15T21:00:00.000Z",
+      "endTime": "2026-10-15T23:50:00.000Z",
+      "price": 32000,
+      "availableSeats": 60,
+      "totalSeats": 60,
+      "room": "Sala 2 - VIP",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Spider-Man: Across the Spider-Verse",
+      "roomName": "Sala 1 - 3D MacroXE",
+      "format": "3D",
+      "startTime": "2026-10-16T15:30:00.000Z",
+      "endTime": "2026-10-16T17:50:00.000Z",
+      "price": 18000,
+      "availableSeats": 150,
+      "totalSeats": 150,
+      "room": "Sala 1 - 3D MacroXE",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Oppenheimer",
+      "roomName": "Sala 1 - Estándar",
+      "format": "2D",
+      "startTime": "2026-10-16T19:00:00.000Z",
+      "endTime": "2026-10-16T22:00:00.000Z",
+      "price": 14000,
+      "availableSeats": 100,
+      "totalSeats": 100,
+      "room": "Sala 1 - Estándar",
+      "isActive": true
+    }
   ]
 }

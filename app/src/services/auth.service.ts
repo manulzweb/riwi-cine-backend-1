@@ -52,6 +52,8 @@ import {
   UserNotFoundError,
   WeakPasswordError,
 } from '../errors/auth.errors.js';
+import User from '../models/user.model.js';
+import { PasswordResetTokenInstance } from '../models/password-reset-token.model.js';
 
 const ROLE_NAME = 'cliente';
 const MEMBERSHIP_LEVEL_NAME = 'BÁSICA';
@@ -59,17 +61,9 @@ const MEMBERSHIP_STATUS_NAME = 'Activa';
 
 /**
  * Servicio encargado de gestionar los procesos de autenticación,
- * registro y ciclo de vida de credenciales de usuarios.
+ * registro y ciclo de vida de credenciales de usuarios (HU-006 / HU-007).
  *
- * @business
- * - Valida consentimientos, correos y fortaleza de contraseña en registro.
- * - Verifica integridad de referencias geográficas y catálogos.
- * - Coordina la creación atómica transaccional de Usuario, Perfil, Membresía Digital,
- *   Billetera de Bonos, Historial y Preferencias.
- * - Gestiona tokens de activación y verificación de correo.
- * - Audita intentos de autenticación y gestiona bloqueos por intentos fallidos.
- * - Emite y rota tokens JWT y tokens de refresco.
- *
+ * @class AuthService
  * @implements {IAuthService}
  */
 export class AuthService implements IAuthService {
@@ -113,67 +107,9 @@ export class AuthService implements IAuthService {
     this.emailVerificationTokenService = emailVerificationTokenService;
   }
 
-  /**
-   * Valida los datos de entrada del registro (Fail-Fast).
-   */
-  private validateRegistrationInput(dto: RegisterUserRequestDto): string {
-    const email = dto.email ? dto.email.trim().toLowerCase() : '';
-    const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
-
-    if (!dto.personalDataConsent || !dto.termsConsent) {
-      throw new Error(
-        'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
-      );
-    }
-
-    if (email !== confirmEmail) {
-      throw new Error('Los correos no coinciden');
-    }
-
-    if (dto.password !== dto.confirmPassword) {
-      throw new PasswordMismatchError();
-    }
-
-    if (!dto.password || !isValidPassword(dto.password)) {
-      throw new WeakPasswordError();
-    }
-
-    return email;
-  }
-
-  /**
-   * Resuelve y valida las referencias de catálogo necesarias para el registro.
-   */
-  private async resolveRegistrationReferences(dto: RegisterUserRequestDto) {
-    const defaultRole = await this.roleRepository.findByName(ROLE_NAME);
-    if (!defaultRole) {
-      throw new Error('No existe el rol por defecto configurado en el sistema');
-    }
-
-    const defaultLevel = await this.membershipLevelRepository.findByName(MEMBERSHIP_LEVEL_NAME);
-    if (!defaultLevel) {
-      throw new Error('No existe el nivel de membresía por defecto configurado en el sistema');
-    }
-
-    const defaultStatus = await this.membershipStatusRepository.findByName(MEMBERSHIP_STATUS_NAME);
-    if (!defaultStatus) {
-      throw new Error('No existe el estado de membresía por defecto configurado en el sistema');
-    }
-
-    const city = await this.cityRepository.findById(dto.cityId);
-    if (!city) {
-      throw new Error('La ciudad principal seleccionada no existe');
-    }
-
-    if (dto.favoriteCinemaId) {
-      const cinema = await this.cinemaRepository.findById(dto.favoriteCinemaId);
-      if (!cinema) {
-        throw new Error('El complejo favorito seleccionado no existe');
-      }
-    }
-
-    return { defaultRole, defaultLevel, defaultStatus };
-  }
+  // ==========================================================================
+  // --- HU-006: Registro de Usuario y Membresía Digital ---
+  // ==========================================================================
 
   /**
    * Registra un nuevo usuario en el sistema junto con su perfil y membresía digital.
@@ -195,7 +131,6 @@ export class AuthService implements IAuthService {
     let membershipCode = '';
 
     const persistRegistration = async (transaction: Transaction) => {
-      // 1. Crear usuario
       const user = await this.userRepository.create(
         {
           roleId: defaultRole.id,
@@ -209,7 +144,6 @@ export class AuthService implements IAuthService {
         transaction,
       );
 
-      // 2. Crear perfil
       await this.profileRepository.create(
         {
           userId: user.id,
@@ -226,47 +160,15 @@ export class AuthService implements IAuthService {
         transaction,
       );
 
-      // 3. Crear membresía digital con código único reintentable
-      const maxAttempts = 3;
-      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-        membershipCode = generateMembershipCode();
-        try {
-          await this.membershipRepository.create(
-            {
-              userId: user.id,
-              code: membershipCode,
-              levelId: defaultLevel.id,
-              statusId: defaultStatus.id,
-              pointsBalance: 0,
-            },
-            transaction,
-          );
-          break;
-        } catch (error) {
-          if (!(error instanceof UniqueConstraintError) || attempt === maxAttempts) {
-            throw error;
-          }
-        }
-      }
-
-      // 4. Crear billetera de bonos
-      await this.bonusWalletRepository.create(
-        {
-          userId: user.id,
-          balance: 0,
-        },
+      membershipCode = await this.createInitialMembership(
+        user.id,
+        defaultLevel.id,
+        defaultStatus.id,
         transaction,
       );
 
-      // 5. Crear historial de compras inicial
-      await this.purchaseHistoryRepository.create(
-        {
-          userId: user.id,
-        },
-        transaction,
-      );
-
-      // 6. Crear preferencias de notificación
+      await this.bonusWalletRepository.create({ userId: user.id, balance: 0 }, transaction);
+      await this.purchaseHistoryRepository.create({ userId: user.id }, transaction);
       await this.notificationPreferenceRepository.create(
         {
           userId: user.id,
@@ -277,7 +179,6 @@ export class AuthService implements IAuthService {
         transaction,
       );
 
-      // 7. Persistir hash de token de verificación
       await this.emailVerificationTokenRepository.create(
         {
           userId: user.id,
@@ -353,6 +254,10 @@ export class AuthService implements IAuthService {
     await this.emailVerificationTokenRepository.markAsUsed(verificationRecord.id);
   }
 
+  // ==========================================================================
+  // --- HU-007: Autenticación, Sesiones y Recuperación ---
+  // ==========================================================================
+
   /**
    * Autentica al usuario en el sistema.
    */
@@ -364,82 +269,25 @@ export class AuthService implements IAuthService {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
     const user = await this.userRepository.findByEmail(email);
 
-    if (!user) {
-      await this.loginAuditRepository.create({
-        userId: null,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'FAILED_USER_NOT_FOUND',
-      });
-      throw new InvalidCredentialsError();
-    }
+    await this.validateUserForLogin(user, email, ipAddress, deviceUserAgent);
 
-    if (user.lockedUntil && user.lockedUntil > new Date()) {
-      await this.loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'ACCOUNT_LOCKED',
-      });
-      throw new AccountLockedError();
-    }
-
-    if (!user.isActive) {
-      await this.loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'ACCOUNT_NOT_ACTIVATED',
-      });
-      throw new AccountNotActivatedError();
-    }
-
-    const isMatch = await this.passwordService.verify(dto.password, user.passwordHash);
+    const isMatch = await this.passwordService.verify(dto.password, user!.passwordHash);
 
     if (!isMatch) {
-      await this.userRepository.incrementFailedAttempts(user.id);
-      await this.loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'FAILED_PASSWORD',
-      });
+      await this.handleFailedPassword(user!.id, email, ipAddress, deviceUserAgent);
       throw new InvalidCredentialsError();
     }
 
-    await this.userRepository.resetFailedAttempts(user.id);
+    await this.userRepository.resetFailedAttempts(user!.id);
+    await this.recordAudit('SUCCESS', email, user!.id, ipAddress, deviceUserAgent);
 
-    await this.loginAuditRepository.create({
-      userId: user.id,
-      emailAttempted: email,
-      ipAddress: ipAddress || null,
-      deviceUserAgent: deviceUserAgent || null,
-      status: 'SUCCESS',
-    });
+    const { accessToken, refreshToken } = await this.issueAndRotateTokens(user!.id);
 
-    const accessToken = this.tokenService.generateAccessToken(user.id);
-    const refreshToken = this.tokenService.generateRefreshToken(user.id);
-
-    await this.refreshTokenRepository.revokeAllByUserId(user.id);
-
-    const decodedRefresh = this.tokenService.verifyRefreshToken(refreshToken);
-    if (decodedRefresh?.exp) {
-      await this.refreshTokenRepository.create({
-        userId: user.id,
-        tokenHash: refreshToken,
-        expiresAt: new Date(decodedRefresh.exp * 1000),
-      });
-    }
-
-    const profile = await this.profileRepository.findByUserId(user.id);
-    const membership = await this.membershipRepository.findByUserId(user.id);
+    const profile = await this.profileRepository.findByUserId(user!.id);
+    const membership = await this.membershipRepository.findByUserId(user!.id);
 
     return {
-      userId: user.id,
+      userId: user!.id,
       accessToken,
       refreshToken,
       profile: profile?.toJSON() || null,
@@ -451,30 +299,7 @@ export class AuthService implements IAuthService {
    * Rota el refresh token y emite un nuevo access token.
    */
   async refreshToken(token: string): Promise<LoginUserResult> {
-    const decoded = this.tokenService.verifyRefreshToken(token);
-    if (!decoded?.sub) {
-      throw new InvalidTokenError('Refresh token inválido o expirado');
-    }
-
-    const userId = Number(decoded.sub);
-    const existingToken = await this.refreshTokenRepository.findByTokenHash(token);
-    if (!existingToken || existingToken.isRevoked) {
-      throw new InvalidTokenError('Refresh token inválido o revocado');
-    }
-
-    await this.refreshTokenRepository.revoke(existingToken.id);
-
-    const accessToken = this.tokenService.generateAccessToken(userId);
-    const newRefreshToken = this.tokenService.generateRefreshToken(userId);
-
-    const newDecoded = this.tokenService.verifyRefreshToken(newRefreshToken);
-    if (newDecoded?.exp) {
-      await this.refreshTokenRepository.create({
-        userId,
-        tokenHash: newRefreshToken,
-        expiresAt: new Date(newDecoded.exp * 1000),
-      });
-    }
+    const { userId, accessToken, newRefreshToken } = await this.rotateRefreshToken(token);
 
     const profile = await this.profileRepository.findByUserId(userId);
     const membership = await this.membershipRepository.findByUserId(userId);
@@ -531,6 +356,232 @@ export class AuthService implements IAuthService {
    * Restablece la contraseña de una cuenta con token de recuperación.
    */
   async resetPassword(dto: ResetPasswordRequestDto): Promise<void> {
+    const email = this.validateResetPasswordInput(dto);
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new InvalidTokenError();
+    }
+
+    const tokenRecord = await this.getValidPasswordResetToken(user.id, dto.token);
+    const { hash: newPasswordHash } = await this.passwordService.hash(dto.newPassword as string);
+
+    await this.userRepository.updatePassword(user.id, newPasswordHash);
+    await this.passwordResetTokenRepository.markAsUsed(tokenRecord.id);
+  }
+
+  // ==========================================================================
+  // --- Helpers Privados de Dominio (SRP) ---
+  // ==========================================================================
+
+  /**
+   * Valida los datos de entrada del registro (Fail-Fast).
+   */
+  private validateRegistrationInput(dto: RegisterUserRequestDto): string {
+    const email = dto.email ? dto.email.trim().toLowerCase() : '';
+    const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
+
+    if (!dto.personalDataConsent || !dto.termsConsent) {
+      throw new Error(
+        'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
+      );
+    }
+
+    if (email !== confirmEmail) {
+      throw new Error('Los correos no coinciden');
+    }
+
+    if (dto.password !== dto.confirmPassword) {
+      throw new PasswordMismatchError();
+    }
+
+    if (!dto.password || !isValidPassword(dto.password)) {
+      throw new WeakPasswordError();
+    }
+
+    return email;
+  }
+
+  /**
+   * Resuelve y valida las referencias de catálogo necesarias para el registro.
+   */
+  private async resolveRegistrationReferences(dto: RegisterUserRequestDto) {
+    const defaultRole = await this.roleRepository.findByName(ROLE_NAME);
+    if (!defaultRole) {
+      throw new Error('No existe el rol por defecto configurado en el sistema');
+    }
+
+    const defaultLevel = await this.membershipLevelRepository.findByName(MEMBERSHIP_LEVEL_NAME);
+    if (!defaultLevel) {
+      throw new Error('No existe el nivel de membresía por defecto configurado en el sistema');
+    }
+
+    const defaultStatus = await this.membershipStatusRepository.findByName(MEMBERSHIP_STATUS_NAME);
+    if (!defaultStatus) {
+      throw new Error('No existe el estado de membresía por defecto configurado en el sistema');
+    }
+
+    const city = await this.cityRepository.findById(dto.cityId);
+    if (!city) {
+      throw new Error('La ciudad principal seleccionada no existe');
+    }
+
+    if (dto.favoriteCinemaId) {
+      const cinema = await this.cinemaRepository.findById(dto.favoriteCinemaId);
+      if (!cinema) {
+        throw new Error('El complejo favorito seleccionado no existe');
+      }
+    }
+
+    return { defaultRole, defaultLevel, defaultStatus };
+  }
+
+  /**
+   * Crea la membresía inicial con código único reintentable.
+   */
+  private async createInitialMembership(
+    userId: number,
+    levelId: number,
+    statusId: number,
+    transaction: Transaction,
+  ): Promise<string> {
+    const maxAttempts = 3;
+    let membershipCode = '';
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      membershipCode = generateMembershipCode();
+      try {
+        await this.membershipRepository.create(
+          {
+            userId,
+            code: membershipCode,
+            levelId,
+            statusId,
+            pointsBalance: 0,
+          },
+          transaction,
+        );
+        return membershipCode;
+      } catch (error) {
+        if (!(error instanceof UniqueConstraintError) || attempt === maxAttempts) {
+          throw error;
+        }
+      }
+    }
+
+    return membershipCode;
+  }
+
+  /**
+   * Valida el estado del usuario antes de verificar contraseña (RN-027, RN-031).
+   */
+  private async validateUserForLogin(
+    user: User | null,
+    email: string,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    if (!user) {
+      await this.recordAudit('FAILED_USER_NOT_FOUND', email, null, ipAddress, deviceUserAgent);
+      throw new InvalidCredentialsError();
+    }
+
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      await this.recordAudit('ACCOUNT_LOCKED', email, user.id, ipAddress, deviceUserAgent);
+      throw new AccountLockedError();
+    }
+
+    if (!user.isActive) {
+      await this.recordAudit('ACCOUNT_NOT_ACTIVATED', email, user.id, ipAddress, deviceUserAgent);
+      throw new AccountNotActivatedError();
+    }
+  }
+
+  /**
+   * Registra el fallo de contraseña e incrementa intentos fallidos (RN-027).
+   */
+  private async handleFailedPassword(
+    userId: number,
+    email: string,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    await this.userRepository.incrementFailedAttempts(userId);
+    await this.recordAudit('FAILED_PASSWORD', email, userId, ipAddress, deviceUserAgent);
+  }
+
+  /**
+   * Registra una auditoría de login en la base de datos.
+   */
+  private async recordAudit(
+    status: string,
+    emailAttempted: string,
+    userId?: number | null,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    await this.loginAuditRepository.create({
+      userId: userId || null,
+      emailAttempted,
+      ipAddress: ipAddress || null,
+      deviceUserAgent: deviceUserAgent || null,
+      status,
+    });
+  }
+
+  /**
+   * Emite tokens y revoca los anteriores en base de datos (RN-028, RN-029, RN-030).
+   */
+  private async issueAndRotateTokens(
+    userId: number,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const accessToken = this.tokenService.generateAccessToken(userId);
+    const refreshToken = this.tokenService.generateRefreshToken(userId);
+
+    await this.refreshTokenRepository.revokeAllByUserId(userId);
+
+    const decodedRefresh = this.tokenService.verifyRefreshToken(refreshToken);
+    if (decodedRefresh?.exp) {
+      await this.refreshTokenRepository.create({
+        userId,
+        tokenHash: refreshToken,
+        expiresAt: new Date(decodedRefresh.exp * 1000),
+      });
+    }
+
+    return { accessToken, refreshToken };
+  }
+
+  /**
+   * Rota el refresh token verificando su validez y revocación previa.
+   */
+  private async rotateRefreshToken(token: string): Promise<{
+    userId: number;
+    accessToken: string;
+    newRefreshToken: string;
+  }> {
+    const decoded = this.tokenService.verifyRefreshToken(token);
+    if (!decoded?.sub) {
+      throw new InvalidTokenError('Refresh token inválido o expirado');
+    }
+
+    const userId = Number(decoded.sub);
+    const existingToken = await this.refreshTokenRepository.findByTokenHash(token);
+    if (!existingToken || existingToken.isRevoked) {
+      throw new InvalidTokenError('Refresh token inválido o revocado');
+    }
+
+    await this.refreshTokenRepository.revoke(existingToken.id);
+
+    const { accessToken, refreshToken: newRefreshToken } = await this.issueAndRotateTokens(userId);
+
+    return { userId, accessToken, newRefreshToken };
+  }
+
+  /**
+   * Valida los datos de entrada para el restablecimiento de contraseña.
+   */
+  private validateResetPasswordInput(dto: ResetPasswordRequestDto): string {
     if (!dto.newPassword || !dto.confirmPassword || dto.newPassword !== dto.confirmPassword) {
       throw new PasswordMismatchError();
     }
@@ -539,14 +590,17 @@ export class AuthService implements IAuthService {
       throw new WeakPasswordError();
     }
 
-    const email = dto.email ? dto.email.trim().toLowerCase() : '';
-    const user = await this.userRepository.findByEmail(email);
+    return dto.email ? dto.email.trim().toLowerCase() : '';
+  }
 
-    if (!user) {
-      throw new InvalidTokenError();
-    }
-
-    const tokenRecord = await this.passwordResetTokenRepository.findLatestUnusedByUserId(user.id);
+  /**
+   * Obtiene y valida la vigencia de un token de recuperación de contraseña.
+   */
+  private async getValidPasswordResetToken(
+    userId: number,
+    plainToken: string,
+  ): Promise<PasswordResetTokenInstance> {
+    const tokenRecord = await this.passwordResetTokenRepository.findLatestUnusedByUserId(userId);
 
     if (!tokenRecord) {
       throw new InvalidTokenError();
@@ -556,16 +610,12 @@ export class AuthService implements IAuthService {
       throw new ExpiredTokenError();
     }
 
-    const isMatch = await this.passwordService.verify(dto.token, tokenRecord.tokenHash);
-
+    const isMatch = await this.passwordService.verify(plainToken, tokenRecord.tokenHash);
     if (!isMatch) {
       throw new InvalidTokenError();
     }
 
-    const { hash: newPasswordHash } = await this.passwordService.hash(dto.newPassword);
-
-    await this.userRepository.updatePassword(user.id, newPasswordHash);
-    await this.passwordResetTokenRepository.markAsUsed(tokenRecord.id);
+    return tokenRecord;
   }
 }
 

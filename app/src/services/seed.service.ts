@@ -11,6 +11,7 @@ import {
   Cinema,
   Room,
   SeatType,
+  Seat,
   Movie,
   Snack,
   Promotion,
@@ -23,6 +24,7 @@ import {
   BonusWallet,
   NotificationPreference,
   PurchaseHistory,
+  CinemaFunction,
 } from '../models/index.js';
 import { generateMembershipCode } from '../utils/crypto.util.js';
 import { ISeedService, SeedPayload, SeedResult } from './interfaces/seed.service.interface.js';
@@ -56,6 +58,7 @@ export class SeedService implements ISeedService {
       movies: 0,
       snacks: 0,
       promotions: 0,
+      functions: 0,
       users: 0,
     };
 
@@ -140,6 +143,7 @@ export class SeedService implements ISeedService {
       }
 
       // 5. Salas
+      const roomMap = new Map<string, number>();
       if (payload.rooms?.length) {
         for (const item of payload.rooms) {
           const cinemaId =
@@ -148,7 +152,7 @@ export class SeedService implements ISeedService {
             cinemaMap.values().next().value ??
             1;
 
-          await Room.findOrCreate({
+          const [room] = await Room.findOrCreate({
             where: { name: item.name, cinemaId },
             defaults: {
               name: item.name,
@@ -159,14 +163,16 @@ export class SeedService implements ISeedService {
             },
             transaction: t,
           });
+          roomMap.set(room.name.toLowerCase(), room.id);
           result.rooms++;
         }
       }
 
       // 6. Tipos de Sillas
+      const seatTypeMap = new Map<string, number>();
       if (payload.seatTypes?.length) {
         for (const item of payload.seatTypes) {
-          await SeatType.findOrCreate({
+          const [st] = await SeatType.findOrCreate({
             where: { name: item.name },
             defaults: {
               name: item.name,
@@ -175,11 +181,46 @@ export class SeedService implements ISeedService {
             },
             transaction: t,
           });
+          seatTypeMap.set(st.name.toLowerCase(), st.id);
           result.seatTypes++;
         }
       }
 
+      // 6.1 Sillas para cada sala
+      const generalTypeId = seatTypeMap.get('general') ?? 1;
+      const prefTypeId = seatTypeMap.get('preferencial') ?? generalTypeId;
+      const vipTypeId = seatTypeMap.get('vip') ?? generalTypeId;
+
+      for (const roomId of roomMap.values()) {
+        const existingCount = await Seat.count({ where: { roomId }, transaction: t });
+        if (existingCount === 0) {
+          const rows = [
+            { row: 'A', typeId: generalTypeId, count: 6 },
+            { row: 'B', typeId: generalTypeId, count: 6 },
+            { row: 'C', typeId: prefTypeId, count: 6 },
+            { row: 'D', typeId: vipTypeId, count: 6 },
+          ];
+
+          for (const r of rows) {
+            for (let num = 1; num <= r.count; num++) {
+              await Seat.create(
+                {
+                  roomId,
+                  seatTypeId: r.typeId,
+                  row: r.row,
+                  number: num,
+                  isAvailable: true,
+                  isActive: true,
+                },
+                { transaction: t },
+              );
+            }
+          }
+        }
+      }
+
       // 7. Películas
+      const movieMap = new Map<string, number>();
       if (payload.movies?.length) {
         for (const item of payload.movies) {
           const [movie] = await Movie.findOrCreate({
@@ -210,7 +251,10 @@ export class SeedService implements ISeedService {
             },
             transaction: t,
           });
-          if (movie) result.movies++;
+          if (movie) {
+            movieMap.set(movie.title.toLowerCase(), movie.id);
+            result.movies++;
+          }
         }
       }
 
@@ -259,6 +303,45 @@ export class SeedService implements ISeedService {
             transaction: t,
           });
           result.promotions++;
+        }
+      }
+
+      // 10. Funciones
+      if (payload.functions?.length) {
+        for (const item of payload.functions) {
+          const movieId =
+            item.movieId ??
+            (item.movieTitle ? movieMap.get(item.movieTitle.toLowerCase()) : undefined) ??
+            movieMap.values().next().value ??
+            1;
+
+          const roomId =
+            item.roomId ??
+            (item.roomName ? roomMap.get(item.roomName.toLowerCase()) : undefined) ??
+            roomMap.values().next().value ??
+            1;
+
+          const startTime = new Date(item.startTime);
+          const endTime = item.endTime ? new Date(item.endTime) : new Date(startTime.getTime() + 120 * 60 * 1000);
+
+          await CinemaFunction.findOrCreate({
+            where: { movieId, roomId, startTime },
+            defaults: {
+              movieId,
+              roomId,
+              startTime,
+              endTime,
+              price: item.price,
+              availableSeats: item.availableSeats ?? item.totalSeats ?? 100,
+              totalSeats: item.totalSeats ?? item.availableSeats ?? 100,
+              format: item.format ?? '2D',
+              room: item.room ?? item.roomName ?? 'Sala Estándar',
+              isActive: item.isActive !== false,
+              active: item.isActive !== false,
+            },
+            transaction: t,
+          });
+          result.functions++;
         }
       }
 

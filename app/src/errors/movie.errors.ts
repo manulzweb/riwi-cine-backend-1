@@ -95,3 +95,34 @@ export class UserInactiveError extends DomainError {
     super(message, 400, 'USER_INACTIVE');
   }
 }
+
+/**
+ * ============================================================================
+ * Errores de Dominio — Funciones y Formatos (HU-009)
+ * ============================================================================
+ */
+
+export class FunctionNotFoundError extends DomainError {
+  constructor(message = 'La función solicitada no fue encontrada.') {
+    super(message, 404, 'FUNCTION_NOT_FOUND');
+  }
+}
+
+export class FunctionInactiveError extends DomainError {
+  constructor(message = 'La función no se encuentra activa.') {
+    super(message, 400, 'FUNCTION_INACTIVE');
+  }
+}
+
+export class FunctionAlreadyStartedError extends DomainError {
+  constructor(message = 'No se pueden seleccionar funciones pasadas o ya iniciadas.') {
+    super(message, 400, 'FUNCTION_ALREADY_STARTED');
+  }
+}
+
+export class InvalidFunctionIdError extends DomainError {
+  constructor(message = 'El ID de la función es inválido.') {
+    super(message, 400, 'INVALID_FUNCTION_ID');
+  }
+}
+

@@ -6,7 +6,7 @@ import cartRepository, { snackRepository } from '../repositories/cart.repository
 import BonusWalletRepository from '../repositories/bonus-wallet.repository.js';
 
 const bonusWalletRepository = new BonusWalletRepository();
-import reservationService from './reservation.service.js';
+import { reservationService } from '../containers/reservation.container.js';
 import {
   ICartService,
   IExpireCartsResult,

@@ -70,6 +70,20 @@ export interface SeedPayload {
     endDate: string;
     isActive?: boolean;
   }>;
+  functions?: Array<{
+    movieTitle?: string;
+    movieId?: number;
+    roomName?: string;
+    roomId?: number;
+    startTime: string;
+    endTime?: string;
+    price: number;
+    availableSeats?: number;
+    totalSeats?: number;
+    format?: string;
+    room?: string;
+    isActive?: boolean;
+  }>;
   users?: Array<{
     email: string;
     password: string;
@@ -94,6 +108,7 @@ export interface SeedResult {
   movies: number;
   snacks: number;
   promotions: number;
+  functions: number;
   users: number;
 }
 

@@ -11,5 +11,8 @@ export interface IMembershipRepository {
   findByCode(code: string, transaction?: Transaction): Promise<Membership | null>;
 
   /** Busca la membresía asociada a un usuario. */
-  findByUserId(userId: number): Promise<Membership | null>;
+  findByUserId(userId: number, transaction?: Transaction): Promise<Membership | null>;
+
+  /** Busca la membresía con sus relaciones de nivel y estado. */
+  findByUserIdWithDetails(userId: number, transaction?: Transaction): Promise<Membership | null>;
 }

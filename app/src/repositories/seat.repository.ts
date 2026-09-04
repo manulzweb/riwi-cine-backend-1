@@ -6,25 +6,14 @@ import Seat from '../models/seat.model.js';
 import SeatType from '../models/seat-type.model.js';
 import CinemaFunction from '../models/function.model.js';
 
-class SeatRepository implements ISeatRepository {
+export class SeatRepository implements ISeatRepository {
   /**
-   * Obtiene todas las sillas correspondientes a la sala
-   * donde se realiza una función.
+   * Obtiene todas las sillas activas de una sala específica con su tipo de silla.
    */
-  async findByFunctionId(functionId: number): Promise<Seat[]> {
-    const cinemaFunction = await CinemaFunction.findByPk(functionId);
-
-    if (!cinemaFunction) {
-      throw new Error('La función no existe.');
-    }
-
-    if (!cinemaFunction.roomId) {
-      throw new Error('La función no tiene una sala asociada.');
-    }
-
+  async findByRoomId(roomId: number): Promise<Seat[]> {
     return await Seat.findAll({
       where: {
-        roomId: cinemaFunction.roomId,
+        roomId,
         isActive: true,
       },
       include: [
@@ -41,26 +30,15 @@ class SeatRepository implements ISeatRepository {
   }
 
   /**
-   * Obtiene las sillas solicitadas verificando que pertenezcan
-   * a la sala de la función.
+   * Obtiene un conjunto de sillas dentro de una sala específica.
    */
-  async findByIds(seatIds: number[], functionId: number): Promise<Seat[]> {
-    const cinemaFunction = await CinemaFunction.findByPk(functionId);
-
-    if (!cinemaFunction) {
-      throw new Error('La función no existe.');
-    }
-
-    if (!cinemaFunction.roomId) {
-      throw new Error('La función no tiene una sala asociada.');
-    }
-
+  async findByIdsInRoom(seatIds: number[], roomId: number): Promise<Seat[]> {
     return await Seat.findAll({
       where: {
         id: {
           [Op.in]: seatIds,
         },
-        roomId: cinemaFunction.roomId,
+        roomId,
         isActive: true,
       },
       include: [
@@ -74,6 +52,30 @@ class SeatRepository implements ISeatRepository {
         ['number', 'ASC'],
       ],
     });
+  }
+
+  /**
+   * Obtiene todas las sillas de la sala asociada a una función.
+   */
+  async findByFunctionId(functionId: number): Promise<Seat[]> {
+    const cinemaFunction = await CinemaFunction.findByPk(functionId);
+    if (!cinemaFunction || !cinemaFunction.roomId) {
+      return [];
+    }
+
+    return this.findByRoomId(cinemaFunction.roomId);
+  }
+
+  /**
+   * Obtiene las sillas solicitadas verificando que pertenezcan a la sala de la función.
+   */
+  async findByIds(seatIds: number[], functionId: number): Promise<Seat[]> {
+    const cinemaFunction = await CinemaFunction.findByPk(functionId);
+    if (!cinemaFunction || !cinemaFunction.roomId) {
+      return [];
+    }
+
+    return this.findByIdsInRoom(seatIds, cinemaFunction.roomId);
   }
 
   /**
@@ -91,4 +93,4 @@ class SeatRepository implements ISeatRepository {
   }
 }
 
-export default new SeatRepository();
+export default SeatRepository;

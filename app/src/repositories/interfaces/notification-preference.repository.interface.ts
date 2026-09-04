@@ -10,5 +10,10 @@ export interface INotificationPreferenceRepository {
     data: NotificationPreferenceCreationAttributes,
     transaction?: Transaction,
   ): Promise<NotificationPreference>;
-  findByUserId(userId: number): Promise<NotificationPreference | null>;
+  findByUserId(userId: number, transaction?: Transaction): Promise<NotificationPreference | null>;
+  updateByUserId(
+    userId: number,
+    data: Partial<NotificationPreferenceCreationAttributes>,
+    transaction?: Transaction,
+  ): Promise<NotificationPreference | null>;
 }
