@@ -1,17 +1,7 @@
 // app/src/routes/movie.routes.ts
 
 import { Router } from 'express';
-import {
-  getMovies,
-  getWeeklyMovies,
-  getTodayMovies,
-  getMoviesByFilter,
-  getMovieDetail,
-  getMovieFunctions,
-  getMovieRecommendations,
-  getUpcomingMovies,
-  getUpcomingMovie,
-} from '../controllers/movie.controller';
+import { movieController } from '../containers/movie.container.js';
 
 const router = Router();
 
@@ -24,7 +14,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/movies:
+ * /movies:
  *   get:
  *     summary: Obtener todas las películas activas
  *     tags: [Movies]
@@ -53,11 +43,11 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/', getMovies);
+router.get('/', movieController.getMovies);
 
 /**
  * @swagger
- * /api/movies/upcoming:
+ * /movies/upcoming:
  *   get:
  *     summary: Obtener las películas en estado "Próximo Estreno"
  *     tags: [Movies]
@@ -97,11 +87,11 @@ router.get('/', getMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/upcoming', getUpcomingMovies);
+router.get('/upcoming', movieController.getUpcomingMovies);
 
 /**
  * @swagger
- * /api/movies/upcoming/{id}:
+ * /movies/upcoming/{id}:
  *   get:
  *     summary: Obtener el detalle de una película en estado "Próximo Estreno"
  *     tags: [Movies]
@@ -150,11 +140,11 @@ router.get('/upcoming', getUpcomingMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/upcoming/:id', getUpcomingMovie);
+router.get('/upcoming/:id', movieController.getUpcomingMovie);
 
 /**
  * @swagger
- * /api/movies/weekly:
+ * /movies/weekly:
  *   get:
  *     summary: Obtener cartelera semanal (próximos 7 días) para la ubicación del usuario
  *     tags: [Movies]
@@ -171,11 +161,11 @@ router.get('/upcoming/:id', getUpcomingMovie);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/weekly', getWeeklyMovies);
+router.get('/weekly', movieController.getWeeklyMovies);
 
 /**
  * @swagger
- * /api/movies/today:
+ * /movies/today:
  *   get:
  *     summary: Obtener películas programadas para el día de hoy
  *     tags: [Movies]
@@ -192,11 +182,11 @@ router.get('/weekly', getWeeklyMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/today', getTodayMovies);
+router.get('/today', movieController.getTodayMovies);
 
 /**
  * @swagger
- * /api/movies/filter:
+ * /movies/filter:
  *   get:
  *     summary: Filtrar películas/funciones por criterios (Fecha, Género, Idioma, Formato, etc.)
  *     tags: [Movies]
@@ -256,11 +246,11 @@ router.get('/today', getTodayMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/filter', getMoviesByFilter);
+router.get('/filter', movieController.getMoviesByFilter);
 
 /**
  * @swagger
- * /api/movies/{id}:
+ * /movies/{id}:
  *   get:
  *     summary: Obtener el detalle completo de una película por su ID
  *     tags: [Movies]
@@ -279,11 +269,11 @@ router.get('/filter', getMoviesByFilter);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id', getMovieDetail);
+router.get('/:id', movieController.getMovieDetail);
 
 /**
  * @swagger
- * /api/movies/{id}/functions:
+ * /movies/{id}/functions:
  *   get:
  *     summary: Obtener las funciones activas y futuras para una película
  *     tags: [Movies]
@@ -306,11 +296,11 @@ router.get('/:id', getMovieDetail);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id/functions', getMovieFunctions);
+router.get('/:id/functions', movieController.getMovieFunctions);
 
 /**
  * @swagger
- * /api/movies/{id}/recommendations:
+ * /movies/{id}/recommendations:
  *   get:
  *     summary: Obtener recomendaciones de películas similares
  *     tags: [Movies]
@@ -327,6 +317,6 @@ router.get('/:id/functions', getMovieFunctions);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id/recommendations', getMovieRecommendations);
+router.get('/:id/recommendations', movieController.getMovieRecommendations);
 
 export default router;

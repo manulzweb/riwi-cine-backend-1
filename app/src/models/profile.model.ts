@@ -1,7 +1,7 @@
 // app/src/models/profile.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface ProfileAttributes {
   id: number;
@@ -26,20 +26,20 @@ class Profile
   extends Model<ProfileAttributes, ProfileCreationAttributes>
   implements ProfileAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public firstName!: string;
-  public lastName!: string;
-  public documentType!: string;
-  public documentNumber!: string;
-  public birthDate!: Date;
-  public gender!: string | null;
-  public phone!: string;
-  public cityId!: number;
-  public favoriteCinemaId!: number | null;
+  declare id: number;
+  declare userId: number;
+  declare firstName: string;
+  declare lastName: string;
+  declare documentType: string;
+  declare documentNumber: string;
+  declare birthDate: Date;
+  declare gender: string | null;
+  declare phone: string;
+  declare cityId: number;
+  declare favoriteCinemaId: number | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Profile.init(

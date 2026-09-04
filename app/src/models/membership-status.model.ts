@@ -1,7 +1,7 @@
 // app/src/models/membership-status.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface MembershipStatusAttributes {
   id: number;
@@ -18,9 +18,9 @@ class MembershipStatus
   extends Model<MembershipStatusAttributes, MembershipStatusCreationAttributes>
   implements MembershipStatusAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
 }
 
 MembershipStatus.init(

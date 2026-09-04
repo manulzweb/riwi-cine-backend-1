@@ -1,8 +1,8 @@
 // app/src/services/city.service.ts
 
-import City from '../models/city.model';
-import repository from '../repositories/city.repository';
-import { ICityService } from './interfaces/city.service.interface';
+import City from '../models/city.model.js';
+import { ICityService } from './interfaces/city.service.interface.js';
+import { ICityRepository } from '../repositories/interfaces/city.repository.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -17,6 +17,7 @@ import { ICityService } from './interfaces/city.service.interface';
  * correspondiente repository.
  *
  * @class CityService
+ * @implements {ICityService}
  *
  * @business
  * Las ciudades dependen jerárquicamente de los departamentos. Esta
@@ -24,6 +25,9 @@ import { ICityService } from './interfaces/city.service.interface';
  * (`País → Departamento → Ciudad`).
  */
 class CityService implements ICityService {
+  constructor(private readonly cityRepository: ICityRepository) {
+    this.cityRepository = cityRepository;
+  }
   /**
    * Obtiene todas las ciudades pertenecientes a un departamento.
    *
@@ -37,14 +41,8 @@ class CityService implements ICityService {
    * Lista de ciudades asociadas al departamento indicado.
    */
   async findByDepartmentId(departmentId: number): Promise<City[]> {
-    return await repository.findByDepartmentId(departmentId);
+    return await this.cityRepository.findByDepartmentId(departmentId);
   }
 }
 
-/**
- * Instancia única del servicio de ciudades utilizada por la aplicación.
- *
- * @constant
- * @type {CityService}
- */
-export default new CityService();
+export default CityService;

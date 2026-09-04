@@ -1,7 +1,7 @@
 // app/src/models/membership.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface MembershipAttributes {
   id: number;
@@ -18,15 +18,15 @@ class Membership
   extends Model<MembershipAttributes, MembershipCreationAttributes>
   implements MembershipAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public code!: string;
-  public levelId!: number;
-  public statusId!: number;
-  public pointsBalance!: number;
+  declare id: number;
+  declare userId: number;
+  declare code: string;
+  declare levelId: number;
+  declare statusId: number;
+  declare pointsBalance: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Membership.init(

@@ -1,7 +1,7 @@
 // app/src/services/captcha/recaptcha-v2.adapter.ts
 
-import { envConfig } from '../../config/env';
-import { CaptchaResult, ICaptchaAdapter } from './interfaces/captcha.adapter';
+import { envConfig } from '../../config/env.js';
+import { CaptchaResult, ICaptchaAdapter } from './interfaces/captcha.adapter.js';
 
 /** Respuesta cruda de https://www.google.com/recaptcha/api/siteverify */
 interface GoogleSiteVerifyResponse {

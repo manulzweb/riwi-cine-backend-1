@@ -1,8 +1,8 @@
 // app/src/repositories/cinema.repository.ts
 
-import { Transaction } from 'sequelize';
-import Cinema, { CinemaCreationAttributes } from '../models/cinema.model';
-import { ICinemaRepository } from './interfaces/cinema.repository.interface';
+import { Transaction, WhereOptions } from 'sequelize';
+import Cinema, { CinemaCreationAttributes } from '../models/cinema.model.js';
+import { ICinemaRepository } from './interfaces/cinema.repository.interface.js';
 
 /**
  * Repositorio de Cines
@@ -31,9 +31,17 @@ class CinemaRepository implements ICinemaRepository {
   /**
    * Obtiene todos los cines de una ciudad.
    */
-  async findByCity(city: string): Promise<Cinema[]> {
-    return await Cinema.findAll({ where: { city } });
+  async findByCityId(cityId: number, isActive?: boolean): Promise<Cinema[]> {
+    const whereOptions: WhereOptions<Cinema> = {
+      cityId,
+    };
+
+    if (isActive !== undefined) {
+      whereOptions.isActive = isActive;
+    }
+
+    return Cinema.findAll({ where: whereOptions });
   }
 }
 
-export default new CinemaRepository();
+export default CinemaRepository;

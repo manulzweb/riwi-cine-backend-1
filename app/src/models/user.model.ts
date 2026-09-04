@@ -14,7 +14,7 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 /**
  * Atributos principales de la entidad `User`.
@@ -62,46 +62,46 @@ export type UserCreationAttributes = Optional<
  */
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   /** Identificador único del usuario (clave primaria). */
-  public id!: number;
+  declare id: number;
 
   /** Identificador del rol asignado. */
-  public roleId!: number;
+  declare roleId: number;
 
   /** Dirección de correo electrónico única del usuario. */
-  public email!: string;
+  declare email: string;
 
   /** Hash de la contraseña cifrada. */
-  public passwordHash!: string;
+  declare passwordHash: string;
 
   /** Indica si el usuario ha sido activado. */
-  public isActive!: boolean;
+  declare isActive: boolean;
 
   /** Fecha y hora en que la cuenta fue activada. */
-  public activatedAt!: Date | null;
+  declare activatedAt: Date | null;
 
   /** Fecha y hora en que el correo electrónico fue verificado. */
-  public emailVerifiedAt!: Date | null;
+  declare emailVerifiedAt: Date | null;
 
   /** Contador de intentos fallidos de inicio de sesión. */
-  public failedLoginAttempts!: number;
+  declare failedLoginAttempts: number;
 
   /** Fecha y hora hasta la cual la cuenta está bloqueada. */
-  public lockedUntil!: Date | null;
+  declare lockedUntil: Date | null;
 
   /** Fecha y hora del último inicio de sesión. */
-  public lastLoginAt!: Date | null;
+  declare lastLoginAt: Date | null;
 
   /** Indica si el usuario dio consentimiento para el tratamiento de datos personales. */
-  public personalDataConsent!: boolean;
+  declare personalDataConsent: boolean;
 
   /** Indica si el usuario aceptó los términos y condiciones. */
-  public termsConsent!: boolean;
+  declare termsConsent: boolean;
 
   /** Indica si el usuario aceptó recibir comunicaciones comerciales. */
-  public commercialConsent!: boolean;
+  declare commercialConsent: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 /**

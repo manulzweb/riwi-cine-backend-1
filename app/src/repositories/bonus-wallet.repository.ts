@@ -1,8 +1,8 @@
 // app/src/repositories/bonus-wallet.repository.ts
 
 import { Transaction } from 'sequelize';
-import BonusWallet, { BonusWalletCreationAttributes } from '../models/bonus-wallet.model';
-import { IBonusWalletRepository } from './interfaces/bonus-wallet.repository.interface';
+import BonusWallet, { BonusWalletCreationAttributes } from '../models/bonus-wallet.model.js';
+import { IBonusWalletRepository } from './interfaces/bonus-wallet.repository.interface.js';
 
 /**
  * Repositorio de Billeteras de Bonos
@@ -24,12 +24,13 @@ class BonusWalletRepository implements IBonusWalletRepository {
     return await BonusWallet.create(data, { transaction });
   }
 
-  /**
-   * Busca la billetera de bonos de un usuario.
-   */
-  async findByUserId(userId: number): Promise<BonusWallet | null> {
-    return await BonusWallet.findOne({ where: { userId } });
+  async findByUserId(userId: number, transaction?: Transaction): Promise<BonusWallet | null> {
+    return await BonusWallet.findOne({ where: { userId }, transaction });
+  }
+
+  async decrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void> {
+    await BonusWallet.decrement('balance', { by: amount, where: { userId }, transaction });
   }
 }
 
-export default new BonusWalletRepository();
+export default BonusWalletRepository;

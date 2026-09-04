@@ -1,7 +1,7 @@
 // app/src/models/purchase-history.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface PurchaseHistoryAttributes {
   id: number;
@@ -27,14 +27,14 @@ class PurchaseHistory
   extends Model<PurchaseHistoryAttributes, PurchaseHistoryCreationAttributes>
   implements PurchaseHistoryAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public totalPurchases!: number;
-  public totalSpent!: number;
-  public lastPurchaseAt!: Date | null;
+  declare id: number;
+  declare userId: number;
+  declare totalPurchases: number;
+  declare totalSpent: number;
+  declare lastPurchaseAt: Date | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 PurchaseHistory.init(

@@ -1,6 +1,6 @@
 // app/src/services/interfaces/token.service.interface.ts
 
-import type { AccessTokenPayload, RefreshTokenPayload } from '../../types/auth.types';
+import type { AccessTokenPayload, RefreshTokenPayload } from '../../types/auth.types.js';
 
 export interface ITokenService {
   /**

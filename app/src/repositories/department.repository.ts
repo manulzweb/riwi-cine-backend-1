@@ -1,7 +1,7 @@
 // app/src/repositories/department.repository.ts
 
-import Department from '../models/department.model';
-import { IDepartmentRepository } from './interfaces/department.repository.interface';
+import Department from '../models/department.model.js';
+import { IDepartmentRepository } from './interfaces/department.repository.interface.js';
 
 /**
  * Repositorio de Departamentos
@@ -14,6 +14,13 @@ import { IDepartmentRepository } from './interfaces/department.repository.interf
 
 class DepartmentRepository implements IDepartmentRepository {
   /**
+   * Busca una departamento por su identificador.
+   */
+  async findById(id: number): Promise<Department | null> {
+    return await Department.findByPk(id);
+  }
+
+  /**
    * Obtiene todos los departamentos de un país.
    */
   async findByCountryId(countryId: number): Promise<Department[]> {
@@ -21,4 +28,4 @@ class DepartmentRepository implements IDepartmentRepository {
   }
 }
 
-export default new DepartmentRepository();
+export default DepartmentRepository;

@@ -1,14 +1,14 @@
 // app/src/services/email-notification.service.ts
 
-import Movie from '../models/movie.model';
-import UpcomingMovieNotification from '../models/upcoming-movie-notification.model';
-import User from '../models/user.model';
-import { sendUpcomingReleaseEmail } from '../config/mailer';
-import { todayDateOnly } from '../utils/date.util';
+import Movie from '../models/movie.model.js';
+import UpcomingMovieNotification from '../models/upcoming-movie-notification.model.js';
+import User from '../models/user.model.js';
+import { sendUpcomingReleaseEmail } from '../config/mailer.js';
+import { todayDateOnly } from '../utils/date.util.js';
 import {
   IEmailNotificationService,
   ProcessResult,
-} from './interfaces/email-notification.service.interface';
+} from './interfaces/email-notification.service.interface.js';
 
 /**
  * Servicio encargado de enviar las notificaciones por correo

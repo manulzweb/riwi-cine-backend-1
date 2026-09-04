@@ -4,7 +4,7 @@ import { Transaction } from 'sequelize';
 import type {
   EmailVerificationTokenCreationAttributes,
   EmailVerificationTokenInstance,
-} from '../../models/email-verification-token.model';
+} from '../../models/email-verification-token.model.js';
 /**
  * Contrato del Repositorio de Tokens de Verificación
  * --------------------------------------------------

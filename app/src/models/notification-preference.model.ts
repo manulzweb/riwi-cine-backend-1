@@ -1,7 +1,7 @@
 // app/src/models/notification-preference.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface NotificationPreferenceAttributes {
   id: number;
@@ -20,14 +20,14 @@ class NotificationPreference
   extends Model<NotificationPreferenceAttributes, NotificationPreferenceCreationAttributes>
   implements NotificationPreferenceAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public emailEnabled!: boolean;
-  public smsEnabled!: boolean;
-  public pushEnabled!: boolean;
+  declare id: number;
+  declare userId: number;
+  declare emailEnabled: boolean;
+  declare smsEnabled: boolean;
+  declare pushEnabled: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 NotificationPreference.init(

@@ -1,7 +1,7 @@
 // app/src/models/bonus-wallet.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface BonusWalletAttributes {
   id: number;
@@ -15,12 +15,12 @@ class BonusWallet
   extends Model<BonusWalletAttributes, BonusWalletCreationAttributes>
   implements BonusWalletAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public balance!: number;
+  declare id: number;
+  declare userId: number;
+  declare balance: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 BonusWallet.init(

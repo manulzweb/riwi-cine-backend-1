@@ -1,6 +1,6 @@
 // app/src/seed/seed.ts
 
-import { Role, MembershipLevel, MembershipStatus } from '../models';
+import { Role, MembershipLevel, MembershipStatus } from '../models/index.js';
 
 export const runSeed = async (): Promise<void> => {
   // 1. Roles
@@ -16,7 +16,27 @@ export const runSeed = async (): Promise<void> => {
   // Membership
   await MembershipLevel.findOrCreate({
     where: { name: 'BÁSICA' },
-    defaults: { name: 'BÁSICA', description: 'Nivel inicial de membresía digital.' },
+    defaults: {
+      name: 'BÁSICA',
+      description: 'Nivel inicial de membresía digital.',
+      discountPercentage: 0,
+    },
+  });
+  await MembershipLevel.findOrCreate({
+    where: { name: 'ESTÁNDAR' },
+    defaults: {
+      name: 'ESTÁNDAR',
+      description: 'Nivel intermedio de membresía digital.',
+      discountPercentage: 5,
+    },
+  });
+  await MembershipLevel.findOrCreate({
+    where: { name: 'PREMIUM' },
+    defaults: {
+      name: 'PREMIUM',
+      description: 'Nivel superior de membresía digital.',
+      discountPercentage: 10,
+    },
   });
   await MembershipStatus.findOrCreate({
     where: { name: 'Activa' },

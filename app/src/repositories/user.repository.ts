@@ -1,9 +1,9 @@
 // app/src/repositories/user.repository.ts
 
 import { Transaction } from 'sequelize';
-import User, { UserCreationAttributes } from '../models/user.model';
-import { IUserRepository } from './interfaces/user.repository.interface';
-import { envConfig } from '../config/env';
+import User, { UserCreationAttributes } from '../models/user.model.js';
+import { IUserRepository } from './interfaces/user.repository.interface.js';
+import { envConfig } from '../config/env.js';
 
 /**
  * Repositorio de Usuarios
@@ -105,4 +105,4 @@ class UserRepository implements IUserRepository {
   }
 }
 
-export default new UserRepository();
+export default UserRepository;

@@ -1,7 +1,10 @@
 // app/src/controllers/department.controller.ts
 
 import { Request, Response } from 'express';
-import departmentService from '../services/department.service';
+
+import { IDepartmentService } from '../services/interfaces/department.service.interface.js';
+
+import { asyncHandler } from '../middleware/async-handler.js';
 
 /**
  * ============================================================================
@@ -41,48 +44,56 @@ import departmentService from '../services/department.service';
  * PostgreSQL
  * ============================================================================
  */
+export class DepartmentController {
+  /**
+   * Servicio encargado de ejecutar la lógica de negocio relacionada con
+   * los departamentos.
+   */
+  constructor(private readonly departmentService: IDepartmentService) {}
 
-/**
- * Obtiene el listado de departamentos pertenecientes a un país.
- *
- * Convierte el parámetro de ruta a entero, delega la consulta al servicio
- * filtrando por país y retorna la colección de departamentos.
- *
- * @async
- *
- * @param {Request} req
- * Objeto de la petición HTTP.
- *
- * Espera recibir en params:
- * @example
- * GET /api/departments/country/1
- * req.params.countryId = "1"
- *
- * @param {Response} res
- * Objeto utilizado para construir la respuesta HTTP.
- *
- * @returns {Promise<Response>}
- * Promesa que resuelve una respuesta HTTP.
- *
- * Posibles respuestas:
- *
- * - **200 OK**
- *   Lista de departamentos obtenida correctamente (puede ser vacía).
- *
- * - **500 Internal Server Error**
- *   Error inesperado durante la consulta.
- *
- * @throws {Error}
- * Cualquier excepción generada por la capa de servicios será capturada
- * y retornada como una respuesta HTTP con código 500.
- */
-export const getDepartments = async (req: Request, res: Response): Promise<Response> => {
-  try {
+  /**
+   * ==========================================================================
+   * Obtiene el listado de departamentos pertenecientes a un país.
+   * ==========================================================================
+   *
+   * Convierte el parámetro de ruta a entero, delega la consulta al servicio
+   * filtrando por país y retorna la colección de departamentos.
+   *
+   * @async
+   *
+   * @param {Request} req
+   * Objeto de la petición HTTP.
+   *
+   * Espera recibir en params:
+   * @example
+   * GET /api/departments/1
+   * req.params.countryId = "1"
+   *
+   * @param {Response} res
+   * Objeto utilizado para construir la respuesta HTTP.
+   *
+   * @returns {Promise<void>}
+   *
+   * Posibles respuestas:
+   *
+   * - **200 OK**
+   *   Lista de departamentos obtenida correctamente (puede ser vacía).
+   *
+   * - **400 Bad Request**
+   *   ID de país inválido.
+   *
+   * - **500 Internal Server Error**
+   *   Error inesperado durante la consulta.
+   */
+  public getDepartments = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const countryId = Number.parseInt(req.params.countryId, 10);
-    const departments = await departmentService.findByCountryId(countryId);
-    return res.status(200).json(departments);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(500).json({ error: message });
-  }
-};
+
+    if (Number.isNaN(countryId)) {
+      res.status(400).json({ error: 'ID de país inválido.' });
+      return;
+    }
+
+    const departments = await this.departmentService.findByCountryId(countryId);
+    res.status(200).json(departments);
+  });
+}

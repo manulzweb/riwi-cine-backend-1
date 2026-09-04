@@ -5,7 +5,7 @@
  *
  * Define las operaciones de persistencia para la entidad Role.
  */
-import Role, { RoleCreationAttributes } from '../../models/role.model';
+import Role, { RoleCreationAttributes } from '../../models/role.model.js';
 
 export interface IRoleRepository {
   /** Crea un rol. */

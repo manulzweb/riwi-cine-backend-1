@@ -5,7 +5,7 @@
  *
  * Encapsula la consulta de cines y la validación de la relación con la ciudad.
  */
-import Cinema, { CinemaCreationAttributes } from '../../models/cinema.model';
+import Cinema, { CinemaCreationAttributes } from '../../models/cinema.model.js';
 
 export interface ICinemaRepository {
   /** Crea un complejo de cine. */
@@ -15,5 +15,5 @@ export interface ICinemaRepository {
   findById(id: number): Promise<Cinema | null>;
 
   /** Busca complejos de cine por ciudad. */
-  findByCity(city: string): Promise<Cinema[]>;
+  findByCityId(cityId: number, isActive: boolean): Promise<Cinema[]>;
 }

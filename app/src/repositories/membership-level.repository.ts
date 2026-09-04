@@ -3,8 +3,8 @@
 import { Transaction } from 'sequelize';
 import MembershipLevel, {
   MembershipLevelCreationAttributes,
-} from '../models/membership-level.model';
-import { IMembershipLevelRepository } from './interfaces/membership-level.repository.interface';
+} from '../models/membership-level.model.js';
+import { IMembershipLevelRepository } from './interfaces/membership-level.repository.interface.js';
 
 /**
  * Repositorio de Niveles de Membresía
@@ -41,4 +41,4 @@ class MembershipLevelRepository implements IMembershipLevelRepository {
   }
 }
 
-export default new MembershipLevelRepository();
+export default MembershipLevelRepository;

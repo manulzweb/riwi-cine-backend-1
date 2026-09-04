@@ -2,17 +2,9 @@
 
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import {
-  login,
-  register,
-  verifyEmail,
-  refreshToken,
-  logoutUser,
-  forgotPassword,
-  resetPassword,
-} from '../controllers/auth.controller';
-import { envConfig } from '../config/env';
-import { verifyCaptcha } from '../middleware/captcha.middleware';
+import { authController } from '../containers/auth.container.js';
+import { envConfig } from '../config/env.js';
+import { verifyCaptcha } from '../middleware/captcha.middleware.js';
 
 const registerLimiter = rateLimit({
   windowMs: envConfig.REGISTER.WINDOW_MS,
@@ -26,12 +18,12 @@ const registerLimiter = rateLimit({
 const router = Router();
 
 /**
- * POST /api/auth/login
+ * POST /auth/login
  * --------------------
  * Autentica un usuario existente y genera un token JWT de acceso.
  *
  * @swagger
- * /api/auth/login:
+ * /auth/login:
  *   post:
  *     summary: Autenticar usuario y generar token
  *     tags: [Auth]
@@ -86,17 +78,17 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', login);
+router.post('/login', authController.login);
 
 /**
- * POST /api/auth/register
+ * POST /auth/register
  * -----------------------
  * Registra un nuevo usuario en la plataforma, creando su perfil,
  * membresía digital en estado Activa, billetera de bonos, preferencias de
  * notificación y genera un token temporal de activación por 24 horas.
  *
  * @swagger
- * /api/auth/register:
+ * /auth/register:
  *   post:
  *     summary: Registrar un nuevo usuario y membresía digital
  *     tags: [Auth]
@@ -221,15 +213,15 @@ router.post('/login', login);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/register', registerLimiter, verifyCaptcha(), register);
+router.post('/register', registerLimiter, verifyCaptcha(), authController.register);
 
 /**
- * POST /api/auth/verify-email
+ * POST /auth/verify-email
  * ---------------------------
  * Activa la cuenta de un usuario utilizando el token recibido por correo electrónico.
  *
  * @swagger
- * /api/auth/verify-email:
+ * /auth/verify-email:
  *   post:
  *     summary: Verificar correo y activar cuenta
  *     tags: [Auth]
@@ -273,11 +265,11 @@ router.post('/register', registerLimiter, verifyCaptcha(), register);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/verify-email', verifyEmail);
+router.post('/verify-email', authController.verifyEmail);
 
-router.post('/refresh', refreshToken);
-router.post('/logout', logoutUser);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/refresh', authController.refreshToken);
+router.post('/logout', authController.logoutUser);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
 export default router;

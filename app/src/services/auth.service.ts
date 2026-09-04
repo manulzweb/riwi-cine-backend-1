@@ -1,49 +1,45 @@
 // app/src/services/auth.service.ts
 
+import crypto from 'node:crypto';
 import { Transaction, UniqueConstraintError } from 'sequelize';
-import { unitOfWork } from '../utils/unit-of-work';
+import sequelize from '../config/database.js';
 
-import { RegisterUserRequestDto } from '../dto/request/register-user.dto';
-import { LoginUserRequestDto } from '../dto/request/login-user.dto';
-import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto';
+import { RegisterUserRequestDto } from '../dto/request/register-user.dto.js';
+import { LoginUserRequestDto } from '../dto/request/login-user.dto.js';
+import { VerifyEmailRequestDto } from '../dto/request/verify-email.dto.js';
+import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto.js';
+import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto.js';
 
 import {
   IAuthService,
   LoginUserResult,
   RegisterUserResult,
-} from './interfaces/auth.service.interface';
+} from './interfaces/auth.service.interface.js';
 
-import { isValidPassword } from '../utils/password.util';
-import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer';
-import { generateMembershipCode } from '../utils/crypto.util';
-import {
-  generateResetToken,
-  getResetTokenExpiry,
-  hashResetToken,
-  verifyResetToken,
-} from '../utils/reset-token.util';
+import { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
+import { IRoleRepository } from '../repositories/interfaces/role.repository.interface.js';
+import { IProfileRepository } from '../repositories/interfaces/profile.repository.interface.js';
+import { IMembershipRepository } from '../repositories/interfaces/membership.repository.interface.js';
+import { IMembershipLevelRepository } from '../repositories/interfaces/membership-level.repository.interface.js';
+import { IMembershipStatusRepository } from '../repositories/interfaces/membership-status.repository.interface.js';
+import { IBonusWalletRepository } from '../repositories/interfaces/bonus-wallet.repository.interface.js';
+import { IPurchaseHistoryRepository } from '../repositories/interfaces/purchase-history.repository.interface.js';
+import { INotificationPreferenceRepository } from '../repositories/interfaces/notification-preference.repository.interface.js';
+import { ICityRepository } from '../repositories/interfaces/city.repository.interface.js';
+import { ICinemaRepository } from '../repositories/interfaces/cinema.repository.interface.js';
+import { IEmailVerificationTokenRepository } from '../repositories/interfaces/email-verification-token.repository.interface.js';
+import { IRefreshTokenRepository } from '../repositories/interfaces/refresh-token.repository.interface.js';
+import { ILoginAuditRepository } from '../repositories/interfaces/login-audit.repository.interface.js';
+import { IPasswordResetTokenRepository } from '../repositories/interfaces/password-reset-token.repository.interface.js';
 
-import userRepository from '../repositories/user.repository';
-import roleRepository from '../repositories/role.repository';
-import profileRepository from '../repositories/profile.repository';
-import membershipRepository from '../repositories/membership.repository';
-import membershipLevelRepository from '../repositories/membership-level.repository';
-import membershipStatusRepository from '../repositories/membership-status.repository';
-import bonusWalletRepository from '../repositories/bonus-wallet.repository';
-import purchaseHistoryRepository from '../repositories/purchase-history.repository';
-import notificationPreferenceRepository from '../repositories/notification-preference.repository';
-import cityRepository from '../repositories/city.repository';
-import cinemaRepository from '../repositories/cinema.repository';
-import emailVerificationTokenRepository from '../repositories/email-verification-token.repository';
-import refreshTokenRepository from '../repositories/refresh-token.repository';
-import loginAuditRepository from '../repositories/login-audit.repository';
+import { IPasswordService } from './interfaces/password.service.interface.js';
+import { ITokenService } from './interfaces/token.service.interface.js';
+import { IEmailVerificationTokenService } from './interfaces/email-verification-token.service.interface.js';
 
-import passwordService from './password.service';
-import tokenService from './auth-token.service';
-import emailVerificationTokenService from './email-verification-token.service';
-import { ForgotPasswordRequestDto } from '../dto/request/forgot-password.dto';
-import { passwordResetTokenRepository } from '../repositories/password-reset-token.repository';
-import { ResetPasswordRequestDto } from '../dto/request/reset-password.dto';
+import { isValidPassword } from '../utils/password.util.js';
+import { sendActivationEmail, sendPasswordResetEmail } from '../config/mailer.js';
+import { generateMembershipCode } from '../utils/crypto.util.js';
+
 import {
   AccountAlreadyActivatedError,
   AccountLockedError,
@@ -63,196 +59,73 @@ import {
   RoleNotConfiguredError,
   UserNotFoundError,
   WeakPasswordError,
-} from '../errors/domain-errors';
+} from '../errors/auth.errors.js';
+import User from '../models/user.model.js';
+import { PasswordResetTokenInstance } from '../models/password-reset-token.model.js';
 
-const roleName = 'cliente';
-const membershipLevelName = 'BÁSICA';
-const membershipStatusName = 'Activa';
+const ROLE_NAME = 'cliente';
+const MEMBERSHIP_LEVEL_NAME = 'BÁSICA';
+const MEMBERSHIP_STATUS_NAME = 'Activa';
 
 /**
- * Servicio encargado de gestionar los procesos de autenticación
- * y registro de usuarios.
- *
- * Responsabilidades:
- * - Validar los datos necesarios para el registro.
- * - Verificar referencias relacionadas.
- * - Coordinar la creación de las entidades asociadas al usuario.
- * - Gestionar la activación de cuentas mediante correo electrónico.
- * - Verificar credenciales durante el inicio de sesión.
- * - Delegar el procesamiento de contraseñas a `PasswordService`.
- * - Delegar la generación y verificación de tokens de correo a
- *   `EmailVerificationTokenService`.
- * - Delegar la generación de JWT de acceso a `TokenService`.
- *
- * El Service no realiza consultas directamente mediante Sequelize.
- * Todas las operaciones de persistencia son delegadas a los
- * correspondientes repositories.
+ * Servicio encargado de gestionar los procesos de autenticación,
+ * registro y ciclo de vida de credenciales de usuarios (HU-006 / HU-007).
  *
  * @class AuthService
- *
- * @security
- * Las contraseñas nunca deben almacenarse en texto plano.
- *
- * Los tokens de verificación nunca deben almacenarse en texto plano.
- * Únicamente debe persistirse su hash.
- *
- * Los JWT de acceso son generados exclusivamente mediante
- * `TokenService`.
+ * @implements {IAuthService}
  */
-class AuthService implements IAuthService {
-  /**
-   * Registra un nuevo usuario en el sistema.
-   *
-   * El proceso valida los datos proporcionados, verifica las
-   * configuraciones requeridas, genera las entidades relacionadas
-   * y crea un token de activación para confirmar el correo electrónico.
-   *
-   * Las operaciones de persistencia relacionadas con el registro
-   * se ejecutan dentro de una única transacción.
-   *
-   * @param {RegisterUserRequestDto} dto
-   * Datos necesarios para registrar el usuario.
-   *
-   * @returns {Promise<RegisterUserResult>}
-   * Identificador del usuario creado.
-   *
-   * @throws {Error}
-   * Cuando los consentimientos requeridos no fueron aceptados.
-   *
-   * @throws {Error}
-   * Cuando los correos electrónicos no coinciden.
-   *
-   * @throws {Error}
-   * Cuando las contraseñas no coinciden.
-   *
-   * @throws {Error}
-   * Cuando la contraseña no cumple las reglas de seguridad.
-   *
-   * @throws {Error}
-   * Cuando el correo ya se encuentra registrado.
-   *
-   * @throws {Error}
-   * Cuando alguna referencia requerida no existe.
-   */
-  /**
-   * Valida los datos de entrada del registro.
-   *
-   * Verifica los consentimientos obligatorios, la coincidencia de
-   * correos y contraseñas, y la política de seguridad de la contraseña.
-   *
-   * @returns El correo electrónico normalizado.
-   */
-  private validateRegistrationInput(dto: RegisterUserRequestDto): string {
-    const email = dto.email ? dto.email.trim().toLowerCase() : '';
-    const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
-
-    /**
-     * Validar los consentimientos obligatorios antes de comenzar
-     * cualquier operación de persistencia.
-     */
-    if (!dto.personalDataConsent || !dto.termsConsent) {
-      throw new ConsentRequiredError();
-    }
-
-    /**
-     * Validar que ambos correos electrónicos coincidan.
-     */
-    if (email !== confirmEmail) {
-      throw new EmailMismatchError();
-    }
-
-    /**
-     * Validar que ambas contraseñas coincidan.
-     */
-    if (dto.password !== dto.confirmPassword) {
-      throw new PasswordMismatchError('Las contraseñas no coinciden');
-    }
-
-    /**
-     * Validar las reglas de seguridad de la contraseña.
-     */
-    if (!dto.password || !isValidPassword(dto.password)) {
-      throw new WeakPasswordError(
-        'La contraseña debe tener al menos 10 caracteres, incluir mayúscula, minúscula, número y caracter especial.',
-      );
-    }
-
-    return email;
+export class AuthService implements IAuthService {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly roleRepository: IRoleRepository,
+    private readonly profileRepository: IProfileRepository,
+    private readonly membershipRepository: IMembershipRepository,
+    private readonly membershipLevelRepository: IMembershipLevelRepository,
+    private readonly membershipStatusRepository: IMembershipStatusRepository,
+    private readonly bonusWalletRepository: IBonusWalletRepository,
+    private readonly purchaseHistoryRepository: IPurchaseHistoryRepository,
+    private readonly notificationPreferenceRepository: INotificationPreferenceRepository,
+    private readonly cityRepository: ICityRepository,
+    private readonly cinemaRepository: ICinemaRepository,
+    private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
+    private readonly refreshTokenRepository: IRefreshTokenRepository,
+    private readonly loginAuditRepository: ILoginAuditRepository,
+    private readonly passwordResetTokenRepository: IPasswordResetTokenRepository,
+    private readonly passwordService: IPasswordService,
+    private readonly tokenService: ITokenService,
+    private readonly emailVerificationTokenService: IEmailVerificationTokenService,
+  ) {
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+    this.profileRepository = profileRepository;
+    this.membershipRepository = membershipRepository;
+    this.membershipLevelRepository = membershipLevelRepository;
+    this.membershipStatusRepository = membershipStatusRepository;
+    this.bonusWalletRepository = bonusWalletRepository;
+    this.purchaseHistoryRepository = purchaseHistoryRepository;
+    this.notificationPreferenceRepository = notificationPreferenceRepository;
+    this.cityRepository = cityRepository;
+    this.cinemaRepository = cinemaRepository;
+    this.emailVerificationTokenRepository = emailVerificationTokenRepository;
+    this.refreshTokenRepository = refreshTokenRepository;
+    this.loginAuditRepository = loginAuditRepository;
+    this.passwordResetTokenRepository = passwordResetTokenRepository;
+    this.passwordService = passwordService;
+    this.tokenService = tokenService;
+    this.emailVerificationTokenService = emailVerificationTokenService;
   }
 
+  // ==========================================================================
+  // --- HU-006: Registro de Usuario y Membresía Digital ---
+  // ==========================================================================
+
   /**
-   * Resuelve las referencias requeridas por el registro.
-   *
-   * Verifica la existencia del rol, nivel y estado de membresía por
-   * defecto, así como la ciudad principal y el complejo favorito
-   * opcional seleccionados por el usuario.
+   * Registra un nuevo usuario en el sistema junto con su perfil y membresía digital.
    */
-  private async resolveRegistrationReferences(dto: RegisterUserRequestDto): Promise<{
-    defaultRole: NonNullable<Awaited<ReturnType<typeof roleRepository.findByName>>>;
-    defaultLevel: NonNullable<Awaited<ReturnType<typeof membershipLevelRepository.findByName>>>;
-    defaultStatus: NonNullable<Awaited<ReturnType<typeof membershipStatusRepository.findByName>>>;
-  }> {
-    /**
-     * Obtener el rol que será asignado al nuevo usuario.
-     */
-    const defaultRole = await roleRepository.findByName(roleName);
-
-    if (!defaultRole) {
-      throw new RoleNotConfiguredError();
-    }
-
-    /**
-     * Obtener el nivel de membresía que será asignado
-     * al nuevo usuario.
-     */
-    const defaultLevel = await membershipLevelRepository.findByName(membershipLevelName);
-
-    if (!defaultLevel) {
-      throw new MembershipLevelNotConfiguredError();
-    }
-
-    /**
-     * Obtener el estado inicial de la membresía.
-     */
-    const defaultStatus = await membershipStatusRepository.findByName(membershipStatusName);
-
-    if (!defaultStatus) {
-      throw new MembershipStatusNotConfiguredError();
-    }
-
-    /**
-     * Validar que la ciudad seleccionada exista.
-     */
-    const city = await cityRepository.findById(dto.cityId);
-
-    if (!city) {
-      throw new CityNotFoundError();
-    }
-
-    /**
-     * Validar el complejo favorito únicamente cuando
-     * el usuario haya proporcionado uno.
-     */
-    if (dto.favoriteCinemaId) {
-      const cinema = await cinemaRepository.findById(dto.favoriteCinemaId);
-
-      if (!cinema) {
-        throw new CinemaNotFoundError();
-      }
-    }
-
-    return { defaultRole, defaultLevel, defaultStatus };
-  }
-
   async register(dto: RegisterUserRequestDto): Promise<RegisterUserResult> {
     const email = this.validateRegistrationInput(dto);
 
-    /**
-     * Verificar que el correo electrónico no se encuentre
-     * registrado previamente.
-     */
-    const existingUser = await userRepository.findByEmail(email);
-
+    const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new EmailAlreadyExistsError();
     }
@@ -260,45 +133,13 @@ class AuthService implements IAuthService {
     const { defaultRole, defaultLevel, defaultStatus } =
       await this.resolveRegistrationReferences(dto);
 
-    /**
-     * Generar el hash de la contraseña.
-     *
-     * El Service no conoce el algoritmo utilizado para generar
-     * el hash. Esta responsabilidad pertenece a `PasswordService`.
-     */
-    const { hash: passwordHash } = await passwordService.hash(dto.password);
+    const { hash: passwordHash } = await this.passwordService.hash(dto.password);
+    const emailVerificationToken = await this.emailVerificationTokenService.generate();
 
-    /**
-     * Generar el token de verificación de correo.
-     *
-     * El token original se conserva únicamente en memoria para
-     * enviarlo posteriormente al usuario.
-     *
-     * El hash será el único valor persistido en la base de datos.
-     */
-    const emailVerificationToken = await emailVerificationTokenService.generate();
-
-    /**
-     * Código de membresía generado durante el registro.
-     *
-     * Se mantiene fuera de la transacción para conservar el valor
-     * generado que será utilizado durante la creación de la membresía.
-     */
     let membershipCode = '';
 
-    /**
-     * Ejecutar todas las operaciones de persistencia dentro
-     * de una única transacción.
-     *
-     * Si alguna operación lanza un error, Sequelize revierte
-     * automáticamente todas las operaciones realizadas dentro
-     * de la transacción.
-     */
     const persistRegistration = async (transaction: Transaction) => {
-      /**
-       * 1. Crear la cuenta de usuario.
-       */
-      const user = await userRepository.create(
+      const user = await this.userRepository.create(
         {
           roleId: defaultRole.id,
           email,
@@ -311,10 +152,7 @@ class AuthService implements IAuthService {
         transaction,
       );
 
-      /**
-       * 2. Crear el perfil asociado al usuario.
-       */
-      await profileRepository.create(
+      await this.profileRepository.create(
         {
           userId: user.id,
           firstName: dto.firstName,
@@ -330,74 +168,16 @@ class AuthService implements IAuthService {
         transaction,
       );
 
-      /**
-       * 3 y 4. Crear la membresía con un código único.
-       *
-       * El código se genera criptográficamente mediante el helper
-       * compartido `generateMembershipCode`. La unicidad final la
-       * garantiza el constraint único de la columna `code`; ante una
-       * colisión se reintenta un número acotado de veces dentro de
-       * la misma transacción.
-       */
-      const maxMembershipCodeAttempts = 3;
-
-      for (let attempt = 1; attempt <= maxMembershipCodeAttempts; attempt += 1) {
-        membershipCode = generateMembershipCode();
-
-        try {
-          await membershipRepository.create(
-            {
-              userId: user.id,
-              code: membershipCode,
-              levelId: defaultLevel.id,
-              statusId: defaultStatus.id,
-              pointsBalance: 0,
-            },
-            transaction,
-          );
-          break;
-        } catch (error) {
-          if (!(error instanceof UniqueConstraintError)) {
-            throw error;
-          }
-
-          /**
-           * Colisión de código: se agota el número de reintentos o se
-           * convierte en un error de negocio para no confundirlo con
-           * la violación de unicidad del correo.
-           */
-          if (attempt === maxMembershipCodeAttempts) {
-            throw new MembershipCodeGenerationError();
-          }
-        }
-      }
-
-      /**
-       * 5. Crear la billetera de bonos del usuario.
-       */
-      await bonusWalletRepository.create(
-        {
-          userId: user.id,
-          balance: 0,
-        },
+      membershipCode = await this.createInitialMembership(
+        user.id,
+        defaultLevel.id,
+        defaultStatus.id,
         transaction,
       );
 
-      /**
-       * 6. Crear el historial de compras vacío del usuario.
-       */
-      await purchaseHistoryRepository.create(
-        {
-          userId: user.id,
-        },
-        transaction,
-      );
-
-      /**
-       * 7. Crear las preferencias de notificación
-       * iniciales del usuario.
-       */
-      await notificationPreferenceRepository.create(
+      await this.bonusWalletRepository.create({ userId: user.id, balance: 0 }, transaction);
+      await this.purchaseHistoryRepository.create({ userId: user.id }, transaction);
+      await this.notificationPreferenceRepository.create(
         {
           userId: user.id,
           emailEnabled: true,
@@ -407,12 +187,7 @@ class AuthService implements IAuthService {
         transaction,
       );
 
-      /**
-       * 8. Persistir el hash del token de verificación.
-       *
-       * El token original nunca se almacena en la base de datos.
-       */
-      await emailVerificationTokenRepository.create(
+      await this.emailVerificationTokenRepository.create(
         {
           userId: user.id,
           tokenHash: emailVerificationToken.hash,
@@ -424,98 +199,35 @@ class AuthService implements IAuthService {
       return user;
     };
 
-    let result: Awaited<ReturnType<typeof persistRegistration>>;
-
+    let createdUser: { id: number; isActive: boolean };
     try {
-      result = await unitOfWork.run(persistRegistration);
+      createdUser = await sequelize.transaction(persistRegistration);
     } catch (error) {
-      /**
-       * Si dos registros concurrentes superan la verificación previa,
-       * el constraint único de la base de datos protege la integridad
-       * del correo. El error de persistencia se traduce a un error de
-       * dominio para que el controlador responda HTTP 409.
-       *
-       * `MembershipCodeGenerationError` ya es de dominio y se propaga
-       * para que el controlador responda 500 sin confundirlo con 409.
-       */
-      if (error instanceof MembershipCodeGenerationError) {
-        throw error;
-      }
       if (error instanceof UniqueConstraintError) {
         throw new EmailAlreadyExistsError();
       }
-
       throw error;
     }
 
-    /**
-     * El correo se envía después de completar correctamente
-     * la transacción.
-     *
-     * De esta manera no se mantiene una operación externa
-     * como el envío del correo dentro de la transacción de la BD.
-     */
     try {
       await sendActivationEmail(email, emailVerificationToken.token);
     } catch (error) {
       console.error('No se pudo enviar el correo de activación:', error);
     }
 
-    /**
-     * El token de activación no se devuelve como access token.
-     *
-     * El usuario deberá verificar primero su correo y posteriormente
-     * iniciar sesión para obtener un JWT de acceso.
-     */
     return {
-      userId: result.id,
-      membershipCode: membershipCode,
-      isActive: result.isActive,
+      userId: createdUser.id,
+      membershipCode,
+      isActive: createdUser.isActive,
     };
   }
 
   /**
-   * Verifica el correo electrónico asociado a una cuenta.
-   *
-   * Busca el token de activación más reciente que no haya sido
-   * utilizado, valida su vigencia y verifica su correspondencia
-   * mediante `EmailVerificationTokenService`.
-   *
-   * Una vez validado correctamente:
-   *
-   * 1. Se activa la cuenta del usuario.
-   * 2. Se marca el token como utilizado.
-   *
-   * @param {VerifyEmailRequestDto} dto
-   * Correo electrónico y token de activación proporcionados
-   * por el usuario.
-   *
-   * @returns {Promise<void>}
-   *
-   * @throws {Error}
-   * Cuando el usuario no existe.
-   *
-   * @throws {Error}
-   * Cuando la cuenta ya se encuentra activada.
-   *
-   * @throws {Error}
-   * Cuando no existe un token válido.
-   *
-   * @throws {Error}
-   * Cuando el token ha expirado.
-   *
-   * @throws {Error}
-   * Cuando el token no coincide con el hash almacenado.
+   * Verifica el correo electrónico y activa la cuenta.
    */
   async verifyEmail(dto: VerifyEmailRequestDto): Promise<void> {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
-
-    /**
-     * Obtener el usuario mediante el Repository.
-     *
-     * El Service no realiza consultas directas mediante Sequelize.
-     */
-    const user = await userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new UserNotFoundError();
@@ -525,11 +237,7 @@ class AuthService implements IAuthService {
       throw new AccountAlreadyActivatedError();
     }
 
-    /**
-     * Obtener el token de verificación más reciente que todavía
-     * no haya sido utilizado.
-     */
-    const verificationRecord = await emailVerificationTokenRepository.findLatestUnusedByUserId(
+    const verificationRecord = await this.emailVerificationTokenRepository.findLatestUnusedByUserId(
       user.id,
     );
 
@@ -537,19 +245,11 @@ class AuthService implements IAuthService {
       throw new InvalidTokenError('Token inválido');
     }
 
-    /**
-     * Validar la fecha de expiración del token.
-     */
     if (new Date() > verificationRecord.expiresAt) {
       throw new ExpiredTokenError();
     }
 
-    /**
-     * Verificar el token utilizando el servicio especializado.
-     *
-     * El Service no realiza directamente la comparación criptográfica.
-     */
-    const isMatch = await emailVerificationTokenService.verify(
+    const isMatch = await this.emailVerificationTokenService.verify(
       dto.token,
       verificationRecord.tokenHash,
     );
@@ -558,43 +258,16 @@ class AuthService implements IAuthService {
       throw new InvalidTokenError('Token inválido');
     }
 
-    /**
-     * Activar la cuenta y marcar el token como usado de forma atómica
-     * mediante Unit of Work. Evita que la cuenta quede activa sin
-     * invalidar el token (o viceversa) ante un fallo intermedio.
-     */
-    await unitOfWork.run(async (tx) => {
-      await userRepository.activate(user.id, tx);
-      await emailVerificationTokenRepository.markAsUsed(verificationRecord.id, tx);
-    });
+    await this.userRepository.activate(user.id);
+    await this.emailVerificationTokenRepository.markAsUsed(verificationRecord.id);
   }
 
+  // ==========================================================================
+  // --- HU-007: Autenticación, Sesiones y Recuperación ---
+  // ==========================================================================
+
   /**
-   * Autentica un usuario mediante sus credenciales.
-   *
-   * El proceso verifica:
-   * - Existencia del usuario.
-   * - Estado de activación de la cuenta.
-   * - Coincidencia de la contraseña.
-   *
-   * Una vez autenticado correctamente, genera un JWT de acceso
-   * mediante `TokenService`.
-   *
-   * @param {LoginUserRequestDto} dto
-   * Credenciales proporcionadas durante el inicio de sesión.
-   *
-   * @returns {Promise<LoginUserResult>}
-   * Identificador del usuario y token JWT de acceso.
-   *
-   * @throws {Error}
-   * Cuando las credenciales no son válidas.
-   *
-   * @throws {Error}
-   * Cuando la cuenta todavía no ha sido activada.
-   *
-   * @security
-   * La contraseña nunca se compara directamente con el hash.
-   * La verificación se delega a `PasswordService`.
+   * Autentica al usuario en el sistema.
    */
   async login(
     dto: LoginUserRequestDto,
@@ -602,94 +275,27 @@ class AuthService implements IAuthService {
     deviceUserAgent?: string,
   ): Promise<LoginUserResult> {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
+    const user = await this.userRepository.findByEmail(email);
 
-    const user = await userRepository.findByEmail(email);
+    await this.validateUserForLogin(user, email, ipAddress, deviceUserAgent);
 
-    if (!user) {
-      await loginAuditRepository.create({
-        userId: null,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'FAILED_USER_NOT_FOUND',
-      });
-      throw new InvalidCredentialsError();
-    }
-
-    if (user.lockedUntil && user.lockedUntil > new Date()) {
-      await loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'ACCOUNT_LOCKED',
-      });
-      throw new AccountLockedError();
-    }
-
-    if (!user.isActive) {
-      await loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'ACCOUNT_NOT_ACTIVATED',
-      });
-      throw new AccountNotActivatedError();
-    }
-
-    const isMatch = await passwordService.verify(dto.password, user.passwordHash);
+    const isMatch = await this.passwordService.verify(dto.password, user!.passwordHash);
 
     if (!isMatch) {
-      await userRepository.incrementFailedAttempts(user.id);
-      await loginAuditRepository.create({
-        userId: user.id,
-        emailAttempted: email,
-        ipAddress: ipAddress || null,
-        deviceUserAgent: deviceUserAgent || null,
-        status: 'FAILED_PASSWORD',
-      });
+      await this.handleFailedPassword(user!.id, email, ipAddress, deviceUserAgent);
       throw new InvalidCredentialsError();
     }
 
-    await userRepository.resetFailedAttempts(user.id);
+    await this.userRepository.resetFailedAttempts(user!.id);
+    await this.recordAudit('SUCCESS', email, user!.id, ipAddress, deviceUserAgent);
 
-    await loginAuditRepository.create({
-      userId: user.id,
-      emailAttempted: email,
-      ipAddress: ipAddress || null,
-      deviceUserAgent: deviceUserAgent || null,
-      status: 'SUCCESS',
-    });
+    const { accessToken, refreshToken } = await this.issueAndRotateTokens(user!.id);
 
-    const accessToken = tokenService.generateAccessToken(user.id);
-    const refreshToken = tokenService.generateRefreshToken(user.id);
-    const decodedRefresh = tokenService.verifyRefreshToken(refreshToken);
-
-    /**
-     * Invalida refresh anteriores y persiste el nuevo de forma atómica
-     * mediante Unit of Work. Garantiza que no quede el usuario sin
-     * refresh válido ante un fallo intermedio (RN-030).
-     */
-    await unitOfWork.run(async (tx) => {
-      await refreshTokenRepository.revokeAllByUserId(user.id, tx);
-      if (decodedRefresh?.exp) {
-        await refreshTokenRepository.create(
-          {
-            userId: user.id,
-            tokenHash: refreshToken,
-            expiresAt: new Date(decodedRefresh.exp * 1000),
-          },
-          tx,
-        );
-      }
-    });
-
-    const profile = await profileRepository.findByUserId(user.id);
-    const membership = await membershipRepository.findByUserId(user.id);
+    const profile = await this.profileRepository.findByUserId(user!.id);
+    const membership = await this.membershipRepository.findByUserId(user!.id);
 
     return {
-      userId: user.id,
+      userId: user!.id,
       accessToken,
       refreshToken,
       profile: profile?.toJSON() || null,
@@ -697,43 +303,14 @@ class AuthService implements IAuthService {
     };
   }
 
+  /**
+   * Rota el refresh token y emite un nuevo access token.
+   */
   async refreshToken(token: string): Promise<LoginUserResult> {
-    const decoded = tokenService.verifyRefreshToken(token);
-    if (!decoded?.sub) {
-      throw new InvalidTokenError('Refresh token inválido o expirado');
-    }
+    const { userId, accessToken, newRefreshToken } = await this.rotateRefreshToken(token);
 
-    const userId = Number(decoded.sub);
-    const existingToken = await refreshTokenRepository.findByTokenHash(token);
-    if (!existingToken || existingToken.isRevoked) {
-      throw new InvalidTokenError('Refresh token inválido o revocado');
-    }
-
-    // Generar nuevos tokens fuera de la transacción (no requieren DB)
-    const accessToken = tokenService.generateAccessToken(userId);
-    const newRefreshToken = tokenService.generateRefreshToken(userId);
-    const newDecoded = tokenService.verifyRefreshToken(newRefreshToken);
-
-    /**
-     * Revoca el refresh anterior y persiste el nuevo de forma atómica
-     * mediante Unit of Work. Evita ventana donde ambos tokens sean válidos.
-     */
-    await unitOfWork.run(async (tx) => {
-      await refreshTokenRepository.revoke(existingToken.id, tx);
-      if (newDecoded?.exp) {
-        await refreshTokenRepository.create(
-          {
-            userId,
-            tokenHash: newRefreshToken,
-            expiresAt: new Date(newDecoded.exp * 1000),
-          },
-          tx,
-        );
-      }
-    });
-
-    const profile = await profileRepository.findByUserId(userId);
-    const membership = await membershipRepository.findByUserId(userId);
+    const profile = await this.profileRepository.findByUserId(userId);
+    const membership = await this.membershipRepository.findByUserId(userId);
 
     return {
       userId,
@@ -744,28 +321,33 @@ class AuthService implements IAuthService {
     };
   }
 
+  /**
+   * Cierra la sesión revocando los tokens de refresco activos.
+   */
   async logout(token: string): Promise<void> {
-    const decoded = tokenService.verifyRefreshToken(token);
+    const decoded = this.tokenService.verifyRefreshToken(token);
     if (decoded?.sub) {
       const userId = Number(decoded.sub);
-      await refreshTokenRepository.revokeAllByUserId(userId);
+      await this.refreshTokenRepository.revokeAllByUserId(userId);
     }
   }
 
+  /**
+   * Inicia el proceso de recuperación de contraseña.
+   */
   async forgotPassword(dto: ForgotPasswordRequestDto): Promise<void> {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
-    const user = await userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      // No revelar si el usuario existe
       return;
     }
 
-    const token = generateResetToken();
-    const hash = await hashResetToken(token);
-    const expiresAt = getResetTokenExpiry();
+    const token = crypto.randomBytes(32).toString('hex');
+    const { hash } = await this.passwordService.hash(token);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 
-    await passwordResetTokenRepository.create({
+    await this.passwordResetTokenRepository.create({
       userId: user.id,
       tokenHash: hash,
       expiresAt,
@@ -778,7 +360,236 @@ class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Restablece la contraseña de una cuenta con token de recuperación.
+   */
   async resetPassword(dto: ResetPasswordRequestDto): Promise<void> {
+    const email = this.validateResetPasswordInput(dto);
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new InvalidTokenError();
+    }
+
+    const tokenRecord = await this.getValidPasswordResetToken(user.id, dto.token);
+    const { hash: newPasswordHash } = await this.passwordService.hash(dto.newPassword as string);
+
+    await this.userRepository.updatePassword(user.id, newPasswordHash);
+    await this.passwordResetTokenRepository.markAsUsed(tokenRecord.id);
+  }
+
+  // ==========================================================================
+  // --- Helpers Privados de Dominio (SRP) ---
+  // ==========================================================================
+
+  /**
+   * Valida los datos de entrada del registro (Fail-Fast).
+   */
+  private validateRegistrationInput(dto: RegisterUserRequestDto): string {
+    const email = dto.email ? dto.email.trim().toLowerCase() : '';
+    const confirmEmail = dto.confirmEmail ? dto.confirmEmail.trim().toLowerCase() : '';
+
+    if (!dto.personalDataConsent || !dto.termsConsent) {
+      throw new Error(
+        'Debe aceptar los términos y condiciones y el tratamiento de datos personales.',
+      );
+    }
+
+    if (email !== confirmEmail) {
+      throw new Error('Los correos no coinciden');
+    }
+
+    if (dto.password !== dto.confirmPassword) {
+      throw new PasswordMismatchError();
+    }
+
+    if (!dto.password || !isValidPassword(dto.password)) {
+      throw new WeakPasswordError();
+    }
+
+    return email;
+  }
+
+  /**
+   * Resuelve y valida las referencias de catálogo necesarias para el registro.
+   */
+  private async resolveRegistrationReferences(dto: RegisterUserRequestDto) {
+    const defaultRole = await this.roleRepository.findByName(ROLE_NAME);
+    if (!defaultRole) {
+      throw new Error('No existe el rol por defecto configurado en el sistema');
+    }
+
+    const defaultLevel = await this.membershipLevelRepository.findByName(MEMBERSHIP_LEVEL_NAME);
+    if (!defaultLevel) {
+      throw new Error('No existe el nivel de membresía por defecto configurado en el sistema');
+    }
+
+    const defaultStatus = await this.membershipStatusRepository.findByName(MEMBERSHIP_STATUS_NAME);
+    if (!defaultStatus) {
+      throw new Error('No existe el estado de membresía por defecto configurado en el sistema');
+    }
+
+    const city = await this.cityRepository.findById(dto.cityId);
+    if (!city) {
+      throw new Error('La ciudad principal seleccionada no existe');
+    }
+
+    if (dto.favoriteCinemaId) {
+      const cinema = await this.cinemaRepository.findById(dto.favoriteCinemaId);
+      if (!cinema) {
+        throw new Error('El complejo favorito seleccionado no existe');
+      }
+    }
+
+    return { defaultRole, defaultLevel, defaultStatus };
+  }
+
+  /**
+   * Crea la membresía inicial con código único reintentable.
+   */
+  private async createInitialMembership(
+    userId: number,
+    levelId: number,
+    statusId: number,
+    transaction: Transaction,
+  ): Promise<string> {
+    const maxAttempts = 3;
+    let membershipCode = '';
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      membershipCode = generateMembershipCode();
+      try {
+        await this.membershipRepository.create(
+          {
+            userId,
+            code: membershipCode,
+            levelId,
+            statusId,
+            pointsBalance: 0,
+          },
+          transaction,
+        );
+        return membershipCode;
+      } catch (error) {
+        if (!(error instanceof UniqueConstraintError) || attempt === maxAttempts) {
+          throw error;
+        }
+      }
+    }
+
+    return membershipCode;
+  }
+
+  /**
+   * Valida el estado del usuario antes de verificar contraseña (RN-027, RN-031).
+   */
+  private async validateUserForLogin(
+    user: User | null,
+    email: string,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    if (!user) {
+      await this.recordAudit('FAILED_USER_NOT_FOUND', email, null, ipAddress, deviceUserAgent);
+      throw new InvalidCredentialsError();
+    }
+
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      await this.recordAudit('ACCOUNT_LOCKED', email, user.id, ipAddress, deviceUserAgent);
+      throw new AccountLockedError();
+    }
+
+    if (!user.isActive) {
+      await this.recordAudit('ACCOUNT_NOT_ACTIVATED', email, user.id, ipAddress, deviceUserAgent);
+      throw new AccountNotActivatedError();
+    }
+  }
+
+  /**
+   * Registra el fallo de contraseña e incrementa intentos fallidos (RN-027).
+   */
+  private async handleFailedPassword(
+    userId: number,
+    email: string,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    await this.userRepository.incrementFailedAttempts(userId);
+    await this.recordAudit('FAILED_PASSWORD', email, userId, ipAddress, deviceUserAgent);
+  }
+
+  /**
+   * Registra una auditoría de login en la base de datos.
+   */
+  private async recordAudit(
+    status: string,
+    emailAttempted: string,
+    userId?: number | null,
+    ipAddress?: string,
+    deviceUserAgent?: string,
+  ): Promise<void> {
+    await this.loginAuditRepository.create({
+      userId: userId || null,
+      emailAttempted,
+      ipAddress: ipAddress || null,
+      deviceUserAgent: deviceUserAgent || null,
+      status,
+    });
+  }
+
+  /**
+   * Emite tokens y revoca los anteriores en base de datos (RN-028, RN-029, RN-030).
+   */
+  private async issueAndRotateTokens(
+    userId: number,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const accessToken = this.tokenService.generateAccessToken(userId);
+    const refreshToken = this.tokenService.generateRefreshToken(userId);
+
+    await this.refreshTokenRepository.revokeAllByUserId(userId);
+
+    const decodedRefresh = this.tokenService.verifyRefreshToken(refreshToken);
+    if (decodedRefresh?.exp) {
+      await this.refreshTokenRepository.create({
+        userId,
+        tokenHash: refreshToken,
+        expiresAt: new Date(decodedRefresh.exp * 1000),
+      });
+    }
+
+    return { accessToken, refreshToken };
+  }
+
+  /**
+   * Rota el refresh token verificando su validez y revocación previa.
+   */
+  private async rotateRefreshToken(token: string): Promise<{
+    userId: number;
+    accessToken: string;
+    newRefreshToken: string;
+  }> {
+    const decoded = this.tokenService.verifyRefreshToken(token);
+    if (!decoded?.sub) {
+      throw new InvalidTokenError('Refresh token inválido o expirado');
+    }
+
+    const userId = Number(decoded.sub);
+    const existingToken = await this.refreshTokenRepository.findByTokenHash(token);
+    if (!existingToken || existingToken.isRevoked) {
+      throw new InvalidTokenError('Refresh token inválido o revocado');
+    }
+
+    await this.refreshTokenRepository.revoke(existingToken.id);
+
+    const { accessToken, refreshToken: newRefreshToken } = await this.issueAndRotateTokens(userId);
+
+    return { userId, accessToken, newRefreshToken };
+  }
+
+  /**
+   * Valida los datos de entrada para el restablecimiento de contraseña.
+   */
+  private validateResetPasswordInput(dto: ResetPasswordRequestDto): string {
     if (!dto.newPassword || !dto.confirmPassword || dto.newPassword !== dto.confirmPassword) {
       throw new PasswordMismatchError();
     }
@@ -787,14 +598,17 @@ class AuthService implements IAuthService {
       throw new WeakPasswordError();
     }
 
-    const email = dto.email ? dto.email.trim().toLowerCase() : '';
-    const user = await userRepository.findByEmail(email);
+    return dto.email ? dto.email.trim().toLowerCase() : '';
+  }
 
-    if (!user) {
-      throw new InvalidTokenError();
-    }
-
-    const tokenRecord = await passwordResetTokenRepository.findLatestUnusedByUserId(user.id);
+  /**
+   * Obtiene y valida la vigencia de un token de recuperación de contraseña.
+   */
+  private async getValidPasswordResetToken(
+    userId: number,
+    plainToken: string,
+  ): Promise<PasswordResetTokenInstance> {
+    const tokenRecord = await this.passwordResetTokenRepository.findLatestUnusedByUserId(userId);
 
     if (!tokenRecord) {
       throw new InvalidTokenError();
@@ -804,32 +618,13 @@ class AuthService implements IAuthService {
       throw new ExpiredTokenError();
     }
 
-    const isMatch = await verifyResetToken(dto.token, tokenRecord.tokenHash);
-
+    const isMatch = await this.passwordService.verify(plainToken, tokenRecord.tokenHash);
     if (!isMatch) {
       throw new InvalidTokenError();
     }
 
-    const { hash: newPasswordHash } = await passwordService.hash(dto.newPassword);
-
-    /**
-     * Actualiza la contraseña y marca el token como usado de forma atómica
-     * mediante Unit of Work. Evita que la contraseña cambie sin invalidar
-     * el token (o viceversa).
-     */
-    await unitOfWork.run(async (tx) => {
-      await userRepository.updatePassword(user.id, newPasswordHash, tx);
-      await passwordResetTokenRepository.markAsUsed(tokenRecord.id, tx);
-    });
+    return tokenRecord;
   }
 }
 
-/**
- * Instancia única del servicio de autenticación utilizada
- * por la aplicación.
- *
- * @constant
- * @type {AuthService}
- */
-
-export default new AuthService();
+export default AuthService;

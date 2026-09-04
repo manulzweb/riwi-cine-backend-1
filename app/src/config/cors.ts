@@ -1,7 +1,7 @@
 // app/src/config/cors.ts
 
 import { CorsOptions } from 'cors';
-import { envConfig } from './env';
+import { envConfig } from './env.js';
 
 const allowedOrigins = envConfig.CORS_ORIGINS;
 

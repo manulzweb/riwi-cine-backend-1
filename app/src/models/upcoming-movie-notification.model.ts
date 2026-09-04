@@ -1,7 +1,7 @@
 // app/src/models/upcoming-movie-notification.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface UpcomingMovieNotificationAttributes {
   id: number;
@@ -20,13 +20,13 @@ class UpcomingMovieNotification
   extends Model<UpcomingMovieNotificationAttributes, UpcomingMovieNotificationCreationAttributes>
   implements UpcomingMovieNotificationAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public movieId!: number;
-  public notifiedAt!: Date | null;
+  declare id: number;
+  declare userId: number;
+  declare movieId: number;
+  declare notifiedAt: Date | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 UpcomingMovieNotification.init(

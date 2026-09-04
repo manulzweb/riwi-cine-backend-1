@@ -1,8 +1,8 @@
 // app/src/repositories/interfaces/movie.repository.interface.ts
 
-import Movie from '../../models/movie.model';
-import CinemaFunction from '../../models/function.model';
-import { FilterMoviesDto } from '../../dto/request/filter-movies.dto';
+import Movie from '../../models/movie.model.js';
+import CinemaFunction from '../../models/function.model.js';
+import { FilterMoviesDto } from '../../dto/request/filter-movies.dto.js';
 
 /**
  * Contrato del Repositorio de Películas.
@@ -12,8 +12,8 @@ export interface IMovieRepository {
   /** Busca una película activa por su id. (HU-004) */
   findById(id: number): Promise<Movie | null>;
 
-  /** Obtiene todas las funciones (activas o no) de una película. (HU-004) */
-  findFunctionsByMovieId(movieId: number): Promise<CinemaFunction[]>;
+  /** Obtiene todas las funciones de una película, opcionalmente filtradas por ciudad. (HU-004) */
+  findFunctionsByMovieId(movieId: number, cityId?: number): Promise<CinemaFunction[]>;
 
   /** Obtiene películas activas que compartan al menos un género, excluyendo el id dado. (HU-004) */
   findByGenres(genres: string[], excludeId: number, limit: number): Promise<Movie[]>;

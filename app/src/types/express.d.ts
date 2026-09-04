@@ -1,13 +1,15 @@
 // app/src/types/express.d.ts
 
-import type { AccessTokenPayload } from './auth.types';
+import 'express';
+import type { AccessTokenPayload } from './auth.types.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AccessTokenPayload;
-    }
+/**
+ * Ampliación de tipos de Express para exponer el usuario autenticado
+ * en las solicitudes protegidas por `requireAuth` y `authMiddleware`.
+ */
+declare module 'express-serve-static-core' {
+  interface Request {
+    userId?: number;
+    user?: AccessTokenPayload;
   }
 }
-
-export {};

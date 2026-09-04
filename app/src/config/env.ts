@@ -67,6 +67,12 @@ export const envConfig = {
   BCRYPT: {
     ROUNDS: Number(process.env.BCRYPT_ROUNDS ?? 12),
   },
+
+  CART: {
+    EXPIRY_MINUTES: Number(process.env.CART_EXPIRY_MINUTES ?? 10),
+    TAX_RATE: Number(process.env.CART_TAX_RATE ?? 0.19),
+    COMBINE_PROMOTIONS: process.env.CART_COMBINE_PROMOTIONS === 'true',
+  },
   LOGIN: {
     MAX_ATTEMPTS: Number(process.env.MAX_LOGIN_ATTEMPTS ?? 5),
     LOCK_TIME_MINUTES: Number(process.env.LOCK_TIME_MINUTES ?? 15),
@@ -86,13 +92,10 @@ export const envConfig = {
     ACTIVATION_TOKEN_EXPIRE_HOURS: Number(process.env.ACTIVATION_TOKEN_EXPIRE_HOURS ?? 24),
   },
 
-  SMTP: {
-    HOST: required('SMTP_HOST'),
-    PORT: Number(process.env.SMTP_PORT ?? 2525),
-    SECURE: process.env.SMTP_SECURE === 'true',
-    USER: required('SMTP_USER'),
-    PASS: required('SMTP_PASS'),
-    FROM: required('SMTP_FROM'),
+  MAILTRAP: {
+    TOKEN: process.env.MAILTRAP_TOKEN ?? '',
+    SENDER_EMAIL: process.env.MAILTRAP_SENDER_EMAIL ?? 'hello@demomailtrap.co',
+    SENDER_NAME: process.env.MAILTRAP_SENDER_NAME ?? 'MultiCine',
   },
 
   COOKIE: {

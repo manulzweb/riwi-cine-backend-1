@@ -1,13 +1,13 @@
 // app/src/repositories/movie.repository.ts
 
 import { Op, WhereOptions } from 'sequelize';
-import Movie from '../models/movie.model';
-import CinemaFunction from '../models/function.model';
-import Room from '../models/room.model';
-import { IMovieRepository } from './interfaces/movie.repository.interface';
-import { FilterMoviesDto } from '../dto/request/filter-movies.dto';
-import { FunctionAttributes } from '../models/function.model';
-import { todayDateOnly } from '../utils/date.util';
+import Movie from '../models/movie.model.js';
+import CinemaFunction, { FunctionAttributes } from '../models/function.model.js';
+import Room from '../models/room.model.js';
+import Cinema from '../models/cinema.model.js';
+import { IMovieRepository } from './interfaces/movie.repository.interface.js';
+import { FilterMoviesDto } from '../dto/request/filter-movies.dto.js';
+import { getTodayDate } from '../utils/date.util.js';
 
 /**
  * Repositorio de Películas
@@ -18,38 +18,81 @@ import { todayDateOnly } from '../utils/date.util';
  * Esta clase es la única responsable de interactuar con Sequelize.
  */
 class MovieRepository implements IMovieRepository {
-  // --- Métodos de HU-004 ---
+  // ==========================================================================
+  // --- Métodos de HU-004 (Detalle, Funciones y Recomendaciones) ---
+  // ==========================================================================
+
   /**
    * Busca una película activa por su identificador.
    */
   async findById(id: number): Promise<Movie | null> {
-    return await Movie.findOne({ where: { id, active: true } });
+    return await Movie.findOne({
+      where: {
+        id,
+        [Op.or]: [{ isActive: true }, { active: true }],
+      },
+    });
   }
 
   /**
-   * Obtiene todas las funciones de una película, ordenadas por fecha y hora.
+   * Obtiene todas las funciones de una película, opcionalmente filtradas
+   * por ciudad y ordenadas cronológicamente.
    */
-  async findFunctionsByMovieId(movieId: number): Promise<CinemaFunction[]> {
+  async findFunctionsByMovieId(movieId: number, cityId?: number): Promise<CinemaFunction[]> {
+    const whereClause: WhereOptions<FunctionAttributes> = { movieId };
+
+    if (cityId) {
+      const roomIds = await this.getRoomIdsForCity(cityId);
+      if (roomIds.length === 0) {
+        return [];
+      }
+      whereClause['roomId'] = { [Op.in]: roomIds };
+    }
+
     return await CinemaFunction.findAll({
-      where: { movieId },
-      order: [['dateTime', 'ASC']],
+      where: whereClause,
+      order: [['startTime', 'ASC']],
     });
   }
 
   /**
    * Obtiene películas activas que compartan géneros con la película indicada,
-   * excluyéndola del resultado y ordenadas por calificación promedio.
+   * excluyéndola del resultado y ordenadas por calificación promedio descendente.
    */
   async findByGenres(genres: string[], excludeId: number, limit: number): Promise<Movie[]> {
+    if (!genres || genres.length === 0) {
+      return [];
+    }
+
     return await Movie.findAll({
       where: {
         id: { [Op.ne]: excludeId },
-        active: true,
+        [Op.or]: [{ isActive: true }, { active: true }],
         genres: { [Op.overlap]: genres },
       },
       order: [['averageRating', 'DESC']],
       limit,
     });
+  }
+
+  /**
+   * Helper privado para obtener los IDs de salas ubicadas en una ciudad específica.
+   */
+  private async getRoomIdsForCity(cityId: number): Promise<number[]> {
+    const rooms = await Room.findAll({
+      include: [
+        {
+          model: Cinema,
+          as: 'cinema',
+          where: { cityId, isActive: true },
+          attributes: [],
+        },
+      ],
+      where: { isActive: true },
+      attributes: ['id'],
+    });
+
+    return rooms.map((room) => room.id);
   }
 
   // --- Métodos de develop / HU-003 ---
@@ -58,7 +101,7 @@ class MovieRepository implements IMovieRepository {
    */
   async findUpcoming(): Promise<Movie[]> {
     return await Movie.findAll({
-      where: { isActive: true, releaseDate: { [Op.gt]: todayDateOnly() } },
+      where: { isActive: true, releaseDate: { [Op.gt]: getTodayDate() } },
       order: [['releaseDate', 'ASC']],
     });
   }
@@ -68,7 +111,7 @@ class MovieRepository implements IMovieRepository {
    */
   async findUpcomingById(id: number): Promise<Movie | null> {
     return await Movie.findOne({
-      where: { id, isActive: true, releaseDate: { [Op.gt]: todayDateOnly() } },
+      where: { id, isActive: true, releaseDate: { [Op.gt]: getTodayDate() } },
     });
   }
 
@@ -136,54 +179,14 @@ class MovieRepository implements IMovieRepository {
    * Obtiene películas aplicando filtros opcionales.
    */
   async findByFilters(filters: FilterMoviesDto): Promise<Movie[]> {
-    const movieWhere: WhereOptions = { isActive: true };
-
-    if (filters.classification) {
-      movieWhere['classification'] = filters.classification;
-    }
-
-    // genre, language y format son arrays en la BD → Op.contains busca si el array incluye el valor
-    if (filters.genre) {
-      movieWhere['genres'] = { [Op.contains]: [filters.genre] };
-    }
-
-    if (filters.language) {
-      movieWhere['languages'] = { [Op.contains]: [filters.language] };
-    }
-
-    if (filters.format) {
-      movieWhere['formats'] = { [Op.contains]: [filters.format] };
-    }
-
-    // Si se filtra por fecha, cinemaId o disponibilidad necesitamos hacer join con funciones
-    const needsFunctionJoin = filters.date || filters.cinemaId || filters.available;
+    const movieWhere = this.buildMovieWhereClause(filters);
+    const needsFunctionJoin = Boolean(filters.date || filters.cinemaId || filters.available);
 
     if (!needsFunctionJoin) {
       return await Movie.findAll({ where: movieWhere });
     }
 
-    const functionWhere: WhereOptions<FunctionAttributes> = { isActive: true };
-
-    if (filters.date) {
-      const day = new Date(filters.date);
-      day.setHours(0, 0, 0, 0);
-      const nextDay = new Date(filters.date);
-      nextDay.setHours(23, 59, 59, 999);
-      functionWhere['startTime'] = { [Op.between]: [day, nextDay] };
-    }
-
-    if (filters.cinemaId) {
-      // Para filtrar por cine necesitamos join con Room y filtrar Room.cinemaId
-      const roomIds = await Room.findAll({
-        where: { cinemaId: filters.cinemaId, isActive: true },
-        attributes: ['id'],
-      });
-      functionWhere['roomId'] = { [Op.in]: roomIds.map((r) => r.id) };
-    }
-
-    if (filters.available) {
-      functionWhere['availableSeats'] = { [Op.gt]: 0 };
-    }
+    const functionWhere = await this.buildFunctionWhereClause(filters);
 
     return await Movie.findAll({
       where: movieWhere,
@@ -197,6 +200,59 @@ class MovieRepository implements IMovieRepository {
       ],
     });
   }
+
+  /**
+   * Construye las condiciones de filtrado para la entidad Movie.
+   */
+  private buildMovieWhereClause(filters: FilterMoviesDto): WhereOptions {
+    const movieWhere: WhereOptions = { isActive: true };
+
+    if (filters.classification) {
+      movieWhere['classification'] = filters.classification;
+    }
+    if (filters.genre) {
+      movieWhere['genres'] = { [Op.contains]: [filters.genre] };
+    }
+    if (filters.language) {
+      movieWhere['languages'] = { [Op.contains]: [filters.language] };
+    }
+    if (filters.format) {
+      movieWhere['formats'] = { [Op.contains]: [filters.format] };
+    }
+
+    return movieWhere;
+  }
+
+  /**
+   * Construye las condiciones de filtrado para las funciones asociadas.
+   */
+  private async buildFunctionWhereClause(
+    filters: FilterMoviesDto,
+  ): Promise<WhereOptions<FunctionAttributes>> {
+    const functionWhere: WhereOptions<FunctionAttributes> = { isActive: true };
+
+    if (filters.date) {
+      const day = new Date(filters.date);
+      day.setHours(0, 0, 0, 0);
+      const nextDay = new Date(filters.date);
+      nextDay.setHours(23, 59, 59, 999);
+      functionWhere['startTime'] = { [Op.between]: [day, nextDay] };
+    }
+
+    if (filters.cinemaId) {
+      const rooms = await Room.findAll({
+        where: { cinemaId: filters.cinemaId, isActive: true },
+        attributes: ['id'],
+      });
+      functionWhere['roomId'] = { [Op.in]: rooms.map((r) => r.id) };
+    }
+
+    if (filters.available) {
+      functionWhere['availableSeats'] = { [Op.gt]: 0 };
+    }
+
+    return functionWhere;
+  }
 }
 
-export default new MovieRepository();
+export default MovieRepository;

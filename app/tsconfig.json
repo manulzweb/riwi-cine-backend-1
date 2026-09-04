@@ -2,10 +2,14 @@
   "compilerOptions": {
     "target": "es2022",
     "module": "nodenext",
+    "moduleResolution": "nodenext",
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "types": ["node", "jest"]

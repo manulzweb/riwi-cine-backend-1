@@ -1,18 +1,19 @@
 // app/src/repositories/interfaces/notification-preference.repository.interface.ts
 
-/**
- * Contrato del repositorio de preferencias de notificación.
- *
- * Define las operaciones de persistencia para la entidad NotificationPreference.
- */
+import { Transaction } from 'sequelize';
 import NotificationPreference, {
   NotificationPreferenceCreationAttributes,
-} from '../../models/notification-preference.model';
+} from '../../models/notification-preference.model.js';
 
 export interface INotificationPreferenceRepository {
-  /** Crea la preferencia de notificación del usuario. */
-  create(data: NotificationPreferenceCreationAttributes): Promise<NotificationPreference>;
-
-  /** Busca la preferencia asociada a un usuario. */
-  findByUserId(userId: number): Promise<NotificationPreference | null>;
+  create(
+    data: NotificationPreferenceCreationAttributes,
+    transaction?: Transaction,
+  ): Promise<NotificationPreference>;
+  findByUserId(userId: number, transaction?: Transaction): Promise<NotificationPreference | null>;
+  updateByUserId(
+    userId: number,
+    data: Partial<NotificationPreferenceCreationAttributes>,
+    transaction?: Transaction,
+  ): Promise<NotificationPreference | null>;
 }

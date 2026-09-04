@@ -1,7 +1,7 @@
 // app/src/models/role.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface RoleAttributes {
   id: number;
@@ -12,9 +12,9 @@ export interface RoleAttributes {
 export type RoleCreationAttributes = Optional<RoleAttributes, 'id'>;
 
 class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
 }
 
 Role.init(

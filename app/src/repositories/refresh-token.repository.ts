@@ -1,21 +1,16 @@
 // app/src/repositories/refresh-token.repository.ts
 
 import { Transaction } from 'sequelize';
-import RefreshToken, { RefreshTokenCreationAttributes } from '../models/refresh-token.model';
+import RefreshToken, { RefreshTokenCreationAttributes } from '../models/refresh-token.model.js';
+import { IRefreshTokenRepository } from './interfaces/refresh-token.repository.interface.js';
 
 /**
  * Repositorio de Tokens de Refresco
  * -----------------------
  * Implementa el patrón Repository para encapsular todas las operaciones
  * de persistencia relacionadas con la entidad RefreshToken.
- *
- * Esta clase es la única responsable de interactuar con Sequelize.
  */
-
-class RefreshTokenRepository {
-  /**
-   * Crea un nuevo token de refresco.
-   */
+export class RefreshTokenRepository implements IRefreshTokenRepository {
   async create(
     data: RefreshTokenCreationAttributes,
     transaction?: Transaction,
@@ -23,29 +18,17 @@ class RefreshTokenRepository {
     return await RefreshToken.create(data, { transaction });
   }
 
-  /**
-   * Busca un token de refresco por su hash.
-   */
   async findByTokenHash(tokenHash: string): Promise<RefreshToken | null> {
     return await RefreshToken.findOne({ where: { tokenHash } });
   }
 
-  /**
-   * Revoca todos los tokens de refresco activos de un usuario.
-   */
   async revokeAllByUserId(userId: number, transaction?: Transaction): Promise<void> {
     await RefreshToken.update({ isRevoked: true }, { where: { userId }, transaction });
   }
 
-  /**
-   * Revoca un token de refresco por su identificador.
-   *
-   * @param id Identificador del token.
-   * @param transaction Transacción opcional para Unit of Work.
-   */
-  async revoke(id: number, transaction?: Transaction): Promise<void> {
-    await RefreshToken.update({ isRevoked: true }, { where: { id }, transaction });
+  async revoke(id: number): Promise<void> {
+    await RefreshToken.update({ isRevoked: true }, { where: { id } });
   }
 }
 
-export default new RefreshTokenRepository();
+export default RefreshTokenRepository;

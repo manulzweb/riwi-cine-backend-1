@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express';
 import { ZodSchema } from 'zod';
-import { formatZodError } from '../utils/zod-error.util';
+import { formatZodError } from '../utils/zod-error.util.js';
 
 /**
  * ============================================================================

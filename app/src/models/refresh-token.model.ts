@@ -1,7 +1,7 @@
 // app/src/models/refresh-token.model.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 export interface RefreshTokenAttributes {
   id: number;
@@ -17,14 +17,14 @@ class RefreshToken
   extends Model<RefreshTokenAttributes, RefreshTokenCreationAttributes>
   implements RefreshTokenAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public tokenHash!: string;
-  public expiresAt!: Date;
-  public isRevoked!: boolean;
+  declare id: number;
+  declare userId: number;
+  declare tokenHash: string;
+  declare expiresAt: Date;
+  declare isRevoked: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 RefreshToken.init(

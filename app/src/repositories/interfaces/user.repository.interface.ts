@@ -1,7 +1,7 @@
 // app/src/repositories/interfaces/user.repository.interface.ts
 
 import { Transaction } from 'sequelize';
-import User, { UserCreationAttributes } from '../../models/user.model';
+import User, { UserCreationAttributes } from '../../models/user.model.js';
 
 /**
  * Contrato del Repositorio de Usuarios.

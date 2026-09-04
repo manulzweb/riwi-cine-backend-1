@@ -8,11 +8,12 @@
  * - Es el que realmente ejecutas cuando corres npm run dev o docker-compose up.
  */
 
-import app from './server';
-import sequelize from './config/database';
-import './models'; // registra todos los modelos y sus asociaciones antes del sync
-import { runSeed } from './seed/seed';
-import { startUpcomingReleaseJob } from './jobs/upcoming-release.job';
+import app from './server.js';
+import sequelize from './config/database.js';
+import './models/index.js'; // registra todos los modelos y sus asociaciones antes del sync
+import { runSeed } from './seed/seed.js';
+import { startUpcomingReleaseJob } from './jobs/upcoming-release.job.js';
+import { startCartExpiryJob } from './jobs/cart-expiry.job.js';
 
 const PORT = process.env.APP_PORT || 3000;
 
@@ -28,6 +29,7 @@ const start = async () => {
     await runSeed();
 
     startUpcomingReleaseJob();
+    startCartExpiryJob();
 
     app.listen(PORT, () => {
       console.log(`Servidor escuchando en puerto ${PORT}`);

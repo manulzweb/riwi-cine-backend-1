@@ -2,11 +2,11 @@
 
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
-import { envConfig } from '../config/env';
+import { envConfig } from '../config/env.js';
 import {
   IEmailVerificationTokenService,
   EmailVerificationTokenResult,
-} from './interfaces/email-verification-token.service.interface';
+} from './interfaces/email-verification-token.service.interface.js';
 
 /**
  * Servicio encargado de generar y verificar tokens de activación
@@ -94,4 +94,4 @@ export class EmailVerificationTokenService implements IEmailVerificationTokenSer
  * @constant
  * @type {EmailVerificationTokenService}
  */
-export default new EmailVerificationTokenService();
+export default EmailVerificationTokenService;

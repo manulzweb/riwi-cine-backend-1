@@ -1,13 +1,13 @@
 // app/src/routes/city.routes.ts
 
 import { Router } from 'express';
-import { getCities } from '../controllers/city.controller';
+import { cityController } from '../containers/city.container.js';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/cities/{departmentId}:
+ * /cities/{departmentId}:
  *   get:
  *     summary: Obtener ciudades activas por departamento (solo con cine activo)
  *     tags: [Cities]
@@ -39,6 +39,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener las ciudades"
  */
-router.get('/:departmentId', getCities);
+router.get('/:departmentId', cityController.getCities);
 
 export default router;

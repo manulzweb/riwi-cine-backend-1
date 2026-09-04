@@ -1,7 +1,7 @@
 // app/src/models/common/base-token-schema.ts
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../../config/database';
+import sequelize from '../../config/database.js';
 
 export interface BaseTokenAttributes {
   id: number;
@@ -40,6 +40,18 @@ const baseTokenFields = {
     defaultValue: null,
     field: 'used_at',
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'created_at',
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'updated_at',
+  },
 } as const;
 
 export function createTokenModel(tableName: string) {
@@ -47,14 +59,14 @@ export function createTokenModel(tableName: string) {
     extends Model<BaseTokenAttributes, BaseTokenCreationAttributes>
     implements BaseTokenAttributes
   {
-    public id!: number;
-    public userId!: number;
-    public tokenHash!: string;
-    public expiresAt!: Date;
-    public usedAt!: Date | null;
+    declare id: number;
+    declare userId: number;
+    declare tokenHash: string;
+    declare expiresAt: Date;
+    declare usedAt: Date | null;
 
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+    declare readonly createdAt: Date;
+    declare readonly updatedAt: Date;
   }
 
   TokenModel.init(baseTokenFields, {

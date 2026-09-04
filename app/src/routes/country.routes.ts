@@ -1,13 +1,13 @@
 // app/src/routes/country.routes.ts
 
 import { Router } from 'express';
-import { getCountries } from '../controllers/country.controller';
+import { countryController } from '../containers/country.container.js';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/countries:
+ * /countries:
  *   get:
  *     summary: Obtener todos los países
  *     tags: [Countries]
@@ -28,6 +28,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener los países"
  */
-router.get('/', getCountries);
+router.get('/', countryController.getCountries);
 
 export default router;

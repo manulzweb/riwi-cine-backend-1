@@ -1,7 +1,7 @@
 // app/src/repositories/country.repository.ts
 
-import Country from '../models/country.model';
-import { ICountryRepository } from './interfaces/country.repository.interface';
+import Country from '../models/country.model.js';
+import { ICountryRepository } from './interfaces/country.repository.interface.js';
 
 /**
  * Repositorio de Países
@@ -19,6 +19,9 @@ class CountryRepository implements ICountryRepository {
   async findAll(): Promise<Country[]> {
     return await Country.findAll();
   }
+  async findById(id: number): Promise<Country | null> {
+    return await Country.findByPk(id);
+  }
 }
 
-export default new CountryRepository();
+export default CountryRepository;

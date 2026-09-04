@@ -3,8 +3,8 @@
 import { Transaction } from 'sequelize';
 import PurchaseHistory, {
   PurchaseHistoryCreationAttributes,
-} from '../models/purchase-history.model';
-import { IPurchaseHistoryRepository } from './interfaces/purchase-history.repository.interface';
+} from '../models/purchase-history.model.js';
+import { IPurchaseHistoryRepository } from './interfaces/purchase-history.repository.interface.js';
 
 /**
  * Repositorio de Historial de Compras
@@ -14,8 +14,7 @@ import { IPurchaseHistoryRepository } from './interfaces/purchase-history.reposi
  *
  * Esta clase es la única responsable de interactuar con Sequelize.
  */
-
-class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
+export class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
   /**
    * Crea un nuevo registro en el historial de compras.
    */
@@ -34,4 +33,4 @@ class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
   }
 }
 
-export default new PurchaseHistoryRepository();
+export default PurchaseHistoryRepository;

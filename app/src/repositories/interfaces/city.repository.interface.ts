@@ -1,6 +1,6 @@
 // app/src/repositories/interfaces/city.repository.interface.ts
 
-import City from '../../models/city.model';
+import City from '../../models/city.model.js';
 
 /**
  * Contrato del repositorio de ciudades.

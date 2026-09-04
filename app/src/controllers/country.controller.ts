@@ -1,7 +1,10 @@
 // app/src/controllers/country.controller.ts
 
 import { Request, Response } from 'express';
-import countryService from '../services/country.service';
+
+import { ICountryService } from '../services/interfaces/country.service.interface.js';
+
+import { asyncHandler } from '../middleware/async-handler.js';
 
 /**
  * ============================================================================
@@ -40,46 +43,45 @@ import countryService from '../services/country.service';
  * PostgreSQL
  * ============================================================================
  */
+export class CountryController {
+  /**
+   * Servicio encargado de ejecutar la lógica de negocio relacionada con
+   * los países.
+   */
+  constructor(private readonly countryService: ICountryService) {}
 
-/**
- * Obtiene el listado completo de países.
- *
- * Delega la consulta a la capa de servicios, la cual será responsable de
- * aplicar cualquier regla de negocio antes de consultar el repositorio.
- *
- * @async
- *
- * @param {Request} _req
- * Objeto de la petición HTTP.
- *
- * En este endpoint no se utiliza, por ello se antepone "_" al nombre de la
- * variable para indicar explícitamente que el parámetro es requerido por
- * Express pero no será utilizado.
- *
- * @param {Response} res
- * Objeto utilizado para construir la respuesta HTTP.
- *
- * @returns {Promise<Response>}
- * Promesa que resuelve una respuesta HTTP.
- *
- * Posibles respuestas:
- *
- * - **200 OK**
- *   Lista de países obtenida correctamente.
- *
- * - **500 Internal Server Error**
- *   Error inesperado durante la consulta.
- *
- * @throws {Error}
- * Cualquier excepción generada por la capa de servicios será capturada
- * y retornada como una respuesta HTTP con código 500.
- */
-export const getCountries = async (_req: Request, res: Response): Promise<Response> => {
-  try {
-    const countries = await countryService.findAll();
-    return res.status(200).json(countries);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(500).json({ error: message });
-  }
-};
+  /**
+   * ==========================================================================
+   * Obtiene el listado completo de países.
+   * ==========================================================================
+   *
+   * Delega la consulta a la capa de servicios, la cual será responsable de
+   * aplicar cualquier regla de negocio antes de consultar el repositorio.
+   *
+   * @async
+   *
+   * @param {Request} _req
+   * Objeto de la petición HTTP.
+   *
+   * En este endpoint no se utiliza, por ello se antepone "_" al nombre de la
+   * variable para indicar explícitamente que el parámetro es requerido por
+   * Express pero no será utilizado.
+   *
+   * @param {Response} res
+   * Objeto utilizado para construir la respuesta HTTP.
+   *
+   * @returns {Promise<void>}
+   *
+   * Posibles respuestas:
+   *
+   * - **200 OK**
+   *   Lista de países obtenida correctamente.
+   *
+   * - **500 Internal Server Error**
+   *   Error inesperado durante la consulta.
+   */
+  public getCountries = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+    const countries = await this.countryService.findAll();
+    res.status(200).json(countries);
+  });
+}

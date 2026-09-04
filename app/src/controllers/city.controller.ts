@@ -1,7 +1,10 @@
 // app/src/controllers/city.controller.ts
 
 import { Request, Response } from 'express';
-import cityService from '../services/city.service';
+
+import { ICityService } from '../services/interfaces/city.service.interface.js';
+
+import { asyncHandler } from '../middleware/async-handler.js';
 
 /**
  * ============================================================================
@@ -41,48 +44,56 @@ import cityService from '../services/city.service';
  * PostgreSQL
  * ============================================================================
  */
+export class CityController {
+  /**
+   * Servicio encargado de ejecutar la lógica de negocio relacionada con
+   * las ciudades.
+   */
+  constructor(private readonly cityService: ICityService) {}
 
-/**
- * Obtiene el listado de ciudades pertenecientes a un departamento.
- *
- * Convierte el parámetro de ruta a entero, delega la consulta al servicio
- * filtrando por departamento y retorna la colección de ciudades.
- *
- * @async
- *
- * @param {Request} req
- * Objeto de la petición HTTP.
- *
- * Espera recibir en params:
- * @example
- * GET /api/cities/department/5
- * req.params.departmentId = "5"
- *
- * @param {Response} res
- * Objeto utilizado para construir la respuesta HTTP.
- *
- * @returns {Promise<Response>}
- * Promesa que resuelve una respuesta HTTP.
- *
- * Posibles respuestas:
- *
- * - **200 OK**
- *   Lista de ciudades obtenida correctamente (puede ser vacía).
- *
- * - **500 Internal Server Error**
- *   Error inesperado durante la consulta.
- *
- * @throws {Error}
- * Cualquier excepción generada por la capa de servicios será capturada
- * y retornada como una respuesta HTTP con código 500.
- */
-export const getCities = async (req: Request, res: Response): Promise<Response> => {
-  try {
+  /**
+   * ==========================================================================
+   * Obtiene el listado de ciudades pertenecientes a un departamento.
+   * ==========================================================================
+   *
+   * Convierte el parámetro de ruta a entero, delega la consulta al servicio
+   * filtrando por departamento y retorna la colección de ciudades.
+   *
+   * @async
+   *
+   * @param {Request} req
+   * Objeto de la petición HTTP.
+   *
+   * Espera recibir en params:
+   * @example
+   * GET /api/cities/5
+   * req.params.departmentId = "5"
+   *
+   * @param {Response} res
+   * Objeto utilizado para construir la respuesta HTTP.
+   *
+   * @returns {Promise<void>}
+   *
+   * Posibles respuestas:
+   *
+   * - **200 OK**
+   *   Lista de ciudades obtenida correctamente (puede ser vacía).
+   *
+   * - **400 Bad Request**
+   *   ID de departamento inválido.
+   *
+   * - **500 Internal Server Error**
+   *   Error inesperado durante la consulta.
+   */
+  public getCities = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const departmentId = Number.parseInt(req.params.departmentId, 10);
-    const cities = await cityService.findByDepartmentId(departmentId);
-    return res.status(200).json(cities);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    return res.status(500).json({ error: message });
-  }
-};
+
+    if (Number.isNaN(departmentId)) {
+      res.status(400).json({ error: 'ID de departamento inválido.' });
+      return;
+    }
+
+    const cities = await this.cityService.findByDepartmentId(departmentId);
+    res.status(200).json(cities);
+  });
+}
