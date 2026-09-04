@@ -41,4 +41,4 @@ class MembershipLevelRepository implements IMembershipLevelRepository {
   }
 }
 
-export default new MembershipLevelRepository();
+export default MembershipLevelRepository;

@@ -92,13 +92,10 @@ export const envConfig = {
     ACTIVATION_TOKEN_EXPIRE_HOURS: Number(process.env.ACTIVATION_TOKEN_EXPIRE_HOURS ?? 24),
   },
 
-  SMTP: {
-    HOST: required('SMTP_HOST'),
-    PORT: Number(process.env.SMTP_PORT ?? 2525),
-    SECURE: process.env.SMTP_SECURE === 'true',
-    USER: required('SMTP_USER'),
-    PASS: required('SMTP_PASS'),
-    FROM: required('SMTP_FROM'),
+  MAILTRAP: {
+    TOKEN: process.env.MAILTRAP_TOKEN ?? '',
+    SENDER_EMAIL: process.env.MAILTRAP_SENDER_EMAIL ?? 'hello@demomailtrap.co',
+    SENDER_NAME: process.env.MAILTRAP_SENDER_NAME ?? 'MultiCine',
   },
 
   COOKIE: {

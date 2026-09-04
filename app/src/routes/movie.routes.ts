@@ -1,17 +1,7 @@
 // app/src/routes/movie.routes.ts
 
 import { Router } from 'express';
-import {
-  getMovies,
-  getWeeklyMovies,
-  getTodayMovies,
-  getMoviesByFilter,
-  getMovieDetail,
-  getMovieFunctions,
-  getMovieRecommendations,
-  getUpcomingMovies,
-  getUpcomingMovie,
-} from '../controllers/movie.controller.js';
+import { movieController } from '../containers/movie.container.js';
 
 const router = Router();
 
@@ -53,7 +43,7 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/', getMovies);
+router.get('/', movieController.getMovies);
 
 /**
  * @swagger
@@ -97,7 +87,7 @@ router.get('/', getMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/upcoming', getUpcomingMovies);
+router.get('/upcoming', movieController.getUpcomingMovies);
 
 /**
  * @swagger
@@ -150,7 +140,7 @@ router.get('/upcoming', getUpcomingMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/upcoming/:id', getUpcomingMovie);
+router.get('/upcoming/:id', movieController.getUpcomingMovie);
 
 /**
  * @swagger
@@ -171,7 +161,7 @@ router.get('/upcoming/:id', getUpcomingMovie);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/weekly', getWeeklyMovies);
+router.get('/weekly', movieController.getWeeklyMovies);
 
 /**
  * @swagger
@@ -192,7 +182,7 @@ router.get('/weekly', getWeeklyMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/today', getTodayMovies);
+router.get('/today', movieController.getTodayMovies);
 
 /**
  * @swagger
@@ -256,7 +246,7 @@ router.get('/today', getTodayMovies);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/filter', getMoviesByFilter);
+router.get('/filter', movieController.getMoviesByFilter);
 
 /**
  * @swagger
@@ -279,7 +269,7 @@ router.get('/filter', getMoviesByFilter);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id', getMovieDetail);
+router.get('/:id', movieController.getMovieDetail);
 
 /**
  * @swagger
@@ -306,7 +296,7 @@ router.get('/:id', getMovieDetail);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id/functions', getMovieFunctions);
+router.get('/:id/functions', movieController.getMovieFunctions);
 
 /**
  * @swagger
@@ -327,6 +317,6 @@ router.get('/:id/functions', getMovieFunctions);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/:id/recommendations', getMovieRecommendations);
+router.get('/:id/recommendations', movieController.getMovieRecommendations);
 
 export default router;

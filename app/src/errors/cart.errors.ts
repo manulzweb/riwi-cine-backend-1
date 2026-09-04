@@ -11,22 +11,20 @@
  * estable para el cliente), de modo que el controlador no dependa del texto.
  */
 
+import { DomainError } from './base.error.js';
+
 /**
  * Clase base para los errores de dominio del carrito.
  *
- * Las subclases definen un mensaje, código HTTP y código de negocio por
- * defecto, pero permiten sobrescribir el mensaje cuando es dinámico
- * (por ejemplo, incluye el nombre del producto o el saldo disponible).
+ * Ahora extiende `DomainError` para que el `errorHandler` lo capture
+ * sin duplicar lógica. Las subclases definen un mensaje, código HTTP y
+ * código de negocio por defecto, pero permiten sobrescribir el mensaje
+ * cuando es dinámico (p.ej. incluye el nombre del producto o el saldo).
  */
-export class CartDomainError extends Error {
-  public readonly status: number;
-  public readonly code: string;
-
+export class CartDomainError extends DomainError {
   constructor(message: string, status: number, code: string, options?: { cause?: unknown }) {
-    super(message, options);
+    super(message, status, code, options);
     this.name = new.target.name;
-    this.status = status;
-    this.code = code;
   }
 }
 

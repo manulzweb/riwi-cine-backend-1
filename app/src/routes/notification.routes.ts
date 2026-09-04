@@ -1,7 +1,7 @@
 // app/src/routes/notification.routes.ts
 
 import { Router } from 'express';
-import { registerUpcomingNotification } from '../controllers/upcoming-notification.controller.js';
+import { upcomingNotificationController } from '../containers/upcoming-notification.container.js';
 import { validate } from '../middleware/validate.middleware.js';
 import { NotificationUpcomingSchema } from '../schemas/notification.schemas.js';
 
@@ -49,7 +49,7 @@ const router = Router();
 router.post(
   '/upcoming',
   validate(NotificationUpcomingSchema, 'body'),
-  registerUpcomingNotification,
+  upcomingNotificationController.register,
 );
 
 export default router;

@@ -19,10 +19,7 @@ export interface FunctionAttributes {
   price: number;
   availableSeats: number;
   isActive: boolean;
-
-  // Campos de HU-004 para compatibilidad y no romper la consulta de detalle
-  dateTime: Date;
-  format: string; // 2D, 3D, IMAX, VIP
+  format: string;
   room: string;
   totalSeats: number;
   active: boolean;
@@ -36,7 +33,6 @@ export interface FunctionCreationAttributes extends Optional<
   | 'isActive'
   | 'roomId'
   | 'endTime'
-  | 'dateTime'
   | 'format'
   | 'room'
   | 'totalSeats'
@@ -47,21 +43,18 @@ class CinemaFunction
   extends Model<FunctionAttributes, FunctionCreationAttributes>
   implements FunctionAttributes
 {
-  public id!: number;
-  public movieId!: number;
-  public roomId!: number;
-  public startTime!: Date;
-  public endTime!: Date;
-  public price!: number;
-  public availableSeats!: number;
-  public isActive!: boolean;
-
-  // Compatibilidad con HU-004
-  public dateTime!: Date;
-  public format!: string;
-  public room!: string;
-  public totalSeats!: number;
-  public active!: boolean;
+  declare id: number;
+  declare movieId: number;
+  declare roomId: number;
+  declare startTime: Date;
+  declare endTime: Date;
+  declare price: number;
+  declare availableSeats: number;
+  declare isActive: boolean;
+  declare format: string;
+  declare room: string;
+  declare totalSeats: number;
+  declare active: boolean;
 }
 
 CinemaFunction.init(
@@ -100,11 +93,6 @@ CinemaFunction.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
-    },
-    // Compatibilidad con HU-004
-    dateTime: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
     format: {
       type: DataTypes.STRING(20),

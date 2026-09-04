@@ -93,4 +93,4 @@ export class PasswordService implements IPasswordService {
  * @constant
  * @type {PasswordService}
  */
-export default new PasswordService();
+export default PasswordService;

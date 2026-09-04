@@ -1,8 +1,8 @@
 // app/src/services/department.service.ts
 
 import Department from '../models/department.model.js';
-import repository from '../repositories/department.repository.js';
 import { IDepartmentService } from './interfaces/department.service.interface.js';
+import { IDepartmentRepository } from '../repositories/interfaces/department.repository.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -17,6 +17,7 @@ import { IDepartmentService } from './interfaces/department.service.interface.js
  * correspondiente repository.
  *
  * @class DepartmentService
+ * @implements {IDepartmentService}
  *
  * @business
  * Los departamentos dependen jerárquicamente de los países. Esta
@@ -24,6 +25,9 @@ import { IDepartmentService } from './interfaces/department.service.interface.js
  * (`País → Departamento → Ciudad`).
  */
 class DepartmentService implements IDepartmentService {
+  constructor(private readonly departmentRepository: IDepartmentRepository) {
+    this.departmentRepository = departmentRepository;
+  }
   /**
    * Obtiene todos los departamentos pertenecientes a un país.
    *
@@ -37,14 +41,8 @@ class DepartmentService implements IDepartmentService {
    * Lista de departamentos asociados al país indicado.
    */
   async findByCountryId(countryId: number): Promise<Department[]> {
-    return await repository.findByCountryId(countryId);
+    return await this.departmentRepository.findByCountryId(countryId);
   }
 }
 
-/**
- * Instancia única del servicio de departamentos utilizada por la aplicación.
- *
- * @constant
- * @type {DepartmentService}
- */
-export default new DepartmentService();
+export default DepartmentService;

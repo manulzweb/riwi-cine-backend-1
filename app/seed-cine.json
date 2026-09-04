@@ -1,0 +1,172 @@
+{
+  "countries": [{ "name": "Colombia" }],
+  "departments": [
+    { "name": "Antioquia", "countryName": "colombia" },
+    { "name": "Bogotá D.C.", "countryName": "colombia" },
+    { "name": "Valle del Cauca", "countryName": "colombia" }
+  ],
+  "cities": [
+    { "name": "Medellín", "departmentName": "antioquia" },
+    { "name": "Bogotá", "departmentName": "bogotá d.c." },
+    { "name": "Cali", "departmentName": "valle del cauca" }
+  ],
+  "cinemas": [
+    {
+      "name": "MultiCine El Tesoro",
+      "address": "Cra. 25A #1A Sur 45, Medellín",
+      "cityName": "medellín"
+    },
+    { "name": "MultiCine Andino", "address": "Cra. 11 #82-71, Bogotá", "cityName": "bogotá" },
+    { "name": "MultiCine Chipichape", "address": "Calle 38 Norte #6N-35, Cali", "cityName": "cali" }
+  ],
+  "rooms": [
+    {
+      "name": "Sala 1 - IMAX",
+      "cinemaName": "multicine el tesoro",
+      "format": "IMAX",
+      "capacity": 120
+    },
+    {
+      "name": "Sala 2 - VIP",
+      "cinemaName": "multicine el tesoro",
+      "format": "VIP",
+      "capacity": 60
+    },
+    {
+      "name": "Sala 1 - 3D MacroXE",
+      "cinemaName": "multicine andino",
+      "format": "3D",
+      "capacity": 150
+    },
+    {
+      "name": "Sala 1 - Estándar",
+      "cinemaName": "multicine chipichape",
+      "format": "2D",
+      "capacity": 100
+    }
+  ],
+  "seatTypes": [
+    {
+      "name": "General",
+      "priceFactor": 1.0,
+      "description": "Silla estándar con excelente visibilidad"
+    },
+    { "name": "Preferencial", "priceFactor": 1.3, "description": "Silla central reclinable" },
+    {
+      "name": "VIP",
+      "priceFactor": 1.8,
+      "description": "Silla en piel reclinable con servicio a la sala"
+    }
+  ],
+  "movies": [
+    {
+      "title": "Dune: Parte Dos",
+      "synopsis": "Paul Atreides se une a Chani y a los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia.",
+      "duration": 166,
+      "rating": "PG-13",
+      "genre": "Ciencia Ficción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s520b4q.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=Way9Dexny3w",
+      "releaseDate": "2024-03-01",
+      "isActive": true
+    },
+    {
+      "title": "Spider-Man: Across the Spider-Verse",
+      "synopsis": "Miles Morales es catapultado a través del Multiverso, donde se encuentra con un equipo de Spider-People encargados de proteger su existencia.",
+      "duration": 140,
+      "rating": "PG",
+      "genre": "Animación",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/4HodYYKEIsGOdinkGi2Ucz6X9i0.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=cqGjhVJWtEg",
+      "releaseDate": "2023-06-02",
+      "isActive": true
+    },
+    {
+      "title": "Oppenheimer",
+      "synopsis": "La historia del científico estadounidense J. Robert Oppenheimer y su papel en el desarrollo de la bomba atómica.",
+      "duration": 180,
+      "rating": "R",
+      "genre": "Drama",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=uYPbbksJxIg",
+      "releaseDate": "2023-07-21",
+      "isActive": true
+    }
+  ],
+  "snacks": [
+    {
+      "name": "Combo Dúo Crispeta Salada",
+      "description": "Crispeta gigante + 2 gaseosas de 22oz + 1 chocolatina",
+      "category": "Combos",
+      "price": 28000,
+      "stock": 500,
+      "imageUrl": "https://images.unsplash.com/photo-1585647347483-22b66260dfff",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Crispeta Caramelo Grande",
+      "description": "Crispeta artesanal acaramelada tamaño grande",
+      "category": "Crispetas",
+      "price": 16000,
+      "stock": 350,
+      "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505e9610f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hot Dog Clásico Cine",
+      "description": "Perro caliente con salchicha americana, queso fundido y papas trituradas",
+      "category": "Comidas Rápidas",
+      "price": 14500,
+      "stock": 200,
+      "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Gaseosa 32oz",
+      "description": "Bebida gaseosa dispensador 32oz",
+      "category": "Bebidas",
+      "price": 8500,
+      "stock": 800,
+      "imageUrl": "https://images.unsplash.com/photo-1554866585-cd94860890b7",
+      "discountPercentage": 0
+    }
+  ],
+  "promotions": [
+    {
+      "name": "Miércoles de Cine - Descuento en Confitería",
+      "snackName": "combo dúo crispeta salada",
+      "discountType": "percent",
+      "discountValue": 20,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    }
+  ],
+  "users": [
+    {
+      "email": "admin@multicine.co",
+      "password": "Password123!",
+      "firstName": "Admin",
+      "lastName": "Principal",
+      "roleName": "admin",
+      "phone": "3100000001",
+      "documentType": "CC",
+      "documentNumber": "1000000001",
+      "cityName": "medellín"
+    },
+    {
+      "email": "cliente.demo@multicine.co",
+      "password": "Password123!",
+      "firstName": "Carlos",
+      "lastName": "Charris",
+      "roleName": "cliente",
+      "phone": "3001234567",
+      "documentType": "CC",
+      "documentNumber": "1098765432",
+      "cityName": "bogotá"
+    }
+  ]
+}

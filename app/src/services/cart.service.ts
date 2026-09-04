@@ -3,7 +3,9 @@
 import sequelize from '../config/database.js';
 import { envConfig } from '../config/env.js';
 import cartRepository, { snackRepository } from '../repositories/cart.repository.js';
-import bonusWalletRepository from '../repositories/bonus-wallet.repository.js';
+import BonusWalletRepository from '../repositories/bonus-wallet.repository.js';
+
+const bonusWalletRepository = new BonusWalletRepository();
 import reservationService from './reservation.service.js';
 import {
   ICartService,

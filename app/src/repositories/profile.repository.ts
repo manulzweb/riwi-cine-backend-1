@@ -27,6 +27,20 @@ class ProfileRepository implements IProfileRepository {
   async findByUserId(userId: number): Promise<Profile | null> {
     return await Profile.findOne({ where: { userId } });
   }
+
+  /**
+   * Actualiza un perfil por su identificador único.
+   */
+  async update(
+    id: number,
+    newData: Partial<ProfileCreationAttributes>,
+    transaction?: Transaction,
+  ): Promise<Profile | null> {
+    const profile = await Profile.findByPk(id, { transaction });
+    if (!profile) return null;
+
+    return await profile.update(newData, { transaction });
+  }
 }
 
-export default new ProfileRepository();
+export default ProfileRepository;

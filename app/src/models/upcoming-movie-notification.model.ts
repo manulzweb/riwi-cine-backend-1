@@ -20,13 +20,13 @@ class UpcomingMovieNotification
   extends Model<UpcomingMovieNotificationAttributes, UpcomingMovieNotificationCreationAttributes>
   implements UpcomingMovieNotificationAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public movieId!: number;
-  public notifiedAt!: Date | null;
+  declare id: number;
+  declare userId: number;
+  declare movieId: number;
+  declare notifiedAt: Date | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 UpcomingMovieNotification.init(

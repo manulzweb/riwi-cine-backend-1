@@ -19,6 +19,9 @@ class CountryRepository implements ICountryRepository {
   async findAll(): Promise<Country[]> {
     return await Country.findAll();
   }
+  async findById(id: number): Promise<Country | null> {
+    return await Country.findByPk(id);
+  }
 }
 
-export default new CountryRepository();
+export default CountryRepository;

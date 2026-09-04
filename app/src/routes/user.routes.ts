@@ -13,7 +13,7 @@
  */
 
 import { Router } from 'express';
-import { createUser, getUsers, updateLocation } from '../controllers/user.controller.js';
+import { userController } from '../containers/user.container.js';
 
 const router = Router();
 
@@ -80,7 +80,7 @@ const router = Router();
  *             example:
  *               error: "No se pudo crear el usuario"
  */
-router.post('/', createUser);
+router.post('/', userController.getUsers);
 
 /**
  * GET /
@@ -121,7 +121,7 @@ router.post('/', createUser);
  *             example:
  *               error: "Error al obtener los usuarios"
  */
-router.get('/', getUsers);
+router.get('/', userController.getUsers);
 
 /**
  * POST /users/location
@@ -191,6 +191,6 @@ router.get('/', getUsers);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/location', updateLocation);
+router.post('/location', userController.updateLocation);
 
 export default router;

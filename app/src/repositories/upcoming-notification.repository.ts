@@ -35,4 +35,4 @@ class UpcomingNotificationRepository implements IUpcomingNotificationRepository 
   }
 }
 
-export default new UpcomingNotificationRepository();
+export default UpcomingNotificationRepository;

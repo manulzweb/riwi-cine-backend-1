@@ -94,4 +94,4 @@ export class EmailVerificationTokenService implements IEmailVerificationTokenSer
  * @constant
  * @type {EmailVerificationTokenService}
  */
-export default new EmailVerificationTokenService();
+export default EmailVerificationTokenService;

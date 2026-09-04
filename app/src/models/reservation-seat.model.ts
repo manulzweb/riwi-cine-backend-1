@@ -21,14 +21,14 @@ class ReservationSeat
   extends Model<ReservationSeatAttributes, ReservationSeatCreationAttributes>
   implements ReservationSeatAttributes
 {
-  public id!: number;
-  public reservationId!: number;
-  public seatId!: number;
-  public status!: ReservationSeatStatus;
-  public price!: number;
+  declare id: number;
+  declare reservationId: number;
+  declare seatId: number;
+  declare status: ReservationSeatStatus;
+  declare price: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 ReservationSeat.init(

@@ -41,4 +41,4 @@ class MembershipStatusRepository implements IMembershipStatusRepository {
   }
 }
 
-export default new MembershipStatusRepository();
+export default MembershipStatusRepository;

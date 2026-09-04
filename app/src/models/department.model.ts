@@ -7,6 +7,7 @@ export interface DepartmentAttributes {
   id: number;
   name: string;
   countryId: number;
+  isActive: boolean;
 }
 
 export type DepartmentCreationAttributes = Optional<DepartmentAttributes, 'id'>;
@@ -15,9 +16,10 @@ class Department
   extends Model<DepartmentAttributes, DepartmentCreationAttributes>
   implements DepartmentAttributes
 {
-  public id!: number;
-  public name!: string;
-  public countryId!: number;
+  declare id: number;
+  declare name: string;
+  declare countryId: number;
+  declare isActive: boolean;
 }
 
 Department.init(
@@ -35,6 +37,11 @@ Department.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'country_id',
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
   },
   {

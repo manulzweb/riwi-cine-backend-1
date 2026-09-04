@@ -10,7 +10,7 @@
 
 import app from './server.js';
 import sequelize from './config/database.js';
-import './models'; // registra todos los modelos y sus asociaciones antes del sync
+import './models/index.js'; // registra todos los modelos y sus asociaciones antes del sync
 import { runSeed } from './seed/seed.js';
 import { startUpcomingReleaseJob } from './jobs/upcoming-release.job.js';
 import { startCartExpiryJob } from './jobs/cart-expiry.job.js';

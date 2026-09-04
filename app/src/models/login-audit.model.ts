@@ -18,15 +18,15 @@ class LoginAudit
   extends Model<LoginAuditAttributes, LoginAuditCreationAttributes>
   implements LoginAuditAttributes
 {
-  public id!: number;
-  public userId!: number | null;
-  public emailAttempted!: string;
-  public ipAddress!: string | null;
-  public deviceUserAgent!: string | null;
-  public status!: string;
+  declare id: number;
+  declare userId: number | null;
+  declare emailAttempted: string;
+  declare ipAddress: string | null;
+  declare deviceUserAgent: string | null;
+  declare status: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 LoginAudit.init(

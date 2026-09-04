@@ -15,6 +15,7 @@ import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import { envConfig } from './config/env.js';
 import router from './routes/index.js';
+import { errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 
@@ -42,5 +43,8 @@ app.use('/api/v1', router);
 // Swagger - disponible en /api/docs y /api/v1/docs para no romper con versionado RN-113
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Error handler centralizado — debe ir al final, después de todas las rutas
+app.use(errorHandler);
 
 export default app;

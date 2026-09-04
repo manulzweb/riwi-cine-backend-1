@@ -199,11 +199,4 @@ export class TokenService implements ITokenService {
   }
 }
 
-/**
- * Instancia única del servicio de tokens utilizada por la aplicación.
- *
- * @constant
- * @type {TokenService}
- */
-const tokenService = new TokenService();
-export default tokenService;
+export default TokenService;

@@ -47,4 +47,4 @@ class CityRepository implements ICityRepository {
   }
 }
 
-export default new CityRepository();
+export default CityRepository;

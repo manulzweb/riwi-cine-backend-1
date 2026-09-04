@@ -1,16 +1,14 @@
 // app/src/repositories/interfaces/profile.repository.interface.ts
 
-/**
- * Contrato del repositorio de perfiles.
- *
- * Encapsula la persistencia de los datos del perfil del usuario.
- */
+import { Transaction } from 'sequelize';
 import Profile, { ProfileCreationAttributes } from '../../models/profile.model.js';
 
 export interface IProfileRepository {
-  /** Crea el perfil del usuario. */
-  create(data: ProfileCreationAttributes): Promise<Profile>;
-
-  /** Busca el perfil asociado a un usuario. */
+  create(data: ProfileCreationAttributes, transaction?: Transaction): Promise<Profile>;
   findByUserId(userId: number): Promise<Profile | null>;
+  update(
+    id: number,
+    newData: Partial<ProfileCreationAttributes>,
+    transaction?: Transaction,
+  ): Promise<Profile | null>;
 }

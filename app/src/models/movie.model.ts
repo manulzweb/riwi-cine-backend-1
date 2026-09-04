@@ -55,29 +55,29 @@ export interface MovieCreationAttributes extends Optional<
 > {}
 
 class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements MovieAttributes {
-  public id!: number;
-  public title!: string;
-  public synopsis!: string;
-  public director!: string;
-  public actors!: string[];
-  public genres!: string[];
-  public languages!: string[];
-  public formats!: string[];
-  public duration!: number;
-  public classification!: string;
-  public releaseDate!: Date;
-  public posterUrl!: string;
-  public bannerUrl!: string;
-  public trailerUrl!: string | null;
-  public averageRating!: number;
-  public active!: boolean;
+  declare id: number;
+  declare title: string;
+  declare synopsis: string;
+  declare director: string;
+  declare actors: string[];
+  declare genres: string[];
+  declare languages: string[];
+  declare formats: string[];
+  declare duration: number;
+  declare classification: string;
+  declare releaseDate: Date;
+  declare posterUrl: string;
+  declare bannerUrl: string;
+  declare trailerUrl: string | null;
+  declare averageRating: number;
+  declare active: boolean;
 
   // Compatibilidad con develop
-  public genre!: string;
-  public language!: string;
-  public isSubtitled!: boolean;
-  public rating!: number | null;
-  public isActive!: boolean;
+  declare genre: string;
+  declare language: string;
+  declare isSubtitled: boolean;
+  declare rating: number | null;
+  declare isActive: boolean;
 }
 
 Movie.init(

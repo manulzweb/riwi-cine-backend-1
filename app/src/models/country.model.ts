@@ -15,9 +15,9 @@ class Country
   extends Model<CountryAttributes, CountryCreationAttributes>
   implements CountryAttributes
 {
-  public id!: number;
-  public name!: string;
-  public isActive!: boolean;
+  declare id: number;
+  declare name: string;
+  declare isActive: boolean;
 }
 
 Country.init(
@@ -41,7 +41,7 @@ Country.init(
     sequelize,
     modelName: 'Country',
     tableName: 'countries',
-    timestamps: true,
+    timestamps: false,
   },
 );
 

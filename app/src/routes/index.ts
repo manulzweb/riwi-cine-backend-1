@@ -12,6 +12,7 @@ import notificationRoutes from './notification.routes.js';
 import healthRoutes from './health.routes.js';
 import reservationRoutes from './reservation.routes.js';
 import cartRoutes from './cart.routes.js';
+import seedRoutes from './seed.routes.js';
 const router = Router();
 
 router.use('/users', userRoutes);
@@ -23,6 +24,7 @@ router.use('/membership', membershipRoutes);
 router.use('/movies', movieRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/health', healthRoutes);
+router.use('/seed', seedRoutes);
 router.use(cartRoutes);
 router.use(reservationRoutes);
 

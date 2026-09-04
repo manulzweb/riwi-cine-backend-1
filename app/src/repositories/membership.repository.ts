@@ -36,4 +36,4 @@ class MembershipRepository implements IMembershipRepository {
   }
 }
 
-export default new MembershipRepository();
+export default MembershipRepository;

@@ -84,7 +84,7 @@ const seed = async () => {
     // Funciones futuras (deben aparecer en /functions)
     {
       movieId: movie1.id,
-      dateTime: inTwoDays,
+      startTime: inTwoDays,
       format: '2D',
       room: 'Sala 1',
       price: 12000,
@@ -93,7 +93,7 @@ const seed = async () => {
     },
     {
       movieId: movie1.id,
-      dateTime: inTwoDays,
+      startTime: inTwoDays,
       format: 'IMAX',
       room: 'Sala IMAX',
       price: 22000,
@@ -102,7 +102,7 @@ const seed = async () => {
     }, // agotada -> soldOut true
     {
       movieId: movie2.id,
-      dateTime: inTwoDays,
+      startTime: inTwoDays,
       format: '2D',
       room: 'Sala 2',
       price: 11000,
@@ -111,7 +111,7 @@ const seed = async () => {
     },
     {
       movieId: movie3.id,
-      dateTime: inTwoDays,
+      startTime: inTwoDays,
       format: 'VIP',
       room: 'Sala VIP',
       price: 28000,
@@ -122,7 +122,7 @@ const seed = async () => {
     // Función pasada (NO debe aparecer en /functions, valida RN-014)
     {
       movieId: movie1.id,
-      dateTime: yesterday,
+      startTime: yesterday,
       format: '2D',
       room: 'Sala 1',
       price: 12000,

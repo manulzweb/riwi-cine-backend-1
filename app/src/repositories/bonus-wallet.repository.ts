@@ -33,4 +33,4 @@ class BonusWalletRepository implements IBonusWalletRepository {
   }
 }
 
-export default new BonusWalletRepository();
+export default BonusWalletRepository;

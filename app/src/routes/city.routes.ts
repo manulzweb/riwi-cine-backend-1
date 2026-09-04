@@ -1,7 +1,7 @@
 // app/src/routes/city.routes.ts
 
 import { Router } from 'express';
-import { getCities } from '../controllers/city.controller.js';
+import { cityController } from '../containers/city.container.js';
 
 const router = Router();
 
@@ -39,6 +39,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener las ciudades"
  */
-router.get('/:departmentId', getCities);
+router.get('/:departmentId', cityController.getCities);
 
 export default router;

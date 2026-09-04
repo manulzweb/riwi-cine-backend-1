@@ -1,94 +1,136 @@
 // app/src/services/upcoming-notification.service.ts
 
 import Movie from '../models/movie.model.js';
+import User from '../models/user.model.js';
+import UpcomingMovieNotification from '../models/upcoming-movie-notification.model.js';
 import { NotificationUpcomingDto } from '../schemas/notification.schemas.js';
-import userRepository from '../repositories/user.repository.js';
-import notificationRepository from '../repositories/upcoming-notification.repository.js';
+import { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
+import { IMovieRepository } from '../repositories/interfaces/movie.repository.interface.js';
+import { IUpcomingNotificationRepository } from '../repositories/interfaces/upcoming-notification.repository.interface.js';
 import {
   IUpcomingNotificationService,
   UpcomingNotificationResult,
 } from './interfaces/upcoming-notification.service.interface.js';
-import { todayDateOnly } from '../utils/date.util.js';
+import { getTodayDate } from '../utils/date.util.js';
+import {
+  MovieNotFoundError,
+  MovieNotUpcomingError,
+  NotificationAlreadyRegisteredError,
+  UserInactiveError,
+  UserNotFoundError,
+} from '../errors/movie.errors.js';
 
 /**
  * Servicio encargado de gestionar las solicitudes de notificación
- * de próximos estrenos.
+ * de próximos estrenos (HU-005).
  *
  * Responsabilidades:
  * - Resolver el usuario solicitante mediante su identificador o su correo.
- * - Validar la existencia y vigencia de la película solicitada.
- * - Impedir solicitudes duplicadas por usuario y película.
+ * - Validar la existencia y vigencia de la película solicitada (RN-017).
+ * - Impedir solicitudes duplicadas por usuario y película (RN-019).
  * - Registrar nuevas solicitudes de notificación.
  *
- * El Service no realiza consultas directamente mediante Sequelize,
- * con la excepción de la lectura directa del modelo `Movie` para
- * validar el estado y la fecha de estreno. Las operaciones sobre
- * usuarios y notificaciones son delegadas a los correspondientes
- * repositories.
+ * Sigue el patrón de Inyección de Dependencias (DI) sin instanciar repositorios directamente.
  *
  * @class UpcomingNotificationService
+ * @implements {IUpcomingNotificationService}
  *
  * @business
- * - RN-017: únicamente pueden registrarse notificaciones para
- *   películas activas que aún no se encuentran en cartelera.
- * - RN-019: cada usuario solo puede registrar una solicitud de
- *   notificación por película.
+ * - RN-017: únicamente pueden registrarse notificaciones para películas activas con estreno futuro.
+ * - RN-019: cada usuario solo puede registrar una solicitud de notificación por película.
  */
 class UpcomingNotificationService implements IUpcomingNotificationService {
+  constructor(
+    private readonly notificationRepository: IUpcomingNotificationRepository,
+    private readonly userRepository: IUserRepository,
+    private readonly movieRepository: IMovieRepository,
+  ) {
+    this.notificationRepository = notificationRepository;
+    this.userRepository = userRepository;
+    this.movieRepository = movieRepository;
+  }
+
   /**
    * Registra una solicitud de notificación para un próximo estreno.
    *
-   * El proceso consiste en:
+   * Orquesta las validaciones de usuario, película y duplicados mediante helpers
+   * privados y persiste la nueva notificación.
    *
-   * 1. Resolver el usuario mediante `userId` o `email`.
-   * 2. Validar que la película exista, esté activa y aún no esté
-   *    en cartelera (RN-017).
-   * 3. Verificar que no exista una solicitud previa del mismo
-   *    usuario para la misma película (RN-019).
-   * 4. Persistir la nueva solicitud.
-   *
-   * @param {NotificationUpcomingDto} dto
-   * Datos de la solicitud: identificador o correo del usuario e
-   * identificador de la película.
-   *
-   * @returns {Promise<UpcomingNotificationResult>}
-   * Identificadores de la solicitud creada, del usuario y de la película.
-   *
-   * @throws {Error}
-   * Cuando no se proporciona un usuario válido o este no existe.
-   *
-   * @throws {Error}
-   * Cuando el usuario no se encuentra activo.
-   *
-   * @throws {Error}
-   * Cuando la película no existe o no está activa.
-   *
-   * @throws {Error}
-   * Cuando la película ya se encuentra en cartelera.
-   *
-   * @throws {Error}
-   * Cuando el usuario ya registró una solicitud de notificación
-   * para la misma película.
+   * @async
+   * @param {NotificationUpcomingDto} dto Datos de la solicitud.
+   * @returns {Promise<UpcomingNotificationResult>} Resultado de la notificación registrada.
    */
   async register(dto: NotificationUpcomingDto): Promise<UpcomingNotificationResult> {
-    // 1. Resolver usuario por userId o email.
-    const user = dto.userId
-      ? await userRepository.findById(dto.userId)
-      : dto.email
-        ? await userRepository.findByEmail(dto.email.trim().toLowerCase())
-        : null;
+    // 1. Resolver y validar usuario (Fail-Fast)
+    const user = await this.resolveUserOrThrow(dto);
+
+    // 2. Validar que la película sea un próximo estreno activo (RN-017)
+    const movie = await this.validateUpcomingMovieOrThrow(dto.movieId);
+
+    // 3. Validar no duplicidad de solicitud (RN-019)
+    await this.validateNoDuplicateNotification(user.id, movie.id);
+
+    // 4. Registrar la notificación
+    const notification = await this.notificationRepository.create({
+      userId: user.id,
+      movieId: movie.id,
+    });
+
+    return this.toResultDto(notification);
+  }
+
+  // ==========================================================================
+  // --- Helpers Privados de Dominio (SRP) ---
+  // ==========================================================================
+
+  /**
+   * Resuelve el usuario solicitante por ID o Email y valida su estado activo.
+   *
+   * @private
+   * @param {NotificationUpcomingDto} dto DTO de entrada.
+   * @returns {Promise<User>} Usuario activo encontrado.
+   * @throws {UserNotFoundError} Si el usuario no existe.
+   * @throws {UserInactiveError} Si el usuario está inactivo.
+   */
+  private async resolveUserOrThrow(dto: NotificationUpcomingDto): Promise<User> {
+    let user: User | null = null;
+
+    if (dto.userId) {
+      user = await this.userRepository.findById(dto.userId);
+    } else if (dto.email) {
+      user = await this.userRepository.findByEmail(dto.email.trim().toLowerCase());
+    }
 
     if (!user) {
-      throw new Error('Usuario no encontrado.');
-    }
-    if (!user.isActive) {
-      throw new Error('El usuario no está activo.');
+      throw new UserNotFoundError();
     }
 
-    // 2. Validar que la película exista y sea un próximo estreno (RN-017).
-    const movie = await Movie.findOne({ where: { id: dto.movieId, isActive: true } });
+    if (!user.isActive) {
+      throw new UserInactiveError();
+    }
+
+    return user;
+  }
+
+  /**
+   * Valida que la película exista, esté activa y su fecha de estreno sea estrictamente futura (RN-017).
+   *
+   * @private
+   * @param {number} movieId Identificador de la película.
+   * @returns {Promise<Movie>} Película válida de próximo estreno.
+   * @throws {MovieNotFoundError} Si la película no existe o no está activa.
+   * @throws {MovieNotUpcomingError} Si la película ya se estrenó o está en cartelera.
+   */
+  private async validateUpcomingMovieOrThrow(movieId: number): Promise<Movie> {
+    const movie = await this.movieRepository.findUpcomingById(movieId);
+
     if (!movie) {
-      throw new Error('Película no encontrada.');
+      // Verificar si existe la película en general
+      const generalMovie = await this.movieRepository.findById(movieId);
+      if (!generalMovie) {
+        throw new MovieNotFoundError();
+      }
+      throw new MovieNotUpcomingError();
     }
 
     const releaseDate =
@@ -96,22 +138,34 @@ class UpcomingNotificationService implements IUpcomingNotificationService {
         ? movie.releaseDate.toISOString().slice(0, 10)
         : String(movie.releaseDate).slice(0, 10);
 
-    if (releaseDate <= todayDateOnly()) {
-      throw new Error('La película ya se encuentra en cartelera.');
+    if (releaseDate <= getTodayDate()) {
+      throw new MovieNotUpcomingError();
     }
 
-    // 3. RN-019: no permitir más de una solicitud por usuario y película.
-    const existing = await notificationRepository.findByUserAndMovie(user.id, movie.id);
+    return movie;
+  }
+
+  /**
+   * Valida que el usuario no haya registrado previamente un aviso para la misma película (RN-019).
+   *
+   * @private
+   * @param {number} userId ID del usuario.
+   * @param {number} movieId ID de la película.
+   * @throws {NotificationAlreadyRegisteredError} Si ya existe una solicitud previa.
+   */
+  private async validateNoDuplicateNotification(userId: number, movieId: number): Promise<void> {
+    const existing = await this.notificationRepository.findByUserAndMovie(userId, movieId);
     if (existing) {
-      throw new Error('Ya registraste una solicitud de notificación para esta película.');
+      throw new NotificationAlreadyRegisteredError();
     }
+  }
 
-    // 4. Registrar la solicitud.
-    const notification = await notificationRepository.create({
-      userId: user.id,
-      movieId: movie.id,
-    });
-
+  /**
+   * Transforma la notificación persistida al DTO de resultado.
+   *
+   * @private
+   */
+  private toResultDto(notification: UpcomingMovieNotification): UpcomingNotificationResult {
     return {
       id: notification.id,
       userId: notification.userId,
@@ -120,11 +174,4 @@ class UpcomingNotificationService implements IUpcomingNotificationService {
   }
 }
 
-/**
- * Instancia única del servicio de notificaciones de próximos estrenos
- * utilizada por la aplicación.
- *
- * @constant
- * @type {UpcomingNotificationService}
- */
-export default new UpcomingNotificationService();
+export default UpcomingNotificationService;

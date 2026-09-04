@@ -14,8 +14,7 @@ import { INotificationPreferenceRepository } from './interfaces/notification-pre
  *
  * Esta clase es la única responsable de interactuar con Sequelize.
  */
-
-class NotificationPreferenceRepository implements INotificationPreferenceRepository {
+export class NotificationPreferenceRepository implements INotificationPreferenceRepository {
   /**
    * Crea unas nuevas preferencias de notificación.
    */
@@ -34,4 +33,4 @@ class NotificationPreferenceRepository implements INotificationPreferenceReposit
   }
 }
 
-export default new NotificationPreferenceRepository();
+export default NotificationPreferenceRepository;

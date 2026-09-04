@@ -1,7 +1,7 @@
 // app/src/routes/department.routes.ts
 
 import { Router } from 'express';
-import { getDepartments } from '../controllers/department.controller.js';
+import { departmentController } from '../containers/department.container.js';
 
 const router = Router();
 
@@ -37,6 +37,6 @@ const router = Router();
  *             example:
  *               error: "Error al obtener los departamentos"
  */
-router.get('/:countryId', getDepartments);
+router.get('/:countryId', departmentController.getDepartments);
 
 export default router;

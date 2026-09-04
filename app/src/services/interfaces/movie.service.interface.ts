@@ -14,21 +14,21 @@ import {
  */
 export interface IMovieService {
   // --- Métodos de HU-004 ---
-  /** Retorna el detalle completo de una película, o null si no existe/no está activa. */
-  getMovieDetail(id: number): Promise<MovieDetailDto | null>;
+  /** Retorna el detalle completo de una película. */
+  getMovieDetail(id: number): Promise<MovieDetailDto>;
 
-  /** Retorna únicamente las funciones futuras de una película (RN-014), marcando agotadas (RN-015). */
-  getMovieFunctions(id: number): Promise<MovieFunctionDto[] | null>;
+  /** Retorna únicamente las funciones futuras de una película (RN-014), marcando agotadas (RN-015) y filtradas opcionalmente por ciudad. */
+  getMovieFunctions(id: number, cityId?: number): Promise<MovieFunctionDto[]>;
 
   /** Retorna películas recomendadas por similitud de género. */
-  getMovieRecommendations(id: number): Promise<MovieRecommendationDto[] | null>;
+  getMovieRecommendations(id: number): Promise<MovieRecommendationDto[]>;
 
   // --- Métodos de develop / HU-003 ---
   /** Retorna las películas en estado "Próximo Estreno" (HU-005). */
   findUpcoming(): Promise<UpcomingMovieDto[]>;
 
-  /** Retorna el detalle de una película en estado "Próximo Estreno", o null si no existe/no aplica (HU-005). */
-  getUpcomingMovie(id: number): Promise<UpcomingMovieDto | null>;
+  /** Retorna el detalle de una película en estado "Próximo Estreno" (HU-005). */
+  getUpcomingMovie(id: number): Promise<UpcomingMovieDto>;
 
   findAll(): Promise<Movie[]>;
 

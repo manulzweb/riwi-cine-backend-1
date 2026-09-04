@@ -15,5 +15,5 @@ export interface ICinemaRepository {
   findById(id: number): Promise<Cinema | null>;
 
   /** Busca complejos de cine por ciudad. */
-  findByCity(city: string): Promise<Cinema[]>;
+  findByCityId(cityId: number, isActive: boolean): Promise<Cinema[]>;
 }

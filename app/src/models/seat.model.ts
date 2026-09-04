@@ -15,16 +15,16 @@ export interface SeatAttributes {
 
 export type SeatCreationAttributes = Optional<SeatAttributes, 'id' | 'isAvailable' | 'isActive'>;
 class Seat extends Model<SeatAttributes, SeatCreationAttributes> implements SeatAttributes {
-  public id!: number;
-  public roomId!: number;
-  public seatTypeId!: number;
-  public row!: string;
-  public number!: number;
-  public isAvailable!: boolean;
-  public isActive!: boolean;
+  declare id: number;
+  declare roomId: number;
+  declare seatTypeId: number;
+  declare row: string;
+  declare number: number;
+  declare isAvailable: boolean;
+  declare isActive: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Seat.init(

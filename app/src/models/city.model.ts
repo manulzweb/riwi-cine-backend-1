@@ -13,10 +13,10 @@ export interface CityAttributes {
 export type CityCreationAttributes = Optional<CityAttributes, 'id'>;
 
 class City extends Model<CityAttributes, CityCreationAttributes> implements CityAttributes {
-  public id!: number;
-  public name!: string;
-  public departmentId!: number;
-  public isActive!: boolean;
+  declare id: number;
+  declare name: string;
+  declare departmentId: number;
+  declare isActive: boolean;
 }
 
 City.init(

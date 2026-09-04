@@ -1,8 +1,8 @@
 // app/src/services/country.service.ts
 
 import Country from '../models/country.model.js';
-import repository from '../repositories/country.repository.js';
 import { ICountryService } from './interfaces/country.service.interface.js';
+import { ICountryRepository } from '../repositories/interfaces/country.repository.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -17,6 +17,7 @@ import { ICountryService } from './interfaces/country.service.interface.js';
  * correspondiente repository.
  *
  * @class CountryService
+ * @implements {ICountryService}
  *
  * @business
  * Los países constituyen el nivel superior de la jerarquía de
@@ -24,6 +25,9 @@ import { ICountryService } from './interfaces/country.service.interface.js';
  * (`País → Departamento → Ciudad`).
  */
 class CountryService implements ICountryService {
+  constructor(private readonly countryRepository: ICountryRepository) {
+    this.countryRepository = countryRepository;
+  }
   /**
    * Obtiene todos los países registrados.
    *
@@ -34,14 +38,8 @@ class CountryService implements ICountryService {
    * Lista de países registrados.
    */
   async findAll(): Promise<Country[]> {
-    return await repository.findAll();
+    return await this.countryRepository.findAll();
   }
 }
 
-/**
- * Instancia única del servicio de países utilizada por la aplicación.
- *
- * @constant
- * @type {CountryService}
- */
-export default new CountryService();
+export default CountryService;

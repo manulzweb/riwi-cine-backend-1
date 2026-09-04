@@ -1,10 +1,26 @@
 // app/src/services/user.service.ts
 
 import User from '../models/user.model.js';
-import { City, Department, Country, Profile, Cinema } from '../models/index.js';
 import { UserLocationDto } from '../dto/request/user-location.dto.js';
-import repository from '../repositories/user.repository.js';
+import {
+  LocationValidationError,
+  CountryNotFoundError,
+  DepartmentNotFoundError,
+  DepartmentCountryMismatchError,
+  CityNotFoundError,
+  CityInactiveError,
+  CityDepartmentMismatchError,
+  CityWithoutCinemaError,
+  DepartmentInactiveError,
+  CountryInactiveError,
+} from '../errors/location.errors.js';
 import { IUserService } from './interfaces/user.service.interface.js';
+import { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
+import { IDepartmentRepository } from '../repositories/interfaces/department.repository.interface.js';
+import { ICityRepository } from '../repositories/interfaces/city.repository.interface.js';
+import { ICountryRepository } from '../repositories/interfaces/country.repository.interface.js';
+import { ICinemaRepository } from '../repositories/interfaces/cinema.repository.interface.js';
+import { IProfileRepository } from '../repositories/interfaces/profile.repository.interface.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -17,13 +33,28 @@ import { IUserService } from './interfaces/user.service.interface.js';
  * - Mantener la lógica de negocio fuera de los controladores.
  *
  * @class UserService
- *
+ * @implements {IUserService}
  * @business
  * Las validaciones relacionadas con la ubicación del usuario garantizan
  * que la ciudad pertenezca al departamento seleccionado y que el
  * departamento pertenezca al país seleccionado.
  */
 class UserService implements IUserService {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly countryRepository: ICountryRepository,
+    private readonly departmentRepository: IDepartmentRepository,
+    private readonly cityRepository: ICityRepository,
+    private readonly cinemaRepository: ICinemaRepository,
+    private readonly profileRepository: IProfileRepository,
+  ) {
+    this.userRepository = userRepository;
+    this.countryRepository = countryRepository;
+    this.departmentRepository = departmentRepository;
+    this.cityRepository = cityRepository;
+    this.cinemaRepository = cinemaRepository;
+    this.profileRepository = profileRepository;
+  }
   /**
    * Obtiene todos los usuarios registrados.
    *
@@ -34,7 +65,7 @@ class UserService implements IUserService {
    * Lista de usuarios registrados.
    */
   async findAll(): Promise<User[]> {
-    return await repository.findAll();
+    return await this.userRepository.findAll();
   }
 
   /**
@@ -69,71 +100,78 @@ class UserService implements IUserService {
    * Cuando el departamento no pertenece al país indicado.
    */
   async updateLocation(dto: UserLocationDto): Promise<void> {
+    this.validateRequiredIds(dto);
+
     const { countryId, departmentId, cityId, userId } = dto;
 
-    if (!countryId) {
-      throw new Error('El país es obligatorio.');
-    }
-
-    if (!departmentId) {
-      throw new Error('El departamento es obligatorio.');
-    }
-
-    if (!cityId) {
-      throw new Error('La ciudad es obligatoria.');
-    }
-
     // 1. Validar País
-    const country = await Country.findByPk(countryId);
-
-    if (!country) {
-      throw new Error('El país seleccionado no existe.');
-    }
+    this.validateCountry(countryId!);
 
     // 2. Validar Departamento
-    const department = await Department.findByPk(departmentId);
-
-    if (!department) {
-      throw new Error('El departamento seleccionado no existe.');
-    }
-
-    if (department.countryId !== countryId) {
-      throw new Error('El departamento no pertenece al país seleccionado.');
-    }
+    this.validateDepartment(departmentId!, countryId!);
 
     // 3. Validar Ciudad
-    const city = await City.findByPk(cityId);
-
-    if (!city) {
-      throw new Error('La ciudad seleccionada no existe.');
-    }
-
-    if (!city.isActive) {
-      throw new Error('La ciudad seleccionada no está activa.');
-    }
-
-    if (city.departmentId !== departmentId) {
-      throw new Error('La ciudad no pertenece al departamento seleccionado.');
-    }
+    this.validateCity(cityId, departmentId);
 
     // 4. Validar RN-006: la ciudad debe tener al menos un cine activo
-    const activeCinema = await Cinema.findOne({
-      where: { cityId: city.id, isActive: true },
-    });
+    this.checkCityHasCinemas(cityId!);
 
-    if (!activeCinema) {
-      throw new Error('La ciudad seleccionada no cuenta con cines activos.');
+    // 5. Actualizar el perfil del usuario utilizando el repositorio
+    if (!userId) return;
+
+    const profile = await this.profileRepository.findByUserId(userId);
+
+    if (profile) {
+      await this.profileRepository.update(profile.id, { cityId });
     }
+  }
 
-    // 5. Actualizar el perfil del usuario
-    if (userId) {
-      const profile = await Profile.findOne({
-        where: { userId },
-      });
+  /**
+   * Valida que los identificadores geográficos obligatorios estén presentes.
+   */
+  private validateRequiredIds(ids: {
+    countryId?: number;
+    departmentId?: number;
+    cityId?: number;
+  }): void {
+    if (!ids.countryId) throw new LocationValidationError('El país es obligatorio.');
+    if (!ids.departmentId) throw new LocationValidationError('El departamento es obligatorio.');
+    if (!ids.cityId) throw new LocationValidationError('La ciudad es obligatoria.');
+  }
 
-      if (profile) {
-        await profile.update({ cityId });
-      }
+  /**
+   * Valida la existencia y estado activo del país.
+   */
+  private async validateCountry(countryId: number): Promise<void> {
+    const country = await this.countryRepository.findById(countryId);
+    if (!country) throw new CountryNotFoundError();
+    if (!country.isActive) throw new CountryInactiveError();
+  }
+
+  /**
+   * Valida la existencia, estado activo y pertenencia al país del departamento.
+   */
+  private async validateDepartment(departmentId: number, countryId: number): Promise<void> {
+    const department = await this.departmentRepository.findById(departmentId);
+    if (!department) throw new DepartmentNotFoundError();
+    if (!department.isActive) throw new DepartmentInactiveError();
+    if (department.countryId !== countryId) throw new DepartmentCountryMismatchError();
+  }
+
+  /**
+   * Valida la existencia, estado activo y pertenencia al departamento de la ciudad.
+   */
+  private async validateCity(cityId: number, departmentId: number): Promise<void> {
+    const city = await this.cityRepository.findById(cityId);
+    if (!city) throw new CityNotFoundError();
+    if (!city.isActive) throw new CityInactiveError();
+    if (city.departmentId !== departmentId) throw new CityDepartmentMismatchError();
+  }
+
+  private async checkCityHasCinemas(cityId: number) {
+    const activeCinema = await this.cinemaRepository.findByCityId(cityId, true);
+    if (!activeCinema) {
+      throw new CityWithoutCinemaError();
     }
   }
 }
@@ -144,4 +182,4 @@ class UserService implements IUserService {
  * @constant
  * @type {UserService}
  */
-export default new UserService();
+export default UserService;

@@ -51,17 +51,17 @@ export class Promotion
   extends Model<PromotionAttributes, PromotionCreationAttributes>
   implements PromotionAttributes
 {
-  public id!: number;
-  public snackId!: number;
-  public name!: string;
-  public discountType!: 'percent' | 'fixed';
-  public discountValue!: number;
-  public startDate!: Date;
-  public endDate!: Date;
-  public isActive!: boolean;
+  declare id: number;
+  declare snackId: number;
+  declare name: string;
+  declare discountType: 'percent' | 'fixed';
+  declare discountValue: number;
+  declare startDate: Date;
+  declare endDate: Date;
+  declare isActive: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Promotion.init(

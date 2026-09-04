@@ -14,8 +14,7 @@ import { IPurchaseHistoryRepository } from './interfaces/purchase-history.reposi
  *
  * Esta clase es la única responsable de interactuar con Sequelize.
  */
-
-class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
+export class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
   /**
    * Crea un nuevo registro en el historial de compras.
    */
@@ -34,4 +33,4 @@ class PurchaseHistoryRepository implements IPurchaseHistoryRepository {
   }
 }
 
-export default new PurchaseHistoryRepository();
+export default PurchaseHistoryRepository;

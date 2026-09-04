@@ -2,15 +2,7 @@
 
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import {
-  login,
-  register,
-  verifyEmail,
-  refreshToken,
-  logoutUser,
-  forgotPassword,
-  resetPassword,
-} from '../controllers/auth.controller.js';
+import { authController } from '../containers/auth.container.js';
 import { envConfig } from '../config/env.js';
 import { verifyCaptcha } from '../middleware/captcha.middleware.js';
 
@@ -86,7 +78,7 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', login);
+router.post('/login', authController.login);
 
 /**
  * POST /auth/register
@@ -221,7 +213,7 @@ router.post('/login', login);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/register', registerLimiter, verifyCaptcha(), register);
+router.post('/register', registerLimiter, verifyCaptcha(), authController.register);
 
 /**
  * POST /auth/verify-email
@@ -273,11 +265,11 @@ router.post('/register', registerLimiter, verifyCaptcha(), register);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/verify-email', verifyEmail);
+router.post('/verify-email', authController.verifyEmail);
 
-router.post('/refresh', refreshToken);
-router.post('/logout', logoutUser);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/refresh', authController.refreshToken);
+router.post('/logout', authController.logoutUser);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
 export default router;

@@ -21,14 +21,14 @@ class Reservation
   extends Model<ReservationAttributes, ReservationCreationAttributes>
   implements ReservationAttributes
 {
-  public id!: number;
-  public userId!: number;
-  public functionId!: number;
-  public status!: ReservationStatus;
-  public expiresAt!: Date | null;
+  declare id: number;
+  declare userId: number;
+  declare functionId: number;
+  declare status: ReservationStatus;
+  declare expiresAt: Date | null;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Reservation.init(

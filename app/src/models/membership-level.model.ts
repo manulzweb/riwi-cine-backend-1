@@ -19,10 +19,10 @@ class MembershipLevel
   extends Model<MembershipLevelAttributes, MembershipLevelCreationAttributes>
   implements MembershipLevelAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
-  public discountPercentage!: number;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
+  declare discountPercentage: number;
 }
 
 MembershipLevel.init(

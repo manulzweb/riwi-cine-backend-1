@@ -19,13 +19,13 @@ class SeatType
   extends Model<SeatTypeAttributes, SeatTypeCreationAttributes>
   implements SeatTypeAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
-  public priceFactor!: number;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
+  declare priceFactor: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 SeatType.init(
