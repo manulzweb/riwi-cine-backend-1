@@ -5,6 +5,11 @@ import BonusWallet, { BonusWalletCreationAttributes } from '../../models/bonus-w
 
 export interface IBonusWalletRepository {
   create(data: BonusWalletCreationAttributes, transaction?: Transaction): Promise<BonusWallet>;
-  findByUserId(userId: number, transaction?: Transaction): Promise<BonusWallet | null>;
+  findByUserId(
+    userId: number,
+    transaction?: Transaction,
+    lock?: boolean,
+  ): Promise<BonusWallet | null>;
   decrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void>;
+  incrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void>;
 }

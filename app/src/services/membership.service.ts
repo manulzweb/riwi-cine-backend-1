@@ -39,6 +39,13 @@ const LEVEL_POINTS_REQUIREMENTS: Record<
  * @class MembershipService
  * @implements {IMembershipService}
  */
+import {
+  MembershipNotFoundError,
+  DuplicateMembershipError,
+  MembershipLevelNotFoundError,
+  MembershipStatusNotFoundError,
+} from '../errors/membership.errors.js';
+
 export class MembershipService implements IMembershipService {
   constructor(
     private readonly membershipRepository: IMembershipRepository,
@@ -83,7 +90,7 @@ export class MembershipService implements IMembershipService {
 
     const membership = await this.membershipRepository.findByUserIdWithDetails(userId);
     if (!membership) {
-      throw new Error('Membresía no encontrada para este usuario.');
+      throw new MembershipNotFoundError();
     }
 
     const bonusWallet = await this.bonusWalletRepository.findByUserId(userId);
@@ -153,7 +160,7 @@ export class MembershipService implements IMembershipService {
   private async ensureUserHasNoActiveMembership(userId: number): Promise<void> {
     const existingMembership = await this.membershipRepository.findByUserId(userId);
     if (existingMembership) {
-      throw new Error('El usuario ya cuenta con una membresía digital activa.');
+      throw new DuplicateMembershipError();
     }
   }
 
@@ -166,12 +173,12 @@ export class MembershipService implements IMembershipService {
   }> {
     const defaultLevel = await this.membershipLevelRepository.findByName('BÁSICA');
     if (!defaultLevel) {
-      throw new Error('Nivel de membresía por defecto no configurado.');
+      throw new MembershipLevelNotFoundError('Nivel de membresía por defecto no configurado.');
     }
 
     const defaultStatus = await this.membershipStatusRepository.findByName('Activa');
     if (!defaultStatus) {
-      throw new Error('Estado de membresía por defecto no configurado.');
+      throw new MembershipStatusNotFoundError('Estado de membresía por defecto no configurado.');
     }
 
     return { defaultLevel, defaultStatus };

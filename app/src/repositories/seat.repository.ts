@@ -1,6 +1,6 @@
 // app/src/repositories/seat.repository.ts
 
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { ISeatRepository } from './interfaces/seat.repository.interface.js';
 import Seat from '../models/seat.model.js';
 import SeatType from '../models/seat-type.model.js';
@@ -32,7 +32,12 @@ export class SeatRepository implements ISeatRepository {
   /**
    * Obtiene un conjunto de sillas dentro de una sala específica.
    */
-  async findByIdsInRoom(seatIds: number[], roomId: number): Promise<Seat[]> {
+  async findByIdsInRoom(
+    seatIds: number[],
+    roomId: number,
+    transaction?: Transaction,
+    lock?: boolean,
+  ): Promise<Seat[]> {
     return await Seat.findAll({
       where: {
         id: {
@@ -51,6 +56,8 @@ export class SeatRepository implements ISeatRepository {
         ['row', 'ASC'],
         ['number', 'ASC'],
       ],
+      transaction,
+      lock: lock && transaction ? Transaction.LOCK.UPDATE : undefined,
     });
   }
 
@@ -69,13 +76,18 @@ export class SeatRepository implements ISeatRepository {
   /**
    * Obtiene las sillas solicitadas verificando que pertenezcan a la sala de la función.
    */
-  async findByIds(seatIds: number[], functionId: number): Promise<Seat[]> {
-    const cinemaFunction = await CinemaFunction.findByPk(functionId);
+  async findByIds(
+    seatIds: number[],
+    functionId: number,
+    transaction?: Transaction,
+    lock?: boolean,
+  ): Promise<Seat[]> {
+    const cinemaFunction = await CinemaFunction.findByPk(functionId, { transaction });
     if (!cinemaFunction || !cinemaFunction.roomId) {
       return [];
     }
 
-    return this.findByIdsInRoom(seatIds, cinemaFunction.roomId);
+    return this.findByIdsInRoom(seatIds, cinemaFunction.roomId, transaction, lock);
   }
 
   /**

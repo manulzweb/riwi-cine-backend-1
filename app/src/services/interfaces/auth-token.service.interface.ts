@@ -6,7 +6,7 @@ export interface ITokenService {
   /**
    * Genera un token JWT de acceso para el usuario autenticado.
    */
-  generateAccessToken(userId: number): string;
+  generateAccessToken(userId: number, roleId?: number): string;
 
   /**
    * Genera un token JWT de refresco para el usuario.

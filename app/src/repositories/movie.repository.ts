@@ -39,7 +39,12 @@ class MovieRepository implements IMovieRepository {
    * por ciudad y ordenadas cronológicamente.
    */
   async findFunctionsByMovieId(movieId: number, cityId?: number): Promise<CinemaFunction[]> {
-    const whereClause: WhereOptions<FunctionAttributes> = { movieId };
+    const whereClause: WhereOptions<FunctionAttributes> = {
+      movieId,
+      isActive: true,
+      active: true,
+      startTime: { [Op.gte]: new Date() },
+    };
 
     if (cityId) {
       const roomIds = await this.getRoomIdsForCity(cityId);

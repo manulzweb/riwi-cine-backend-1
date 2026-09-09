@@ -12,6 +12,11 @@ import { ICinemaRepository } from '../repositories/interfaces/cinema.repository.
 import { UpdateProfileRequestDto } from '../dto/request/update-profile.dto.js';
 import { ProfileDetailResponseDto } from '../dto/response/profile-detail.dto.js';
 import { UserNotFoundError } from '../errors/auth.errors.js';
+import {
+  ProfileNotFoundError,
+  CityNotFoundError,
+  CinemaNotFoundError,
+} from '../errors/profile.errors.js';
 import User from '../models/user.model.js';
 import Profile from '../models/profile.model.js';
 import Membership from '../models/membership.model.js';
@@ -144,7 +149,7 @@ export class ProfileService implements IProfileService {
   private async ensureProfileExists(userId: number): Promise<Profile> {
     const profile = await this.profileRepository.findByUserId(userId);
     if (!profile) {
-      throw new Error('Perfil de usuario no encontrado.');
+      throw new ProfileNotFoundError();
     }
     return profile;
   }
@@ -156,14 +161,14 @@ export class ProfileService implements IProfileService {
     if (cityId) {
       const city = await this.cityRepository.findById(cityId);
       if (!city) {
-        throw new Error('La ciudad seleccionada no existe.');
+        throw new CityNotFoundError();
       }
     }
 
     if (favoriteCinemaId) {
       const cinema = await this.cinemaRepository.findById(favoriteCinemaId);
       if (!cinema) {
-        throw new Error('El cine favorito seleccionado no existe.');
+        throw new CinemaNotFoundError();
       }
     }
   }

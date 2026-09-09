@@ -112,8 +112,8 @@ export class ReservationService implements IReservationService {
       const fn = await this.functionRepository.findById(dto.functionId);
       this.assertFunctionSelectable(fn, dto.functionId);
 
-      // 3. Validar existencia de las sillas en la sala
-      const seats = await this.seatRepository.findByIds(dto.seatIds, dto.functionId);
+      // 3. Validar existencia de las sillas en la sala con bloqueo pesimista (FOR UPDATE)
+      const seats = await this.seatRepository.findByIds(dto.seatIds, dto.functionId, t, true);
       this.assertSeatsBelongToFunction(seats, dto.seatIds);
 
       // 4. Validar que ninguna silla esté bloqueada o inactiva (RN-041, RN-043)
@@ -153,7 +153,9 @@ export class ReservationService implements IReservationService {
         ? reservationIdOrDto
         : reservationIdOrDto.reservationId;
     const userId =
-      typeof reservationIdOrDto === 'number' ? userIdParam : reservationIdOrDto.userId ?? userIdParam;
+      typeof reservationIdOrDto === 'number'
+        ? userIdParam
+        : (reservationIdOrDto.userId ?? userIdParam);
 
     if (!reservationId || reservationId <= 0) {
       throw new InvalidReservationIdError();
@@ -286,6 +288,7 @@ export class ReservationService implements IReservationService {
 
   /**
    * Valida en tiempo real que ninguna silla esté bloqueada o inactiva (RN-041).
+   * Optimizado en bloque (batch) para evitar cuellos de botella N+1 queries.
    */
   private async assertSeatsAreAvailable(
     seats: Seat[],
@@ -298,18 +301,24 @@ export class ReservationService implements IReservationService {
           `La silla ${seat.row}${seat.number} no se encuentra habilitada.`,
         );
       }
+    }
 
-      const activeReservation = await this.reservationRepository.findActiveReservationBySeat(
-        seat.id,
-        functionId,
-        t,
+    const seatIds = seats.map((seat) => seat.id);
+    const activeReservations = await this.reservationRepository.findActiveReservationsBySeats(
+      seatIds,
+      functionId,
+      t,
+    );
+
+    if (activeReservations.length > 0) {
+      const occupiedSeatIds = new Set(activeReservations.map((r) => r.seatId));
+      const firstOccupiedSeat = seats.find((seat) => occupiedSeatIds.has(seat.id));
+      const seatLabel = firstOccupiedSeat
+        ? `${firstOccupiedSeat.row}${firstOccupiedSeat.number}`
+        : '';
+      throw new SeatNotAvailableError(
+        `La silla ${seatLabel} ya se encuentra reservada o comprada.`,
       );
-
-      if (activeReservation) {
-        throw new SeatNotAvailableError(
-          `La silla ${seat.row}${seat.number} ya se encuentra reservada o comprada.`,
-        );
-      }
     }
   }
 
@@ -366,11 +375,12 @@ export class ReservationService implements IReservationService {
   private buildSummaryDto(reservation: Reservation): ReservationSummaryDto {
     const fn = (reservation as Reservation & { function?: CinemaFunction }).function;
     const movie = fn ? (fn as CinemaFunction & { movie?: Movie }).movie : undefined;
-    const rawSeats = (
-      reservation as Reservation & {
-        reservationSeats?: (ReservationSeat & { seat?: Seat & { seatType?: SeatType } })[];
-      }
-    ).reservationSeats ?? [];
+    const rawSeats =
+      (
+        reservation as Reservation & {
+          reservationSeats?: (ReservationSeat & { seat?: Seat & { seatType?: SeatType } })[];
+        }
+      ).reservationSeats ?? [];
 
     const seats: ReservedSeatItemDto[] = rawSeats.map((rs) => ({
       seatId: rs.seatId,

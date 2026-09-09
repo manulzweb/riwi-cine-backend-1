@@ -15,14 +15,8 @@
  */
 
 import { Router } from 'express';
-import {
-  applyGiftcard,
-  applyMembership,
-  createCart,
-  deleteCart,
-  getCart,
-  updateCart,
-} from '../controllers/cart.controller.js';
+import { cartController } from '../containers/cart.container.js';
+import { snackController } from '../containers/snack.container.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -86,7 +80,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/cart', requireAuth, createCart);
+router.post('/', requireAuth, cartController.create);
 
 /**
  * @swagger
@@ -122,7 +116,7 @@ router.post('/cart', requireAuth, createCart);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/cart', requireAuth, getCart);
+router.get('/', requireAuth, cartController.getDetail);
 
 /**
  * @swagger
@@ -189,7 +183,7 @@ router.get('/cart', requireAuth, getCart);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/cart', requireAuth, updateCart);
+router.put('/', requireAuth, cartController.update);
 
 /**
  * @swagger
@@ -229,7 +223,7 @@ router.put('/cart', requireAuth, updateCart);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/cart', requireAuth, deleteCart);
+router.delete('/', requireAuth, cartController.remove);
 
 /**
  * @swagger
@@ -272,7 +266,7 @@ router.delete('/cart', requireAuth, deleteCart);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/cart/apply-membership', requireAuth, applyMembership);
+router.post('/apply-membership', requireAuth, cartController.applyMembership);
 
 /**
  * @swagger
@@ -327,6 +321,14 @@ router.post('/cart/apply-membership', requireAuth, applyMembership);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/cart/apply-giftcard', requireAuth, applyGiftcard);
+router.post('/apply-giftcard', requireAuth, cartController.applyGiftcard);
+
+/**
+ * Endpoints específicos de Confitería en el Carrito (HU-012)
+ */
+router.post('/snacks', requireAuth, snackController.addSnackToCart);
+router.get('/snacks', requireAuth, snackController.getCart);
+router.put('/snacks/:cartItemId', requireAuth, snackController.updateCartItem);
+router.delete('/snacks/:cartItemId', requireAuth, snackController.removeCartItem);
 
 export default router;

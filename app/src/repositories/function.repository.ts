@@ -47,14 +47,11 @@ class FunctionRepository implements IFunctionRepository {
     }
 
     if (filters.date) {
-      const startOfDay = new Date(`${filters.date}T00:00:00.000Z`);
-      const endOfDay = new Date(`${filters.date}T23:59:59.999Z`);
+      const [year, month, day] = filters.date.split('-').map(Number);
+      const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
+      const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
       where.startTime = {
-        [Op.and]: [
-          { [Op.gte]: now },
-          { [Op.gte]: startOfDay },
-          { [Op.lte]: endOfDay },
-        ],
+        [Op.and]: [{ [Op.gte]: now }, { [Op.gte]: startOfDay }, { [Op.lte]: endOfDay }],
       };
     }
 

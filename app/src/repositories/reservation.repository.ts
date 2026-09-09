@@ -1,6 +1,7 @@
 // app/src/repositories/reservation.repository.ts
 
 import { Op, Transaction } from 'sequelize';
+import sequelize from '../config/database.js';
 import { IReservationRepository } from './interfaces/reservation.repository.interface.js';
 import Reservation from '../models/reservation.model.js';
 import ReservationSeat from '../models/reservation-seat.model.js';
@@ -54,10 +55,37 @@ export class ReservationRepository implements IReservationRepository {
     functionId: number,
     transaction?: Transaction,
   ): Promise<ReservationSeat | null> {
-    return await ReservationSeat.findOne({
+    const seats = await this.findActiveReservationsBySeats([seatId], functionId, transaction);
+    return seats[0] ?? null;
+  }
+
+  async findActiveReservationsBySeats(
+    seatIds: number[],
+    functionId: number,
+    transaction?: Transaction,
+  ): Promise<ReservationSeat[]> {
+    if (seatIds.length === 0) {
+      return [];
+    }
+
+    const now = new Date();
+    return await ReservationSeat.findAll({
       where: {
-        seatId,
-        status: 'LOCKED',
+        seatId: {
+          [Op.in]: seatIds,
+        },
+        [Op.or]: [
+          { status: 'SOLD' },
+          {
+            status: 'LOCKED',
+            [Op.and]: [
+              sequelize.where(sequelize.col('reservation.status'), 'ACTIVE'),
+              sequelize.where(sequelize.col('reservation.expires_at'), {
+                [Op.gt]: now,
+              }),
+            ],
+          },
+        ],
       },
       include: [
         {
@@ -65,10 +93,6 @@ export class ReservationRepository implements IReservationRepository {
           as: 'reservation',
           where: {
             functionId,
-            status: 'ACTIVE',
-            expiresAt: {
-              [Op.gt]: new Date(),
-            },
           },
         },
       ],
@@ -80,11 +104,21 @@ export class ReservationRepository implements IReservationRepository {
     functionId: number,
     transaction?: Transaction,
   ): Promise<ReservationSeat[]> {
+    const now = new Date();
     return await ReservationSeat.findAll({
       where: {
-        status: {
-          [Op.in]: ['LOCKED', 'SOLD'],
-        },
+        [Op.or]: [
+          { status: 'SOLD' },
+          {
+            status: 'LOCKED',
+            [Op.and]: [
+              sequelize.where(sequelize.col('reservation.status'), 'ACTIVE'),
+              sequelize.where(sequelize.col('reservation.expires_at'), {
+                [Op.gt]: now,
+              }),
+            ],
+          },
+        ],
       },
       include: [
         {
@@ -92,14 +126,11 @@ export class ReservationRepository implements IReservationRepository {
           as: 'reservation',
           where: {
             functionId,
-            status: 'ACTIVE',
-            expiresAt: {
-              [Op.gt]: new Date(),
-            },
           },
         },
       ],
       transaction,
+      lock: transaction ? Transaction.LOCK.UPDATE : undefined,
     });
   }
 

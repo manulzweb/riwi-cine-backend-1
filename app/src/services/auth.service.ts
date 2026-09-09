@@ -58,6 +58,7 @@ import { PasswordResetTokenInstance } from '../models/password-reset-token.model
 const ROLE_NAME = 'cliente';
 const MEMBERSHIP_LEVEL_NAME = 'BÁSICA';
 const MEMBERSHIP_STATUS_NAME = 'Activa';
+const DUMMY_BCRYPT_HASH = '$2b$10$cy6YxvetoHKT6gelchVC8.uoxe0nZx5OU0m68IFzDa2c8SHqWnbKe';
 
 /**
  * Servicio encargado de gestionar los procesos de autenticación,
@@ -269,7 +270,7 @@ export class AuthService implements IAuthService {
     const email = dto.email ? dto.email.trim().toLowerCase() : '';
     const user = await this.userRepository.findByEmail(email);
 
-    await this.validateUserForLogin(user, email, ipAddress, deviceUserAgent);
+    await this.validateUserForLogin(user, email, dto.password, ipAddress, deviceUserAgent);
 
     const isMatch = await this.passwordService.verify(dto.password, user!.passwordHash);
 
@@ -281,7 +282,7 @@ export class AuthService implements IAuthService {
     await this.userRepository.resetFailedAttempts(user!.id);
     await this.recordAudit('SUCCESS', email, user!.id, ipAddress, deviceUserAgent);
 
-    const { accessToken, refreshToken } = await this.issueAndRotateTokens(user!.id);
+    const { accessToken, refreshToken } = await this.issueAndRotateTokens(user!.id, user!.roleId);
 
     const profile = await this.profileRepository.findByUserId(user!.id);
     const membership = await this.membershipRepository.findByUserId(user!.id);
@@ -367,6 +368,7 @@ export class AuthService implements IAuthService {
     const { hash: newPasswordHash } = await this.passwordService.hash(dto.newPassword as string);
 
     await this.userRepository.updatePassword(user.id, newPasswordHash);
+    await this.refreshTokenRepository.revokeAllByUserId(user.id);
     await this.passwordResetTokenRepository.markAsUsed(tokenRecord.id);
   }
 
@@ -478,10 +480,12 @@ export class AuthService implements IAuthService {
   private async validateUserForLogin(
     user: User | null,
     email: string,
+    password?: string,
     ipAddress?: string,
     deviceUserAgent?: string,
   ): Promise<void> {
     if (!user) {
+      await this.passwordService.verify(password ?? 'dummy_password', DUMMY_BCRYPT_HASH);
       await this.recordAudit('FAILED_USER_NOT_FOUND', email, null, ipAddress, deviceUserAgent);
       throw new InvalidCredentialsError();
     }
@@ -534,17 +538,25 @@ export class AuthService implements IAuthService {
    */
   private async issueAndRotateTokens(
     userId: number,
+    roleId?: number,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = this.tokenService.generateAccessToken(userId);
+    let userRoleId = roleId;
+    if (userRoleId === undefined) {
+      const user = await this.userRepository.findById(userId);
+      userRoleId = user?.roleId;
+    }
+
+    const accessToken = this.tokenService.generateAccessToken(userId, userRoleId);
     const refreshToken = this.tokenService.generateRefreshToken(userId);
 
     await this.refreshTokenRepository.revokeAllByUserId(userId);
 
     const decodedRefresh = this.tokenService.verifyRefreshToken(refreshToken);
     if (decodedRefresh?.exp) {
+      const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
       await this.refreshTokenRepository.create({
         userId,
-        tokenHash: refreshToken,
+        tokenHash,
         expiresAt: new Date(decodedRefresh.exp * 1000),
       });
     }
@@ -566,14 +578,19 @@ export class AuthService implements IAuthService {
     }
 
     const userId = Number(decoded.sub);
-    const existingToken = await this.refreshTokenRepository.findByTokenHash(token);
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const existingToken = await this.refreshTokenRepository.findByTokenHash(tokenHash);
     if (!existingToken || existingToken.isRevoked) {
       throw new InvalidTokenError('Refresh token inválido o revocado');
     }
 
     await this.refreshTokenRepository.revoke(existingToken.id);
 
-    const { accessToken, refreshToken: newRefreshToken } = await this.issueAndRotateTokens(userId);
+    const user = await this.userRepository.findById(userId);
+    const { accessToken, refreshToken: newRefreshToken } = await this.issueAndRotateTokens(
+      userId,
+      user?.roleId,
+    );
 
     return { userId, accessToken, newRefreshToken };
   }

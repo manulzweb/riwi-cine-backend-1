@@ -22,6 +22,12 @@ export interface ICartRepository {
   /** Busca el carrito activo de un usuario. */
   findActiveByUserId(userId: number): Promise<Cart | null>;
 
+  /** Busca el carrito activo de un usuario o lo crea si no existe. */
+  findOrCreateActiveByUserId(userId: number, expiresAt?: Date): Promise<Cart>;
+
+  /** Obtiene el carrito activo del usuario con sus ítems de confitería y productos asociados. */
+  findWithItems(userId: number): Promise<Cart | null>;
+
   /** Busca un carrito por su identificador. */
   findById(cartId: number): Promise<Cart | null>;
 
@@ -90,7 +96,7 @@ export interface ICartRepository {
   findActiveMembershipDiscountByUserId(userId: number): Promise<number>;
 }
 
-export interface ISnackRepository {
+export interface ICartSnackRepository {
   /** Busca un producto de confitería por su identificador. */
   findById(snackId: number): Promise<Snack | null>;
 

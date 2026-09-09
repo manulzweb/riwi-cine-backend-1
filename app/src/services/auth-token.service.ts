@@ -41,13 +41,17 @@ export class TokenService implements ITokenService {
    * `ACCESS_SECRET`. Su tiempo de expiración debe mantenerse corto
    * para reducir el impacto de una posible exposición del token.
    */
-  generateAccessToken(userId: number): string {
-    return jwt.sign({ sub: String(userId), type: 'access' }, envConfig.JWT.ACCESS_SECRET, {
-      expiresIn: envConfig.JWT.ACCESS_EXPIRES_IN,
-      issuer: envConfig.JWT.ISSUER,
-      audience: envConfig.JWT.AUDIENCE,
-      algorithm: 'HS256',
-    } as SignOptions);
+  generateAccessToken(userId: number, roleId?: number): string {
+    return jwt.sign(
+      { sub: String(userId), role: roleId ?? 1, type: 'access' },
+      envConfig.JWT.ACCESS_SECRET,
+      {
+        expiresIn: envConfig.JWT.ACCESS_EXPIRES_IN,
+        issuer: envConfig.JWT.ISSUER,
+        audience: envConfig.JWT.AUDIENCE,
+        algorithm: 'HS256',
+      } as SignOptions,
+    );
   }
 
   /**

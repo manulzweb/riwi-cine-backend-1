@@ -14,6 +14,7 @@
 
 import { Router } from 'express';
 import { userController } from '../containers/user.container.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -96,6 +97,8 @@ router.post('/', userController.getUsers);
  *   get:
  *     summary: Obtener todos los usuarios
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de usuarios obtenida exitosamente
@@ -121,7 +124,7 @@ router.post('/', userController.getUsers);
  *             example:
  *               error: "Error al obtener los usuarios"
  */
-router.get('/', userController.getUsers);
+router.get('/', authMiddleware([1]), userController.getUsers);
 
 /**
  * POST /users/location

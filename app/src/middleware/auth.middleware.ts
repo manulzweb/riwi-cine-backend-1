@@ -61,11 +61,31 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
 
   const payload = tokenService.verifyAccessToken(token);
 
-  if (!payload) {
+  if (!payload || payload.type !== 'access') {
     res.status(401).json({ message: 'Token inválido o expirado.' });
     return;
   }
 
   req.userId = Number(payload.sub);
+  next();
+};
+
+/**
+ * Middleware opcional de autenticación.
+ * Si se envía un token Bearer en el header, lo decodifica y asigna `req.userId`.
+ * Si no se envía token, permite continuar al controlador para que resuelva `userId`
+ * por parámetro si aplica.
+ */
+export const optionalAuth = (req: Request, _res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = tokenService.extractTokenFromHeader(authHeader);
+    if (token) {
+      const payload = tokenService.verifyAccessToken(token);
+      if (payload?.sub) {
+        req.userId = Number(payload.sub);
+      }
+    }
+  }
   next();
 };

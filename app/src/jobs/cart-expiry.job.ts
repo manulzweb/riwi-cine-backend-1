@@ -1,7 +1,7 @@
 // app/src/jobs/cart-expiry.job.ts
 
 import cron, { ScheduledTask } from 'node-cron';
-import cartService from '../services/cart.service.js';
+import { cartService } from '../containers/cart.container.js';
 
 const CRON_SCHEDULE = '* * * * *';
 

@@ -15,6 +15,15 @@ const registerLimiter = rateLimit({
   skip: () => envConfig.NODE_ENV === 'test',
 });
 
+const loginLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 10,
+  message: {
+    error: 'Demasiados intentos de inicio de sesión. Por favor, intenta de nuevo en 5 minutos.',
+  },
+  skip: () => envConfig.NODE_ENV === 'test',
+});
+
 const router = Router();
 
 /**
@@ -78,7 +87,7 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', authController.login);
+router.post('/login', loginLimiter, authController.login);
 
 /**
  * POST /auth/register

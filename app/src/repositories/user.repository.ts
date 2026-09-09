@@ -23,10 +23,12 @@ class UserRepository implements IUserRepository {
   }
 
   /**
-   * Obtiene todos los usuarios.
+   * Obtiene todos los usuarios excluyendo passwordHash.
    */
   async findAll(): Promise<User[]> {
-    return await User.findAll();
+    return await User.findAll({
+      attributes: { exclude: ['passwordHash'] },
+    });
   }
 
   /**
@@ -70,10 +72,19 @@ class UserRepository implements IUserRepository {
     const user = await User.findByPk(id);
     if (!user) return;
 
-    const attempts = (user.failedLoginAttempts ?? 0) + 1;
+    // Si la cuenta tuvo un bloqueo anterior y ya expiró el tiempo, se reinicia el conteo
+    const isLockExpired = user.lockedUntil && user.lockedUntil <= new Date();
+    const currentAttempts = isLockExpired ? 0 : (user.failedLoginAttempts ?? 0);
+    const attempts = currentAttempts + 1;
+
     await user.update({
       failedLoginAttempts: attempts,
-      lockedUntil: attempts >= max ? new Date(Date.now() + minutes * 60_000) : user.lockedUntil,
+      lockedUntil:
+        attempts >= max
+          ? new Date(Date.now() + minutes * 60_000)
+          : isLockExpired
+            ? null
+            : user.lockedUntil,
     });
   }
   /**

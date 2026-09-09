@@ -15,6 +15,7 @@ import cartRoutes from './cart.routes.js';
 import seedRoutes from './seed.routes.js';
 import profileRoutes from './profile.routes.js';
 import functionRoutes from './function.routes.js';
+import snackRoutes from './snack.routes.js';
 const router = Router();
 
 router.use('/users', userRoutes);
@@ -30,7 +31,8 @@ router.use('/notifications', notificationRoutes);
 router.use('/health', healthRoutes);
 router.use('/seed', seedRoutes);
 router.use('/reservations', reservationRoutes);
-router.use(cartRoutes);
-router.use(reservationRoutes);
+router.use('/cart', cartRoutes);
+router.use('/carts', cartRoutes);
+router.use('/snacks', snackRoutes);
 
 export default router as Router;

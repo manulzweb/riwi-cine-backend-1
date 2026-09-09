@@ -24,12 +24,24 @@ class BonusWalletRepository implements IBonusWalletRepository {
     return await BonusWallet.create(data, { transaction });
   }
 
-  async findByUserId(userId: number, transaction?: Transaction): Promise<BonusWallet | null> {
-    return await BonusWallet.findOne({ where: { userId }, transaction });
+  async findByUserId(
+    userId: number,
+    transaction?: Transaction,
+    lock?: boolean,
+  ): Promise<BonusWallet | null> {
+    return await BonusWallet.findOne({
+      where: { userId },
+      transaction,
+      lock: lock && transaction ? Transaction.LOCK.UPDATE : undefined,
+    });
   }
 
   async decrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void> {
     await BonusWallet.decrement('balance', { by: amount, where: { userId }, transaction });
+  }
+
+  async incrementBalance(userId: number, amount: number, transaction?: Transaction): Promise<void> {
+    await BonusWallet.increment('balance', { by: amount, where: { userId }, transaction });
   }
 }
 

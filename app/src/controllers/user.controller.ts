@@ -95,7 +95,13 @@ export class UserController {
   public getUsers = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     const users = await this.userService.findAll();
 
-    res.status(200).json(users);
+    const safeUsers = users.map((user) => {
+      const plainUser = typeof user.toJSON === 'function' ? user.toJSON() : { ...user };
+      delete (plainUser as { passwordHash?: string }).passwordHash;
+      return plainUser;
+    });
+
+    res.status(200).json(safeUsers);
   });
 
   /**

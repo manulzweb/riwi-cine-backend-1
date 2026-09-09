@@ -9,7 +9,7 @@ import Promotion from '../models/promotion.model.js';
 import Membership from '../models/membership.model.js';
 import MembershipLevel from '../models/membership-level.model.js';
 import MembershipStatus from '../models/membership-status.model.js';
-import { ICartRepository, ISnackRepository } from './interfaces/cart.repository.interface.js';
+import { ICartRepository, ICartSnackRepository } from './interfaces/cart.repository.interface.js';
 
 /**
  * Repositorio del carrito de compras.
@@ -21,6 +21,47 @@ class CartRepository implements ICartRepository {
   async findActiveByUserId(userId: number): Promise<Cart | null> {
     return await Cart.findOne({
       where: { userId, status: 'ACTIVE' },
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+  async findOrCreateActiveByUserId(userId: number, expiresAt?: Date): Promise<Cart> {
+    const existing = await this.findActiveByUserId(userId);
+    if (existing) {
+      return existing;
+    }
+
+    return await this.create({
+      userId,
+      status: 'ACTIVE',
+      expiresAt: expiresAt ?? new Date(Date.now() + 10 * 60 * 1000),
+    });
+  }
+
+  async findWithItems(userId: number): Promise<Cart | null> {
+    return await Cart.findOne({
+      where: { userId, status: 'ACTIVE' },
+      include: [
+        {
+          model: CartItem,
+          as: 'items',
+          include: [
+            {
+              model: Snack,
+              as: 'snack',
+              attributes: [
+                'id',
+                'name',
+                'description',
+                'imageUrl',
+                'category',
+                'price',
+                'discountPercentage',
+              ],
+            },
+          ],
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
   }
@@ -158,7 +199,7 @@ class CartRepository implements ICartRepository {
  * Consultas de solo lectura sobre Snack y Promotion para validar
  * disponibilidad y promociones vigentes al administrar el carrito.
  */
-class SnackRepository implements ISnackRepository {
+class CartSnackRepository implements ICartSnackRepository {
   async findById(snackId: number): Promise<Snack | null> {
     return await Snack.findByPk(snackId);
   }
@@ -175,5 +216,5 @@ class SnackRepository implements ISnackRepository {
   }
 }
 
-export const snackRepository = new SnackRepository();
-export default new CartRepository();
+export { CartRepository, CartSnackRepository };
+export default CartRepository;

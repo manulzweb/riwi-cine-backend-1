@@ -107,6 +107,15 @@
       "discountPercentage": 0
     },
     {
+      "name": "Combo Mega Familiar",
+      "description": "1 Crispeta gigante, 4 Gaseosas medianas, 2 Perros calientes clásicos y 1 Chocolatina.",
+      "category": "Combos",
+      "price": 45000,
+      "stock": 40,
+      "imageUrl": "https://images.unsplash.com/photo-1585647347483-22b66260dfff",
+      "discountPercentage": 10
+    },
+    {
       "name": "Crispeta Caramelo Grande",
       "description": "Crispeta artesanal acaramelada tamaño grande",
       "category": "Crispetas",
@@ -121,6 +130,15 @@
       "category": "Comidas Rápidas",
       "price": 14500,
       "stock": 200,
+      "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Perro Caliente Especial (Agotado)",
+      "description": "Salchicha americana, ripio de papa y salsas de la casa",
+      "category": "Comidas Rápidas",
+      "price": 14000,
+      "stock": 0,
       "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
       "discountPercentage": 0
     },
@@ -140,6 +158,15 @@
       "snackName": "combo dúo crispeta salada",
       "discountType": "percent",
       "discountValue": 20,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Rebaja Fin de Semana en Gaseosas",
+      "snackName": "gaseosa 32oz",
+      "discountType": "fixed",
+      "discountValue": 1000,
       "startDate": "2026-01-01",
       "endDate": "2026-12-31",
       "isActive": true

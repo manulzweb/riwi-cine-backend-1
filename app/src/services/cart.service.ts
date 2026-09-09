@@ -2,11 +2,12 @@
 
 import sequelize from '../config/database.js';
 import { envConfig } from '../config/env.js';
-import cartRepository, { snackRepository } from '../repositories/cart.repository.js';
-import BonusWalletRepository from '../repositories/bonus-wallet.repository.js';
-
-const bonusWalletRepository = new BonusWalletRepository();
-import { reservationService } from '../containers/reservation.container.js';
+import {
+  ICartRepository,
+  ICartSnackRepository,
+} from '../repositories/interfaces/cart.repository.interface.js';
+import { IBonusWalletRepository } from '../repositories/interfaces/bonus-wallet.repository.interface.js';
+import { IReservationService } from './interfaces/reservation.service.interface.js';
 import {
   ICartService,
   IExpireCartsResult,
@@ -60,7 +61,19 @@ interface SnackPricing {
  * - Aplicar reglas de negocio RN-044 a RN-048.
  * - Expirar carritos inactivos liberando las sillas reservadas.
  */
-class CartService implements ICartService {
+export class CartService implements ICartService {
+  constructor(
+    private readonly cartRepository: ICartRepository,
+    private readonly snackRepository: ICartSnackRepository,
+    private readonly reservationService: IReservationService,
+    private readonly bonusWalletRepository: IBonusWalletRepository,
+  ) {
+    this.cartRepository = cartRepository;
+    this.snackRepository = snackRepository;
+    this.reservationService = reservationService;
+    this.bonusWalletRepository = bonusWalletRepository;
+  }
+
   private expiryMs(): number {
     return envConfig.CART.EXPIRY_MINUTES * 60 * 1000;
   }
@@ -77,7 +90,7 @@ class CartService implements ICartService {
    */
   private async effectiveSnackPrice(snackId: number): Promise<SnackPricing> {
     const now = new Date();
-    const snack = await snackRepository.findById(snackId);
+    const snack = await this.snackRepository.findById(snackId);
 
     if (!snack) {
       throw new SnackNotFoundError();
@@ -87,7 +100,7 @@ class CartService implements ICartService {
       throw new OutOfStockError(`El producto "${snack.name}" está agotado.`);
     }
 
-    const activePromotions = await snackRepository.findActivePromotionsBySnackId(snackId, now);
+    const activePromotions = await this.snackRepository.findActivePromotionsBySnackId(snackId, now);
     const basePrice = Number(snack.price);
     const baseDiscountPercentage = Number(snack.discountPercentage);
 
@@ -135,7 +148,7 @@ class CartService implements ICartService {
   }
 
   async create(userId: number, dto: CreateCartRequestDto): Promise<CartDetailResponseDto> {
-    const existing = await cartRepository.findActiveByUserId(userId);
+    const existing = await this.cartRepository.findActiveByUserId(userId);
 
     if (existing) {
       throw new DuplicateCartError();
@@ -144,7 +157,7 @@ class CartService implements ICartService {
     let lockResult: LockSeatsResult | null = null;
 
     try {
-      lockResult = (await reservationService.lockSeats({
+      lockResult = (await this.reservationService.lockSeats({
         userId,
         functionId: dto.functionId,
         seatIds: dto.seatIds,
@@ -152,16 +165,18 @@ class CartService implements ICartService {
 
       const seats = lockResult.seats ?? [];
       const quantity = seats.length;
-      const unitPrice = quantity > 0 ? Number(seats[0].price) : 0;
       const total = round2(seats.reduce((sum, seat) => sum + Number(seat.price), 0));
+      const allSamePrice = seats.every((s) => Number(s.price) === Number(seats[0]?.price));
+      const unitPrice =
+        quantity > 0 ? (allSamePrice ? Number(seats[0].price) : round2(total / quantity)) : 0;
 
       const cart = await sequelize.transaction(async (transaction) => {
-        const created = await cartRepository.create(
+        const created = await this.cartRepository.create(
           { userId, status: 'ACTIVE', expiresAt: this.newExpiry() },
           transaction,
         );
 
-        await cartRepository.addTicket(
+        await this.cartRepository.addTicket(
           {
             cartId: created.id,
             functionId: dto.functionId,
@@ -182,7 +197,7 @@ class CartService implements ICartService {
       // liberar la reserva para no dejar sillas bloqueadas huérfanas.
       if (lockResult) {
         try {
-          await reservationService.releaseSeats({
+          await this.reservationService.releaseSeats({
             reservationId: lockResult.reservationId,
             userId,
           });
@@ -205,16 +220,27 @@ class CartService implements ICartService {
   }
 
   /**
-   * Marca un carrito como expirado y libera las sillas de sus entradas.
+   * Marca un carrito como expirado, libera las sillas y reembolsa los bonos aplicados.
    */
   async expireStaleCart(cartId: number): Promise<void> {
-    const cart = await cartRepository.findDetailById(cartId);
+    const cart = await this.cartRepository.findDetailById(cartId);
 
     if (cart?.status !== 'ACTIVE') return;
 
+    // Si se habían aplicado bonos, devolver el saldo a la billetera
+    const giftcardAmount = Number(cart.giftcardAmount || 0);
+    if (giftcardAmount > 0) {
+      try {
+        await this.bonusWalletRepository.incrementBalance(cart.userId, giftcardAmount);
+        await this.cartRepository.update(cartId, { giftcardAmount: 0 });
+      } catch (err) {
+        console.error(`Error reembolsando bonos al expirar carrito ${cartId}:`, err);
+      }
+    }
+
     for (const ticket of cart.tickets ?? []) {
       try {
-        await reservationService.releaseSeats({
+        await this.reservationService.releaseSeats({
           reservationId: ticket.reservationId,
           userId: cart.userId,
         });
@@ -223,11 +249,11 @@ class CartService implements ICartService {
       }
     }
 
-    await cartRepository.update(cartId, { status: 'EXPIRED' });
+    await this.cartRepository.update(cartId, { status: 'EXPIRED' });
   }
 
   async expireCarts(): Promise<IExpireCartsResult> {
-    const expired = await cartRepository.findExpiredActive(new Date());
+    const expired = await this.cartRepository.findExpiredActive(new Date());
     const errors: string[] = [];
     let cartsExpired = 0;
 
@@ -248,7 +274,7 @@ class CartService implements ICartService {
    * (RN-046). Lanza error si no existe o si acaba de vencer.
    */
   private async getActiveCartOrThrow(userId: number) {
-    const cart = await cartRepository.findActiveByUserId(userId);
+    const cart = await this.cartRepository.findActiveByUserId(userId);
 
     if (!cart) {
       throw new CartNotFoundError();
@@ -266,7 +292,7 @@ class CartService implements ICartService {
    * Construye el detalle completo del carrito con su resumen económico.
    */
   private async buildDetail(userId: number, cartId: number): Promise<CartDetailResponseDto> {
-    const cart = await cartRepository.findDetailById(cartId);
+    const cart = await this.cartRepository.findDetailById(cartId);
 
     if (!cart) {
       throw new CartNotFoundError();
@@ -341,16 +367,21 @@ class CartService implements ICartService {
     });
 
     const ticketsSubtotal = round2(tickets.reduce((sum, ticket) => sum + ticket.total, 0));
-    const snacksGross = round2(
-      snacks.reduce((sum, snack) => sum + snack.basePrice * snack.quantity, 0),
-    );
-    const promotionsDiscount = round2(
-      snacks.reduce((sum, snack) => sum + (snack.basePrice - snack.unitPrice) * snack.quantity, 0),
-    );
+
+    let snacksGross = 0;
+    let snacksNet = 0;
+    for (const item of snacks) {
+      snacksGross += item.basePrice * item.quantity;
+      snacksNet += item.unitPrice * item.quantity;
+    }
+    snacksGross = round2(snacksGross);
+    snacksNet = round2(snacksNet);
+
+    const promotionsDiscount = round2(Math.max(0, snacksGross - snacksNet));
     const subtotal = round2(ticketsSubtotal + snacksGross);
 
     const membershipDiscountPercentage =
-      await cartRepository.findActiveMembershipDiscountByUserId(userId);
+      await this.cartRepository.findActiveMembershipDiscountByUserId(userId);
     const membershipBase = Math.max(0, subtotal - promotionsDiscount);
     const membershipDiscount = round2(membershipBase * (membershipDiscountPercentage / 100));
 
@@ -407,17 +438,17 @@ class CartService implements ICartService {
     cart: { id: number },
     change: { snackId: number; quantity: number },
   ): Promise<void> {
-    const existingItem = await cartRepository.findItemByCartAndSnack(cart.id, change.snackId);
+    const existingItem = await this.cartRepository.findItemByCartAndSnack(cart.id, change.snackId);
 
     if (change.quantity === 0) {
       if (existingItem) {
-        await cartRepository.removeItem(existingItem.id);
+        await this.cartRepository.removeItem(existingItem.id);
       }
       return;
     }
 
     const pricing = await this.effectiveSnackPrice(change.snackId);
-    const snack = await snackRepository.findById(change.snackId);
+    const snack = await this.snackRepository.findById(change.snackId);
 
     if (!snack || snack.stock < change.quantity) {
       throw new InsufficientStockError(
@@ -426,14 +457,14 @@ class CartService implements ICartService {
     }
 
     if (existingItem) {
-      await cartRepository.updateItem(existingItem.id, {
+      await this.cartRepository.updateItem(existingItem.id, {
         quantity: change.quantity,
         unitPrice: pricing.unitPrice,
       });
       return;
     }
 
-    await cartRepository.createItem({
+    await this.cartRepository.createItem({
       cartId: cart.id,
       snackId: change.snackId,
       quantity: change.quantity,
@@ -446,18 +477,18 @@ class CartService implements ICartService {
     ticketIds: number[],
   ): Promise<void> {
     for (const ticketId of ticketIds) {
-      const ticket = await cartRepository.findTicketById(ticketId);
+      const ticket = await this.cartRepository.findTicketById(ticketId);
 
       if (ticket?.cartId !== cart.id) {
         throw new TicketNotBelongsError();
       }
 
-      await reservationService.releaseSeats({
+      await this.reservationService.releaseSeats({
         reservationId: ticket.reservationId,
         userId: cart.userId,
       });
 
-      await cartRepository.removeTicket(ticketId);
+      await this.cartRepository.removeTicket(ticketId);
     }
   }
 
@@ -472,23 +503,29 @@ class CartService implements ICartService {
       await this.removeTickets(cart, dto.removeTicketIds);
     }
 
-    await cartRepository.update(cart.id, { expiresAt: this.newExpiry() });
+    await this.cartRepository.update(cart.id, { expiresAt: this.newExpiry() });
 
     return await this.buildDetail(userId, cart.id);
   }
 
   async remove(userId: number): Promise<{ cartId: number }> {
-    const cart = await cartRepository.findActiveByUserId(userId);
+    const cart = await this.cartRepository.findActiveByUserId(userId);
 
     if (!cart) {
       throw new CartNotFoundError();
     }
 
-    const detail = await cartRepository.findDetailById(cart.id);
+    const detail = await this.cartRepository.findDetailById(cart.id);
+
+    // Reembolsar saldo de bonos al cancelar el carrito
+    const giftcardAmount = Number(detail?.giftcardAmount ?? cart.giftcardAmount ?? 0);
+    if (giftcardAmount > 0) {
+      await this.bonusWalletRepository.incrementBalance(userId, giftcardAmount);
+    }
 
     for (const ticket of detail?.tickets ?? []) {
       try {
-        await reservationService.releaseSeats({
+        await this.reservationService.releaseSeats({
           reservationId: ticket.reservationId,
           userId,
         });
@@ -497,7 +534,7 @@ class CartService implements ICartService {
       }
     }
 
-    await cartRepository.remove(cart.id);
+    await this.cartRepository.remove(cart.id);
 
     return { cartId: cart.id };
   }
@@ -518,15 +555,34 @@ class CartService implements ICartService {
     }
 
     const cart = await this.getActiveCartOrThrow(userId);
+    const detail = await this.buildDetail(userId, cart.id);
+    const maxApplicableAmount = round2(detail.summary.total + detail.summary.giftcardApplied);
+
+    if (dto.amount > maxApplicableAmount) {
+      throw new InvalidAmountError(
+        `El monto del bono (${dto.amount}) no puede superar el total a pagar del carrito (${maxApplicableAmount}).`,
+      );
+    }
 
     return await sequelize.transaction(async (transaction) => {
-      const wallet = await bonusWalletRepository.findByUserId(userId, transaction);
+      const wallet = await this.bonusWalletRepository.findByUserId(userId, transaction, true);
 
       if (!wallet) {
         throw new WalletNotFoundError();
       }
 
-      const balance = Number(wallet.balance);
+      // Si el carrito ya tenía un bono aplicado previamente, restituir antes de aplicar el nuevo monto
+      const currentGiftcard = Number(cart.giftcardAmount || 0);
+      if (currentGiftcard > 0) {
+        await this.bonusWalletRepository.incrementBalance(userId, currentGiftcard, transaction);
+      }
+
+      const updatedWallet = await this.bonusWalletRepository.findByUserId(
+        userId,
+        transaction,
+        true,
+      );
+      const balance = Number(updatedWallet?.balance ?? 0);
 
       if (balance < dto.amount) {
         throw new InsufficientBalanceError(
@@ -534,9 +590,9 @@ class CartService implements ICartService {
         );
       }
 
-      await bonusWalletRepository.decrementBalance(userId, dto.amount, transaction);
+      await this.bonusWalletRepository.decrementBalance(userId, dto.amount, transaction);
 
-      await cartRepository.update(
+      await this.cartRepository.update(
         cart.id,
         {
           giftcardAmount: round2(dto.amount),
@@ -545,9 +601,9 @@ class CartService implements ICartService {
         transaction,
       );
 
-      return { appliedAmount: round2(dto.amount), walletBalance: balance - dto.amount };
+      return { appliedAmount: round2(dto.amount), walletBalance: round2(balance - dto.amount) };
     });
   }
 }
 
-export default new CartService();
+export default CartService;
