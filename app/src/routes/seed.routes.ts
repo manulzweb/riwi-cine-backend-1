@@ -3,7 +3,6 @@
 import { Request, Router } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import { seedController } from '../containers/seed.container.js';
-import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -25,8 +24,6 @@ const upload = multer({
  *   post:
  *     summary: Poblar base de datos desde un archivo JSON
  *     tags: [Seed]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -43,7 +40,7 @@ const upload = multer({
  *       400:
  *         description: Archivo inválido o formato incorrecto
  */
-router.post('/upload', authMiddleware([1]), upload.single('file'), seedController.seedFromFile);
+router.post('/upload', upload.single('file'), seedController.seedFromFile);
 
 /**
  * @swagger
@@ -51,8 +48,6 @@ router.post('/upload', authMiddleware([1]), upload.single('file'), seedControlle
  *   post:
  *     summary: Poblar base de datos desde un payload JSON directo
  *     tags: [Seed]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -65,6 +60,6 @@ router.post('/upload', authMiddleware([1]), upload.single('file'), seedControlle
  *       400:
  *         description: Datos inválidos
  */
-router.post('/json', authMiddleware([1]), seedController.seedFromJsonBody);
+router.post('/json', seedController.seedFromJsonBody);
 
 export default router;

@@ -95,6 +95,9 @@ export interface SeedPayload {
     documentNumber?: string;
     cityName?: string;
     cityId?: number;
+    membershipLevelName?: string;
+    pointsBalance?: number;
+    bonusBalance?: number;
   }>;
 }
 

@@ -403,20 +403,30 @@ export class SeedService implements ISeedService {
             { transaction: t },
           );
 
-          if (defaultLevel && defaultStatus) {
+          const targetLevel = u.membershipLevelName
+            ? ((await MembershipLevel.findOne({
+                where: { name: u.membershipLevelName.toUpperCase() },
+                transaction: t,
+              })) ?? defaultLevel)
+            : defaultLevel;
+
+          if (targetLevel && defaultStatus) {
             await Membership.create(
               {
                 userId: user.id,
                 code: generateMembershipCode(),
-                levelId: defaultLevel.id,
+                levelId: targetLevel.id,
                 statusId: defaultStatus.id,
-                pointsBalance: 100,
+                pointsBalance: u.pointsBalance ?? 100,
               },
               { transaction: t },
             );
           }
 
-          await BonusWallet.create({ userId: user.id, balance: 0 }, { transaction: t });
+          await BonusWallet.create(
+            { userId: user.id, balance: u.bonusBalance ?? 0 },
+            { transaction: t },
+          );
           await PurchaseHistory.create({ userId: user.id }, { transaction: t });
           await NotificationPreference.create(
             {

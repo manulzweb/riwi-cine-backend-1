@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "1c2cd724-1020-4688-9e87-4c4092bb875e",
+      "id": "64ec3d70-b114-4640-8282-edb8f7843158",
       "name": "Confitería",
       "description": {
         "content": "Catálogo de confitería, promociones e ítems del carrito (HU-012)",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "6636c959-c024-4a7e-90f4-aeb6891107c7",
+          "id": "b1f52523-d156-4a0a-81a3-14f6a63e8793",
           "name": "Obtener catálogo completo de productos de confitería",
           "request": {
             "name": "Obtener catálogo completo de productos de confitería",
@@ -42,7 +42,7 @@
           },
           "response": [
             {
-              "id": "75b0c44c-6d0b-41ae-a120-5d6b0e03bd96",
+              "id": "132cc581-d203-4807-8fed-bede6400b2e6",
               "name": "Lista de productos con precios efectivos y disponibilidad",
               "originalRequest": {
                 "url": {
@@ -82,7 +82,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "33842dfc-a755-4d7b-8d88-eb24f3580f45",
+              "id": "9de82fce-2ec3-4f3d-88a3-8bc6824b7329",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -122,7 +122,7 @@
           }
         },
         {
-          "id": "c405efe4-5447-4e4a-9e02-0bb7c5edfd6d",
+          "id": "cd272212-d15f-480e-8abb-fdd4fe56f4fa",
           "name": "Obtener la lista de categorías disponibles de confitería",
           "request": {
             "name": "Obtener la lista de categorías disponibles de confitería",
@@ -149,7 +149,7 @@
           },
           "response": [
             {
-              "id": "d0464fa0-b401-4145-ba9d-e9955d61ae23",
+              "id": "e02c84f1-a643-41af-a1b8-43de08df4bf5",
               "name": "Lista de categorías existentes",
               "originalRequest": {
                 "url": {
@@ -191,7 +191,7 @@
           }
         },
         {
-          "id": "1bb0db08-b327-462e-a332-d428c0e6ab05",
+          "id": "69cca937-7038-4455-a860-8b72adaef9f4",
           "name": "Consultar disponibilidad e inventario en tiempo real (RN-049)",
           "request": {
             "name": "Consultar disponibilidad e inventario en tiempo real (RN-049)",
@@ -218,7 +218,7 @@
           },
           "response": [
             {
-              "id": "fb1e966f-09ac-46fb-a2cf-2ae50c9a9e2b",
+              "id": "28253256-5358-4258-a13e-91049aedfd83",
               "name": "Lista de disponibilidad de todos los productos",
               "originalRequest": {
                 "url": {
@@ -260,7 +260,7 @@
           }
         },
         {
-          "id": "a960b3f4-6a3e-4fda-a539-2d8f904cad4b",
+          "id": "12c358ce-0a9f-4ca8-8995-37fece4f5005",
           "name": "Añadir un producto de confitería al carrito activo del usuario",
           "request": {
             "name": "Añadir un producto de confitería al carrito activo del usuario",
@@ -308,7 +308,7 @@
           },
           "response": [
             {
-              "id": "11137d3f-48e4-4fcb-bc4e-601dc283b211",
+              "id": "c40eb6d2-ad3a-428a-8ce4-d77e16de1bb7",
               "name": "Producto añadido al carrito exitosamente",
               "originalRequest": {
                 "url": {
@@ -360,7 +360,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bbd41a81-16a0-4ce1-af2e-c2ca081051af",
+              "id": "468d1951-6000-41b0-a62f-055644354605",
               "name": "Stock insuficiente, producto agotado (RN-049) o datos inválidos",
               "originalRequest": {
                 "url": {
@@ -408,7 +408,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "275d023c-deb1-4f99-a19e-7cd55fcb2196",
+              "id": "0a35b16b-40fc-47bc-9771-e711ac7eec43",
               "name": "Producto o usuario no encontrado",
               "originalRequest": {
                 "url": {
@@ -462,7 +462,7 @@
           }
         },
         {
-          "id": "02d7fad3-15ce-4bd7-ba19-cdb503528870",
+          "id": "27778f47-c4cb-4635-9615-42f4d95b7b1a",
           "name": "Obtener los productos de confitería en el carrito del usuario",
           "request": {
             "name": "Obtener los productos de confitería en el carrito del usuario",
@@ -504,7 +504,7 @@
           },
           "response": [
             {
-              "id": "7ed2c54f-2399-4a0a-8104-789bec472017",
+              "id": "8c9eb52b-d637-45cf-8ab4-5333ebc7ca6c",
               "name": "Carrito obtenido con ítems y total calculado",
               "originalRequest": {
                 "url": {
@@ -553,7 +553,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e0b39aba-0a60-4f1a-81b8-8e19b5f885ba",
+              "id": "56d77b69-0844-4878-b643-8f106781f1dc",
               "name": "Parámetro userId no provisto y token ausente",
               "originalRequest": {
                 "url": {
@@ -604,7 +604,7 @@
           }
         },
         {
-          "id": "457ff473-1cdd-4d1a-968a-4e70d055a674",
+          "id": "cfed2faf-bddc-4b82-84ff-0daa31d286a1",
           "name": "Actualizar la cantidad de un ítem de confitería del carrito",
           "request": {
             "name": "Actualizar la cantidad de un ítem de confitería del carrito",
@@ -664,7 +664,7 @@
           },
           "response": [
             {
-              "id": "3f7331b8-b400-4860-bb24-b5d756fbe360",
+              "id": "d7ad99db-5bfd-443a-9d94-33bacf1696b9",
               "name": "Cantidad actualizada exitosamente",
               "originalRequest": {
                 "url": {
@@ -726,7 +726,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "f2b3b590-7bae-4aa7-98da-9e343102fb62",
+              "id": "068fc107-f36c-4867-b6a0-88f268cf4515",
               "name": "Cantidad inválida o stock insuficiente (RN-049)",
               "originalRequest": {
                 "url": {
@@ -788,7 +788,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "f7b28a33-53f3-4891-b81b-ba7107c05e96",
+              "id": "f3584dc5-d40e-488d-807e-5007bff58cb8",
               "name": "Ítem o carrito no encontrado",
               "originalRequest": {
                 "url": {
@@ -856,7 +856,7 @@
           }
         },
         {
-          "id": "487c09ad-ab60-4cf3-93f0-2f60cdf852ee",
+          "id": "38d53b35-fd52-4608-b64f-cb9c2b2d8e4c",
           "name": "Eliminar un producto de confitería del carrito",
           "request": {
             "name": "Eliminar un producto de confitería del carrito",
@@ -901,7 +901,7 @@
           },
           "response": [
             {
-              "id": "2205afe3-b9d4-4ee6-af91-29f38a9c9b5f",
+              "id": "3dd60c73-1e50-476e-841f-6f8d0d1f3703",
               "name": "Producto eliminado del carrito exitosamente",
               "originalRequest": {
                 "url": {
@@ -955,7 +955,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "604f759c-7be5-42fe-b496-7ab3bc7f76db",
+              "id": "766885cf-0525-466f-933c-eefe4779bd0b",
               "name": "Ítem o carrito no encontrado",
               "originalRequest": {
                 "url": {
@@ -1015,7 +1015,7 @@
           }
         },
         {
-          "id": "8d8832cd-67af-4418-bc06-0af19cface5f",
+          "id": "5f1e053c-316a-409a-aebb-294db11930c0",
           "name": "Obtener el detalle de un producto de confitería",
           "request": {
             "name": "Obtener el detalle de un producto de confitería",
@@ -1044,7 +1044,7 @@
           },
           "response": [
             {
-              "id": "5cda2f67-9b85-4b27-8f82-4e14f5af2352",
+              "id": "f2c850bf-e327-4c2d-a421-52d8b01905fb",
               "name": "Detalle del producto con precio efectivo y promociones",
               "originalRequest": {
                 "url": {
@@ -1082,7 +1082,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "bee2f120-9286-4a5e-9ca8-63b6309e76c5",
+              "id": "ff18db01-31f2-4da8-a78d-e7cc87628512",
               "name": "ID inválido",
               "originalRequest": {
                 "url": {
@@ -1120,7 +1120,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "aabe3800-f9ca-44e4-9b6c-365944a40328",
+              "id": "31a14d35-8b3b-4fd7-9f1c-164b8731448c",
               "name": "Producto no encontrado",
               "originalRequest": {
                 "url": {
@@ -1167,7 +1167,7 @@
       "event": []
     },
     {
-      "id": "6b8e7988-7579-4408-80bd-6cc23c9dd293",
+      "id": "69b7b57e-5ded-490b-ac2c-6d49976b6c51",
       "name": "Reservations",
       "description": {
         "content": "Gestión de selección interactiva y bloqueo temporal de sillas (HU-010)",
@@ -1175,7 +1175,7 @@
       },
       "item": [
         {
-          "id": "9fc9cf82-d2dc-4f7e-861a-2cea550e23a0",
+          "id": "91c1b889-5a1c-49cd-8a5b-e8dc693d6cd9",
           "name": "Bloquear temporalmente las sillas seleccionadas (RN-039)",
           "request": {
             "name": "Bloquear temporalmente las sillas seleccionadas (RN-039)",
@@ -1219,7 +1219,7 @@
           },
           "response": [
             {
-              "id": "ec25e1cb-e879-407e-80eb-71ad04fb7b91",
+              "id": "ee42083c-ae15-485b-9dcb-9f36ba2207d2",
               "name": "Sillas bloqueadas exitosamente por 10 minutos",
               "originalRequest": {
                 "url": {
@@ -1267,7 +1267,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "c75bd1f0-9289-496a-a0aa-d2a22b2910a1",
+              "id": "dd3eb71c-b90b-40fe-b213-3f69cd84cc68",
               "name": "Datos inválidos o límite de sillas superado",
               "originalRequest": {
                 "url": {
@@ -1315,7 +1315,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "bfd3d96d-d0a5-4ada-aa7b-b78cf55f60c3",
+              "id": "a977b3b7-94fa-46e5-b804-2ce8797b8434",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -1363,7 +1363,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "76303f9e-68d2-4ad0-92d5-2feb810dfc12",
+              "id": "55feb30c-54b3-4856-ad00-cf35770877cf",
               "name": "Función o silla no encontrada",
               "originalRequest": {
                 "url": {
@@ -1411,7 +1411,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "b1c273af-1d34-42bd-affb-b2319ba70fd4",
+              "id": "5c93e34d-6da0-465d-ab25-ba4b8b7dee20",
               "name": "Silla ocupada o reservada",
               "originalRequest": {
                 "url": {
@@ -1465,7 +1465,7 @@
           }
         },
         {
-          "id": "2b0d4342-66b7-4710-8948-681952f69a62",
+          "id": "36e4524a-1fde-4109-b5fc-09e0ca798b77",
           "name": "Liberar voluntariamente las sillas de una reserva activa (RN-040)",
           "request": {
             "name": "Liberar voluntariamente las sillas de una reserva activa (RN-040)",
@@ -1509,7 +1509,7 @@
           },
           "response": [
             {
-              "id": "928907a6-a59d-4619-990a-029d3c992ec0",
+              "id": "3b57b0d8-1d5c-4cc7-a8c2-55e100e8c745",
               "name": "Reserva liberada exitosamente",
               "originalRequest": {
                 "url": {
@@ -1557,7 +1557,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "907d460c-54d1-46a9-a355-6a62623d3a92",
+              "id": "8d7c7ccd-cc39-45b3-8289-a100312a4ac6",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -1605,7 +1605,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "ced19adc-96b3-4702-9888-794f77f09eaa",
+              "id": "56ec4548-2308-4e7f-91c8-8b7b5d10037a",
               "name": "Acceso no autorizado a la reserva",
               "originalRequest": {
                 "url": {
@@ -1653,7 +1653,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "7540cb70-3639-4ec8-b060-63121cbf2efe",
+              "id": "9be98c96-1d57-4bce-b75e-124443762521",
               "name": "Reserva no encontrada",
               "originalRequest": {
                 "url": {
@@ -1707,7 +1707,7 @@
           }
         },
         {
-          "id": "64a25ba8-4adb-49e9-bf69-42df79938afd",
+          "id": "3a81d7b3-2a20-419b-96e8-b93632ba3f66",
           "name": "Obtener el resumen de una reserva activa",
           "request": {
             "name": "Obtener el resumen de una reserva activa",
@@ -1724,7 +1724,7 @@
                 {
                   "disabled": false,
                   "key": "reservationId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "(Required) ID de la reserva"
                 }
               ],
@@ -1743,7 +1743,7 @@
           },
           "response": [
             {
-              "id": "8de14fd3-47e0-4304-a56d-6ffb08d422ac",
+              "id": "1ae0bba5-fcac-435f-950e-1759f4573973",
               "name": "Resumen de la reserva obtenido exitosamente",
               "originalRequest": {
                 "url": {
@@ -1757,7 +1757,7 @@
                   "query": [
                     {
                       "key": "reservationId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -1788,7 +1788,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "ade2499c-dafc-4ebc-923e-afb2628bf1cd",
+              "id": "4d75271c-9313-47de-bc9c-e45fccebb55b",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -1802,7 +1802,7 @@
                   "query": [
                     {
                       "key": "reservationId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -1833,7 +1833,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "244073e8-cb36-4d38-ac6a-a04c54495b3f",
+              "id": "e044df94-985c-4125-b763-6697ca5306f1",
               "name": "Reserva no encontrada o expirada",
               "originalRequest": {
                 "url": {
@@ -1847,7 +1847,7 @@
                   "query": [
                     {
                       "key": "reservationId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -1884,7 +1884,7 @@
           }
         },
         {
-          "id": "e98b4811-6ed8-4b23-b173-622cf1dcfa40",
+          "id": "9c9de49c-fd57-4eae-9dac-df83e3d8d62c",
           "name": "Obtener el resumen de una reserva por ID en ruta",
           "request": {
             "name": "Obtener el resumen de una reserva por ID en ruta",
@@ -1903,7 +1903,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la reserva"
                 }
@@ -1922,7 +1922,7 @@
           },
           "response": [
             {
-              "id": "da1c044d-a1ab-4f55-a798-ea0b27ca6213",
+              "id": "a3b3a904-6f90-4681-9863-face7db70826",
               "name": "Resumen de la reserva obtenido exitosamente",
               "originalRequest": {
                 "url": {
@@ -1939,7 +1939,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la reserva"
                     }
@@ -1971,7 +1971,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "673f359c-0f12-470f-bb28-328b976f5a63",
+              "id": "d6cdb7d3-a1aa-4889-affa-6455720cd8d9",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -1988,7 +1988,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la reserva"
                     }
@@ -2020,7 +2020,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "114698c9-3c68-443d-b201-25cf21819e83",
+              "id": "5b636b06-1488-43cd-a6bb-35da81433858",
               "name": "Reserva no encontrada o expirada",
               "originalRequest": {
                 "url": {
@@ -2037,7 +2037,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la reserva"
                     }
@@ -2078,7 +2078,7 @@
       "event": []
     },
     {
-      "id": "d6521660-023b-4ae4-86c2-658ce9958d99",
+      "id": "f8c8e261-3929-44f2-bb92-9c261024207c",
       "name": "Profile",
       "description": {
         "content": "Consulta y actualización de perfil de usuario y preferencias (HU-008)",
@@ -2086,7 +2086,7 @@
       },
       "item": [
         {
-          "id": "592dc0f7-020b-452e-baf2-b6898c32232d",
+          "id": "f033dc2f-5750-4a99-bcf9-3cfae678f98f",
           "name": "Consultar el perfil del usuario autenticado",
           "request": {
             "name": "Consultar el perfil del usuario autenticado",
@@ -2114,7 +2114,7 @@
           },
           "response": [
             {
-              "id": "508bbc56-1b3f-4b7a-848f-ba0c85247ea1",
+              "id": "22a34fda-aa8c-4ca6-9c5c-d2fb07894596",
               "name": "Perfil obtenido exitosamente",
               "originalRequest": {
                 "url": {
@@ -2153,7 +2153,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "4143c749-091d-450e-b0d2-d32f2f19dbf6",
+              "id": "d62e1e9f-f41d-423c-812d-189f45d750cd",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -2198,7 +2198,7 @@
           }
         },
         {
-          "id": "af3e6141-8251-45c2-a70c-70ec2997ef09",
+          "id": "cf0f1903-c08e-4115-a062-f6327ad34a6d",
           "name": "Actualizar información personal y preferencias del usuario autenticado",
           "request": {
             "name": "Actualizar información personal y preferencias del usuario autenticado",
@@ -2231,7 +2231,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": true,\n    \"smsEnabled\": false,\n    \"pushEnabled\": false\n  }\n}",
+              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": false,\n    \"smsEnabled\": true,\n    \"pushEnabled\": true\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2241,7 +2241,7 @@
           },
           "response": [
             {
-              "id": "1ffec710-8d98-4649-9fc4-e75e97b02ff7",
+              "id": "8d619f2c-dbaf-43d0-8c38-6c73da01ed76",
               "name": "Perfil actualizado exitosamente",
               "originalRequest": {
                 "url": {
@@ -2267,7 +2267,7 @@
                 "method": "PUT",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": true,\n    \"smsEnabled\": false,\n    \"pushEnabled\": false\n  }\n}",
+                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": false,\n    \"smsEnabled\": true,\n    \"pushEnabled\": true\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2288,7 +2288,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "70163499-aa75-4b6d-9070-fb56a626d347",
+              "id": "18cf181a-5b7c-48cd-a497-a1c340ed3579",
               "name": "Datos inválidos",
               "originalRequest": {
                 "url": {
@@ -2314,7 +2314,7 @@
                 "method": "PUT",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": true,\n    \"smsEnabled\": false,\n    \"pushEnabled\": false\n  }\n}",
+                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": false,\n    \"smsEnabled\": true,\n    \"pushEnabled\": true\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2335,7 +2335,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "e5ff619c-23d1-4f67-b63c-dd941fce99b0",
+              "id": "eb90160d-53a6-47b2-bcfa-f93244858544",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -2361,7 +2361,7 @@
                 "method": "PUT",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": true,\n    \"smsEnabled\": false,\n    \"pushEnabled\": false\n  }\n}",
+                  "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Charris\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1995-05-15\",\n  \"gender\": \"Masculino\",\n  \"cityId\": 1,\n  \"favoriteCinemaId\": 2,\n  \"notificationPreferences\": {\n    \"emailEnabled\": false,\n    \"smsEnabled\": true,\n    \"pushEnabled\": true\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2391,7 +2391,7 @@
       "event": []
     },
     {
-      "id": "603cb8c2-73aa-4baf-bfac-27d2c51d7a00",
+      "id": "027864be-3e12-4509-965c-33acd20aa9b7",
       "name": "Notifications",
       "description": {
         "content": "Endpoints para la gestión de notificaciones de próximos estrenos.",
@@ -2399,7 +2399,7 @@
       },
       "item": [
         {
-          "id": "d8f8e562-2b93-40e0-82b7-835c20fa3080",
+          "id": "da2eb7e8-b72e-4ded-b1a3-2b6b73eecc77",
           "name": "Registrar solicitud de notificación para un próximo estreno",
           "request": {
             "name": "Registrar solicitud de notificación para un próximo estreno",
@@ -2435,7 +2435,7 @@
           },
           "response": [
             {
-              "id": "13790e5f-03f3-41ab-b23f-d11ccf237461",
+              "id": "15862de6-d868-4ba0-ae73-1ccf6d60a6bd",
               "name": "Solicitud registrada exitosamente.",
               "originalRequest": {
                 "url": {
@@ -2473,7 +2473,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "4c75c4b6-2dd9-4f6a-87c6-8a74268f07cd",
+              "id": "8dc19db5-5368-4d47-8fd2-4893310c7721",
               "name": "Datos inválidos o solicitud duplicada.",
               "originalRequest": {
                 "url": {
@@ -2511,7 +2511,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "c1d03bc7-3358-408a-babb-8b2472d58763",
+              "id": "0ae6bbc8-fa13-42e1-ab94-c7a05afcb2af",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -2558,7 +2558,7 @@
       "event": []
     },
     {
-      "id": "425459b1-2f71-4fb4-8da3-6710798b2961",
+      "id": "150fa78f-c171-48a8-9c47-bb5686a78092",
       "name": "Movies",
       "description": {
         "content": "Endpoints para la gestión de películas, cartelera semanal y detalles.",
@@ -2566,7 +2566,7 @@
       },
       "item": [
         {
-          "id": "dd1016a5-491d-4853-9ac6-791269198ff3",
+          "id": "397a6c1b-57d5-4600-a67a-ab8f2f4cc792",
           "name": "Obtener todas las películas activas",
           "request": {
             "name": "Obtener todas las películas activas",
@@ -2592,7 +2592,7 @@
           },
           "response": [
             {
-              "id": "3f7a503d-d5c8-4b5e-8639-b3261892d3e5",
+              "id": "c67e453f-3627-4634-ac53-34db61e39d03",
               "name": "Lista de películas obtenida exitosamente.",
               "originalRequest": {
                 "url": {
@@ -2622,12 +2622,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"id\": 7817,\n    \"title\": \"string\",\n    \"synopsis\": \"string\",\n    \"duration\": 3083,\n    \"director\": \"string\",\n    \"isActive\": true\n  },\n  {\n    \"id\": 4390,\n    \"title\": \"string\",\n    \"synopsis\": \"string\",\n    \"duration\": 5452,\n    \"director\": \"string\",\n    \"isActive\": true\n  }\n]",
+              "body": "[\n  {\n    \"id\": 3258,\n    \"title\": \"string\",\n    \"synopsis\": \"string\",\n    \"duration\": 7559,\n    \"director\": \"string\",\n    \"isActive\": true\n  },\n  {\n    \"id\": 2904,\n    \"title\": \"string\",\n    \"synopsis\": \"string\",\n    \"duration\": 6512,\n    \"director\": \"string\",\n    \"isActive\": true\n  }\n]",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6d27912a-138b-482a-b8c8-7680e5cba7f3",
+              "id": "fcb88ef1-1f73-4b25-adbf-8eb82c9bcdd2",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -2662,7 +2662,7 @@
           }
         },
         {
-          "id": "3184df02-f9df-47c3-bb4a-323a44f26c9b",
+          "id": "23c4fdb6-bf2a-4530-aaaa-4b1a6b809744",
           "name": "Obtener las películas en estado \"Próximo Estreno\"",
           "request": {
             "name": "Obtener las películas en estado \"Próximo Estreno\"",
@@ -2689,7 +2689,7 @@
           },
           "response": [
             {
-              "id": "78baadf3-e127-4410-89a0-baebac627fcc",
+              "id": "9a3fed51-6168-4a1a-8fde-cf55ffbd98ae",
               "name": "Lista de próximos estrenos obtenida exitosamente.",
               "originalRequest": {
                 "url": {
@@ -2720,12 +2720,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"id\": 8272,\n    \"title\": \"string\",\n    \"posterUrl\": \"string\",\n    \"releaseDate\": \"2026-01-30\",\n    \"genres\": [\n      \"string\",\n      \"string\"\n    ],\n    \"classification\": \"string\",\n    \"duration\": 830,\n    \"trailerUrl\": \"string\",\n    \"synopsis\": \"string\",\n    \"daysUntil\": 1833\n  },\n  {\n    \"id\": 295,\n    \"title\": \"string\",\n    \"posterUrl\": \"string\",\n    \"releaseDate\": \"1981-09-11\",\n    \"genres\": [\n      \"string\",\n      \"string\"\n    ],\n    \"classification\": \"string\",\n    \"duration\": 5025,\n    \"trailerUrl\": \"string\",\n    \"synopsis\": \"string\",\n    \"daysUntil\": 6926\n  }\n]",
+              "body": "[\n  {\n    \"id\": 2075,\n    \"title\": \"string\",\n    \"posterUrl\": \"string\",\n    \"releaseDate\": \"2018-04-09\",\n    \"genres\": [\n      \"string\",\n      \"string\"\n    ],\n    \"classification\": \"string\",\n    \"duration\": 1200,\n    \"trailerUrl\": \"string\",\n    \"synopsis\": \"string\",\n    \"daysUntil\": 7824\n  },\n  {\n    \"id\": 7312,\n    \"title\": \"string\",\n    \"posterUrl\": \"string\",\n    \"releaseDate\": \"2020-01-08\",\n    \"genres\": [\n      \"string\",\n      \"string\"\n    ],\n    \"classification\": \"string\",\n    \"duration\": 2007,\n    \"trailerUrl\": \"string\",\n    \"synopsis\": \"string\",\n    \"daysUntil\": 9958\n  }\n]",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "259aebb2-389f-4186-b1e0-ae0dbcf2c9d3",
+              "id": "db1437f6-e002-4b23-baf0-3793978590b9",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -2761,7 +2761,7 @@
           }
         },
         {
-          "id": "d6ff481b-7b34-4258-b402-9b5807108cd1",
+          "id": "eacbc051-1934-40e5-8b00-abca8e5aeb0f",
           "name": "Obtener el detalle de una película en estado \"Próximo Estreno\"",
           "request": {
             "name": "Obtener el detalle de una película en estado \"Próximo Estreno\"",
@@ -2780,7 +2780,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la película."
                 }
@@ -2797,7 +2797,7 @@
           },
           "response": [
             {
-              "id": "4ca7be34-1140-4cbb-a0a9-eb6f4e86695a",
+              "id": "35cc568b-eddd-4074-b676-93bb0577aa22",
               "name": "Detalle del próximo estreno obtenido exitosamente.",
               "originalRequest": {
                 "url": {
@@ -2814,7 +2814,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -2837,12 +2837,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": 6722,\n  \"title\": \"string\",\n  \"posterUrl\": \"string\",\n  \"releaseDate\": \"1948-02-28\",\n  \"genres\": [\n    \"string\",\n    \"string\"\n  ],\n  \"classification\": \"string\",\n  \"duration\": 810,\n  \"trailerUrl\": \"string\",\n  \"synopsis\": \"string\",\n  \"daysUntil\": 8375\n}",
+              "body": "{\n  \"id\": 7404,\n  \"title\": \"string\",\n  \"posterUrl\": \"string\",\n  \"releaseDate\": \"2000-02-07\",\n  \"genres\": [\n    \"string\",\n    \"string\"\n  ],\n  \"classification\": \"string\",\n  \"duration\": 1343,\n  \"trailerUrl\": \"string\",\n  \"synopsis\": \"string\",\n  \"daysUntil\": 1908\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5e0a9b6f-3fcc-4d6f-a568-92f034a5fe91",
+              "id": "230dc580-2b9e-4168-9e37-98191cee4166",
               "name": "Id de la película inválido.",
               "originalRequest": {
                 "url": {
@@ -2859,7 +2859,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -2881,7 +2881,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "3de0d76a-3442-4505-888e-81c1e7c8a464",
+              "id": "db814dfe-b672-4490-acca-708801a96d8a",
               "name": "Próximo estreno no encontrado.",
               "originalRequest": {
                 "url": {
@@ -2898,7 +2898,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -2920,7 +2920,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "b2e5333f-1d4e-4c4b-b4a4-ffe834da2908",
+              "id": "1db7baa8-a9e9-4236-b2d9-187b03c7f52b",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -2937,7 +2937,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -2965,7 +2965,7 @@
           }
         },
         {
-          "id": "dceb8f6d-b8b7-4b4f-8d76-94b7872a72dc",
+          "id": "7d899dea-c904-4d3f-9ab0-a047c906be4d",
           "name": "Obtener cartelera semanal (próximos 7 días) para la ubicación del usuario",
           "request": {
             "name": "Obtener cartelera semanal (próximos 7 días) para la ubicación del usuario",
@@ -2982,7 +2982,7 @@
                 {
                   "disabled": false,
                   "key": "cityId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "ID de la ciudad para filtrar la cartelera."
                 }
               ],
@@ -2993,7 +2993,7 @@
           },
           "response": [
             {
-              "id": "ddae121f-398a-48af-83ca-cbecf311e2b3",
+              "id": "969d6fbc-9b6b-438e-8111-0f21b90c1710",
               "name": "Cartelera semanal obtenida exitosamente.",
               "originalRequest": {
                 "url": {
@@ -3007,7 +3007,7 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -3028,7 +3028,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "df3b03fc-dacc-4878-978d-bcdc701d5be1",
+              "id": "d1103b2f-56e3-406d-bc3e-5300355784fe",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3042,7 +3042,7 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -3069,7 +3069,7 @@
           }
         },
         {
-          "id": "5f61afa7-62cc-4cc5-96cd-8e90d34f8522",
+          "id": "160771fd-910a-4ed0-ac6f-287eb5521354",
           "name": "Obtener películas programadas para el día de hoy",
           "request": {
             "name": "Obtener películas programadas para el día de hoy",
@@ -3086,7 +3086,7 @@
                 {
                   "disabled": false,
                   "key": "cityId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "ID de la ciudad."
                 }
               ],
@@ -3097,7 +3097,7 @@
           },
           "response": [
             {
-              "id": "979cda1a-c424-47d5-b8a7-7d68cd57f094",
+              "id": "865eff9e-30b1-496d-b357-04043022d689",
               "name": "Películas de hoy obtenidas exitosamente.",
               "originalRequest": {
                 "url": {
@@ -3111,7 +3111,7 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -3132,7 +3132,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "51f155d6-8f2a-473a-bf20-f2797c1bf426",
+              "id": "5db9a5c5-165b-4ccc-bf5d-e76976e67758",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3146,7 +3146,7 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": []
@@ -3173,7 +3173,7 @@
           }
         },
         {
-          "id": "ac7eb7a3-a6e9-4b96-8268-38f4ea470ac8",
+          "id": "a272f826-efb4-4fa1-a728-0f682f34cf60",
           "name": "Filtrar películas/funciones por criterios (Fecha, Género, Idioma, Formato, etc.)",
           "request": {
             "name": "Filtrar películas/funciones por criterios (Fecha, Género, Idioma, Formato, etc.)",
@@ -3190,13 +3190,13 @@
                 {
                   "disabled": false,
                   "key": "cityId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "ID de la ciudad."
                 },
                 {
                   "disabled": false,
                   "key": "date",
-                  "value": "1949-11-14",
+                  "value": "1981-03-26",
                   "description": "Fecha a consultar (YYYY-MM-DD)."
                 },
                 {
@@ -3226,7 +3226,7 @@
                 {
                   "disabled": false,
                   "key": "cinemaId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "Complejo/cine específico."
                 },
                 {
@@ -3243,7 +3243,7 @@
           },
           "response": [
             {
-              "id": "27be7cfc-7935-4265-9aef-167dbef7c29b",
+              "id": "6a319292-ada7-4a3b-a2b9-e7d36bc98949",
               "name": "Cartelera filtrada exitosamente.",
               "originalRequest": {
                 "url": {
@@ -3257,11 +3257,11 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     },
                     {
                       "key": "date",
-                      "value": "1949-11-14"
+                      "value": "1981-03-26"
                     },
                     {
                       "key": "genre",
@@ -3281,7 +3281,7 @@
                     },
                     {
                       "key": "cinemaId",
-                      "value": "5108"
+                      "value": "6227"
                     },
                     {
                       "key": "available",
@@ -3306,7 +3306,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "82e397a0-6962-400c-a820-daa5d3618111",
+              "id": "994a8235-ad6d-4ac8-aaef-ce3102a1d58d",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3320,11 +3320,11 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     },
                     {
                       "key": "date",
-                      "value": "1949-11-14"
+                      "value": "1981-03-26"
                     },
                     {
                       "key": "genre",
@@ -3344,7 +3344,7 @@
                     },
                     {
                       "key": "cinemaId",
-                      "value": "5108"
+                      "value": "6227"
                     },
                     {
                       "key": "available",
@@ -3375,7 +3375,7 @@
           }
         },
         {
-          "id": "aa9ea4bf-b92b-4ddb-94d5-1dac6741746d",
+          "id": "a7046c2e-2e40-40d8-983d-83a71452953b",
           "name": "Obtener el detalle completo de una película por su ID",
           "request": {
             "name": "Obtener el detalle completo de una película por su ID",
@@ -3393,7 +3393,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la película."
                 }
@@ -3404,7 +3404,7 @@
           },
           "response": [
             {
-              "id": "413f5eca-f99e-4b30-a3ee-4729ba8a4825",
+              "id": "b8151a4e-774b-4dbf-9e1d-0b73bee80884",
               "name": "Detalle de película obtenido correctamente.",
               "originalRequest": {
                 "url": {
@@ -3420,7 +3420,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -3442,7 +3442,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "61544da6-31df-4c63-9f3f-30b54ffd4f07",
+              "id": "3450ceac-a247-4333-9661-76e48beb2141",
               "name": "Película no encontrada.",
               "originalRequest": {
                 "url": {
@@ -3458,7 +3458,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -3480,7 +3480,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "249351d4-d0f5-4ba4-bb63-6aeaa411cb49",
+              "id": "32916763-89fa-4d1d-9a03-24bc64bc350c",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3496,7 +3496,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -3524,7 +3524,7 @@
           }
         },
         {
-          "id": "9186460b-ea08-4bd8-b417-9a4c3004ce73",
+          "id": "097a4363-efef-4b35-9ad9-b3aa03323705",
           "name": "Obtener las funciones activas y futuras para una película",
           "request": {
             "name": "Obtener las funciones activas y futuras para una película",
@@ -3542,7 +3542,7 @@
                 {
                   "disabled": false,
                   "key": "cityId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "ID de la ciudad para filtrar funciones."
                 }
               ],
@@ -3550,7 +3550,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la película."
                 }
@@ -3561,7 +3561,7 @@
           },
           "response": [
             {
-              "id": "3e4224fd-6608-4f31-86d6-0ead0d35c1ef",
+              "id": "9e4588e3-bd1d-4185-aba5-a761a7f44007",
               "name": "Funciones futuras obtenidas correctamente.",
               "originalRequest": {
                 "url": {
@@ -3576,14 +3576,14 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": [
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -3605,7 +3605,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "1e84860a-def4-42c1-9394-20515f23ab36",
+              "id": "160d2f37-186c-4ee3-a543-2b4e4a10bc7f",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3620,14 +3620,14 @@
                   "query": [
                     {
                       "key": "cityId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": [
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película."
                     }
@@ -3655,7 +3655,7 @@
           }
         },
         {
-          "id": "f8e02670-6cac-4506-890b-6eeb6dcf6a20",
+          "id": "09dd79e1-ac1e-4414-b782-69b97d4f224b",
           "name": "Obtener recomendaciones de películas similares",
           "request": {
             "name": "Obtener recomendaciones de películas similares",
@@ -3674,7 +3674,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la película de referencia."
                 }
@@ -3685,7 +3685,7 @@
           },
           "response": [
             {
-              "id": "ac07f7fc-3821-433b-8305-4d39da921048",
+              "id": "7d9e9524-dfa5-4f5f-ba04-b5902743f8ec",
               "name": "Recomendaciones de películas obtenidas exitosamente.",
               "originalRequest": {
                 "url": {
@@ -3702,7 +3702,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película de referencia."
                     }
@@ -3724,7 +3724,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "b47e879f-7be8-467c-a075-b4d81faf5168",
+              "id": "dfe65f4a-967c-4027-9d2d-5fa98d5ff321",
               "name": "Error interno del servidor.",
               "originalRequest": {
                 "url": {
@@ -3741,7 +3741,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película de referencia."
                     }
@@ -3772,7 +3772,7 @@
       "event": []
     },
     {
-      "id": "898b197a-75c6-4869-9f13-d7ed6c1d907a",
+      "id": "7cf96e5c-ed27-4585-9bb5-041c3d247a6a",
       "name": "Membership",
       "description": {
         "content": "Gestión de membresía digital y beneficios (HU-008)",
@@ -3780,7 +3780,7 @@
       },
       "item": [
         {
-          "id": "cd5d99bb-c410-4bcb-a251-f16732bf0948",
+          "id": "2ef57298-324f-4567-a006-eb7d90692c56",
           "name": "Consultar membresía digital del usuario autenticado",
           "request": {
             "name": "Consultar membresía digital del usuario autenticado",
@@ -3808,7 +3808,7 @@
           },
           "response": [
             {
-              "id": "a0be6bf2-f0b2-4576-b20f-c968e2425f96",
+              "id": "b45d1b4a-a12b-45d5-84a2-4a0bbbb7f214",
               "name": "Detalle de membresía con código QR",
               "originalRequest": {
                 "url": {
@@ -3847,7 +3847,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "f39d5905-e1f2-4178-9cf1-833b74b05163",
+              "id": "fd5e33dd-719e-4c34-a62e-d378e2e094a7",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -3892,7 +3892,7 @@
           }
         },
         {
-          "id": "909a440e-c43f-4a3f-9576-8bc7ada19727",
+          "id": "c7e660ce-ab9d-4817-a38d-499d94656428",
           "name": "Consultar beneficios y descuentos vigentes por nivel de membresía (RN-032)",
           "request": {
             "name": "Consultar beneficios y descuentos vigentes por nivel de membresía (RN-032)",
@@ -3921,7 +3921,7 @@
           },
           "response": [
             {
-              "id": "f1bba066-5a76-490e-af48-4269a95355fc",
+              "id": "35a63e2a-c6ed-4421-8c96-05154d1e754f",
               "name": "Lista de beneficios y porcentaje de descuento calculado",
               "originalRequest": {
                 "url": {
@@ -3961,7 +3961,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "ba47bcbb-9fd3-4f1c-b5ae-a20ae36634e9",
+              "id": "806cf780-bb42-4bab-83d3-20a983a884d1",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -4007,7 +4007,7 @@
           }
         },
         {
-          "id": "f9f943b3-5900-4d38-8138-ccd2d269af5d",
+          "id": "f9e4ad98-0bcf-4972-8945-bd498e02e157",
           "name": "Crear membresía digital manualmente para un usuario",
           "request": {
             "name": "Crear membresía digital manualmente para un usuario",
@@ -4043,7 +4043,7 @@
           },
           "response": [
             {
-              "id": "9fa27032-164c-4bf0-b6cf-77a7cfe52908",
+              "id": "65b66f9d-52e0-46fb-939e-60c2ede98911",
               "name": "Membresía digital creada exitosamente",
               "originalRequest": {
                 "url": {
@@ -4081,7 +4081,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "6a2561f7-c4f7-4b43-8fd9-849b6795767b",
+              "id": "2daed110-0817-44d0-840f-5a7eab43a16f",
               "name": "El ID de usuario es obligatorio o el usuario ya cuenta con membresía activa",
               "originalRequest": {
                 "url": {
@@ -4119,7 +4119,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "d7d79eba-3414-49dc-842a-4c9cd76ba2da",
+              "id": "8c6fde5f-16e0-4f85-ad22-4b3e28ce4efe",
               "name": "Usuario no encontrado",
               "originalRequest": {
                 "url": {
@@ -4166,7 +4166,7 @@
       "event": []
     },
     {
-      "id": "59f384c9-1172-41d0-936e-2778dd9a933f",
+      "id": "a9c513d9-70ab-48d0-869c-f7e73b422d51",
       "name": "Functions",
       "description": {
         "content": "Consulta de funciones, horarios y formatos de proyección (HU-009)",
@@ -4174,7 +4174,7 @@
       },
       "item": [
         {
-          "id": "b438e82b-f2d4-4080-992b-b8f0f152d148",
+          "id": "48eb7ad0-0956-4b04-b0cd-0cd9200f17c1",
           "name": "Obtener funciones de una película con filtros (formato, fecha, cine)",
           "request": {
             "name": "Obtener funciones de una película con filtros (formato, fecha, cine)",
@@ -4204,7 +4204,7 @@
                 {
                   "disabled": false,
                   "key": "cinemaId",
-                  "value": "5108",
+                  "value": "6227",
                   "description": "ID del cine o complejo"
                 }
               ],
@@ -4212,7 +4212,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la película"
                 }
@@ -4223,7 +4223,7 @@
           },
           "response": [
             {
-              "id": "64db4bbc-e587-4c72-a13a-64fc40b10882",
+              "id": "cc450746-af7f-4dcc-af44-36ec396f4250",
               "name": "Funciones obtenidas exitosamente",
               "originalRequest": {
                 "url": {
@@ -4246,14 +4246,14 @@
                     },
                     {
                       "key": "cinemaId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": [
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película"
                     }
@@ -4275,7 +4275,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "c9629628-8d8f-413b-9f45-5688e10f3598",
+              "id": "9e8be8f9-9632-4bb7-9ba1-8b442d1b82a4",
               "name": "Película no encontrada",
               "originalRequest": {
                 "url": {
@@ -4298,14 +4298,14 @@
                     },
                     {
                       "key": "cinemaId",
-                      "value": "5108"
+                      "value": "6227"
                     }
                   ],
                   "variable": [
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la película"
                     }
@@ -4333,7 +4333,7 @@
           }
         },
         {
-          "id": "700f95b5-ee23-4fde-98e6-92f2e8af6a74",
+          "id": "fcb8f3f1-1af5-401a-aa7a-805edbedf36e",
           "name": "Obtener el desglose de precios y promociones de una función",
           "request": {
             "name": "Obtener el desglose de precios y promociones de una función",
@@ -4352,7 +4352,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la función"
                 }
@@ -4363,7 +4363,7 @@
           },
           "response": [
             {
-              "id": "e4b64a9c-9f64-4eec-aa33-226564513a2b",
+              "id": "b16d6553-904b-4e36-aa51-59f79e6dabe0",
               "name": "Precios calculados exitosamente",
               "originalRequest": {
                 "url": {
@@ -4380,7 +4380,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4402,7 +4402,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "4f389c67-4ef9-4e0b-9a9b-923150bdfa28",
+              "id": "14f07d61-4122-4daf-bb93-59c4c6a98888",
               "name": "Función inactiva o ya iniciada",
               "originalRequest": {
                 "url": {
@@ -4419,7 +4419,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4441,7 +4441,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "bf222ba9-5087-46f4-9cfb-0a6f6a224bfb",
+              "id": "b40e4f1e-a75e-401f-a200-1534f5e2728f",
               "name": "Función no encontrada",
               "originalRequest": {
                 "url": {
@@ -4458,7 +4458,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4486,7 +4486,7 @@
           }
         },
         {
-          "id": "5bdd77ff-42be-42b8-b11e-dcba49f0ad65",
+          "id": "351af808-a860-4bc7-a91e-44fc97db0b98",
           "name": "Obtener el mapa de sillas y disponibilidad en tiempo real de una función (HU-010)",
           "request": {
             "name": "Obtener el mapa de sillas y disponibilidad en tiempo real de una función (HU-010)",
@@ -4505,7 +4505,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la función"
                 }
@@ -4516,7 +4516,7 @@
           },
           "response": [
             {
-              "id": "8bbc71a3-2999-479e-ad04-621f3fdf70b8",
+              "id": "0d655592-cadd-4f3d-8f08-02bbcf7b1c8b",
               "name": "Mapa interactivo de sillas obtenido exitosamente",
               "originalRequest": {
                 "url": {
@@ -4533,7 +4533,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4555,7 +4555,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "eec0cd59-20bc-4090-9883-b4319d23ac43",
+              "id": "6d495a4a-99e2-4acd-b226-bf2385f19a12",
               "name": "Función inactiva o ya iniciada",
               "originalRequest": {
                 "url": {
@@ -4572,7 +4572,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4594,7 +4594,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "fcd40b3e-3933-4274-a5c4-2924ad1173a9",
+              "id": "53d72cc6-a8e0-4511-ba33-3832b060b560",
               "name": "Función no encontrada",
               "originalRequest": {
                 "url": {
@@ -4611,7 +4611,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4639,7 +4639,7 @@
           }
         },
         {
-          "id": "92efc39c-398e-4ccc-ab28-d25c441de695",
+          "id": "feb051c3-3c67-4fba-9acd-84350c58b8c2",
           "name": "Obtener el detalle de una función",
           "request": {
             "name": "Obtener el detalle de una función",
@@ -4657,7 +4657,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "id",
                   "description": "(Required) ID de la función"
                 }
@@ -4668,7 +4668,7 @@
           },
           "response": [
             {
-              "id": "dc4eed5e-19fa-40cb-a830-bdf5f8a6777b",
+              "id": "1e780363-6524-49e3-b430-c808f344e135",
               "name": "Detalle de la función obtenido exitosamente",
               "originalRequest": {
                 "url": {
@@ -4684,7 +4684,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4706,7 +4706,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "6d33306b-5907-4f4b-9301-e000028157af",
+              "id": "b8cd6eeb-a369-46eb-a5ec-83021f2997a7",
               "name": "Función inactiva o ya iniciada",
               "originalRequest": {
                 "url": {
@@ -4722,7 +4722,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4744,7 +4744,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "f19a04a2-3b7c-4469-8516-2727cb2bb9b7",
+              "id": "c3594b64-b319-4512-92fc-81032b1000cb",
               "name": "Función no encontrada",
               "originalRequest": {
                 "url": {
@@ -4760,7 +4760,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "id",
                       "description": "(Required) ID de la función"
                     }
@@ -4791,7 +4791,7 @@
       "event": []
     },
     {
-      "id": "33a79e70-22b3-4b4a-9f34-6db9cd988bce",
+      "id": "206f0049-9c86-442d-812a-70b1738af1be",
       "name": "Cart",
       "description": {
         "content": "Carrito de compras de entradas y confitería (HU-011)",
@@ -4799,7 +4799,7 @@
       },
       "item": [
         {
-          "id": "c5c7c704-d1ed-4db1-9744-0db2f7bb86a6",
+          "id": "948c1961-8c50-4a91-af04-2638e6f75423",
           "name": "Crea el carrito a partir de las sillas seleccionadas",
           "request": {
             "name": "Crea el carrito a partir de las sillas seleccionadas",
@@ -4846,7 +4846,7 @@
           },
           "response": [
             {
-              "id": "b9d64b34-cce3-4cd4-a59b-96d523b4fc75",
+              "id": "60564c2e-42d0-446d-bdfc-2e287f4cea82",
               "name": "Carrito creado con su detalle completo",
               "originalRequest": {
                 "url": {
@@ -4897,7 +4897,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cbb186be-3074-434a-bedf-b992e0c0754c",
+              "id": "9addb8b5-504f-4a6b-a078-f872c01a0596",
               "name": "Datos inválidos, sillas ocupadas o función agotada",
               "originalRequest": {
                 "url": {
@@ -4948,7 +4948,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "117591b4-0f12-423f-9857-65896e860893",
+              "id": "53175367-8ec7-4df9-b627-bef0b44196d5",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -4999,7 +4999,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "04658a59-fa12-4bb2-94ba-7e2eac5a0ff8",
+              "id": "185971c1-2129-47d7-a091-6dc75dfd4483",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -5056,7 +5056,7 @@
           }
         },
         {
-          "id": "0717b0a0-a02b-48cf-9970-7637e5d05f83",
+          "id": "1ffb4334-3eab-4456-a40f-86e0d789e6ae",
           "name": "Obtiene el detalle completo del carrito activo",
           "request": {
             "name": "Obtiene el detalle completo del carrito activo",
@@ -5090,7 +5090,7 @@
           },
           "response": [
             {
-              "id": "5b92a9af-b7c1-42a3-92fd-4991809066f2",
+              "id": "bf0b93fc-dea1-47a6-976b-82d0094d7b1e",
               "name": "Detalle del carrito activo con entradas, confitería y resumen económico",
               "originalRequest": {
                 "url": {
@@ -5133,7 +5133,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "caf878fc-a27d-43a5-9810-b0575ca225bd",
+              "id": "e40da52e-e9b6-4593-9024-e5bb73c05fb7",
               "name": "No existe un carrito activo o se encuentra expirado",
               "originalRequest": {
                 "url": {
@@ -5176,7 +5176,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "52a32d5c-de95-4b60-b3cf-ab820145f95c",
+              "id": "a2f96853-9857-4a20-af25-1361eb23c028",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -5219,7 +5219,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a23c4dcc-a2b1-4e12-a6f3-50fe26f64afa",
+              "id": "90d8f115-8c0a-435a-bbc3-e521aa53d6a3",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -5268,7 +5268,7 @@
           }
         },
         {
-          "id": "b8a1b303-5c80-40c8-96b0-cd2a54351e0b",
+          "id": "22fe0129-4036-492a-9c22-aef82f80a848",
           "name": "Modifica cantidades de confitería y/o quita entradas del carrito",
           "request": {
             "name": "Modifica cantidades de confitería y/o quita entradas del carrito",
@@ -5315,7 +5315,7 @@
           },
           "response": [
             {
-              "id": "3e1e7848-219a-48c6-879c-bb559b91e5c9",
+              "id": "3ac7f541-d60d-4877-a5e8-315ffdd44ff4",
               "name": "Carrito actualizado con su detalle y resumen recalculados",
               "originalRequest": {
                 "url": {
@@ -5366,7 +5366,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "838a3cbb-b440-4be6-ab1c-95c3955597c5",
+              "id": "4f720a00-2ec9-48fb-a24a-b63a45a22969",
               "name": "Cantidades negativas, stock insuficiente o entrada inexistente",
               "originalRequest": {
                 "url": {
@@ -5417,7 +5417,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "104a0f07-6299-4c55-8d62-defd3f3d7284",
+              "id": "15178949-87fd-4385-a3a1-e3a67723409d",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -5468,7 +5468,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e11dd336-8be9-424a-91c6-52e80706f4a4",
+              "id": "05d0ae40-b13b-4c52-a3eb-bfdf052fff81",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -5525,7 +5525,7 @@
           }
         },
         {
-          "id": "22d9644c-575c-435b-a3c1-1248fd4edfbf",
+          "id": "30a68c50-f376-487d-a3ea-9b99cecbf043",
           "name": "Cancela el carrito activo y libera las sillas reservadas",
           "request": {
             "name": "Cancela el carrito activo y libera las sillas reservadas",
@@ -5559,7 +5559,7 @@
           },
           "response": [
             {
-              "id": "3ee15c35-ccb1-49ae-bca0-05dd90082eca",
+              "id": "1d429a3b-1fdf-4058-ab66-9bf6fcad0bdf",
               "name": "Carrito cancelado y sillas liberadas",
               "originalRequest": {
                 "url": {
@@ -5602,7 +5602,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5a31759f-363a-41e0-ac15-8d6457d6f1a5",
+              "id": "11abd269-a18b-4fc7-8714-e6227eff09db",
               "name": "No existe un carrito activo para este usuario.",
               "originalRequest": {
                 "url": {
@@ -5645,7 +5645,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0c419fe2-9621-4a2c-bf3b-87b9634bada7",
+              "id": "53b76e06-7979-436a-b79c-9b486c6d07e6",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -5688,7 +5688,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fa72bbe5-4531-4d3b-8b7d-a13b12665efc",
+              "id": "ac3873b4-4b8a-44b1-803c-cb1ddc30f568",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -5737,7 +5737,7 @@
           }
         },
         {
-          "id": "02aa1f6e-e39a-4449-9921-e4bbcf433679",
+          "id": "bf1eace1-dbea-47f4-bddd-c8c8d74c6568",
           "name": "Aplica el descuento automático por membresía (RN-047)",
           "request": {
             "name": "Aplica el descuento automático por membresía (RN-047)",
@@ -5772,7 +5772,7 @@
           },
           "response": [
             {
-              "id": "a08b62d9-27af-492c-8501-5032c49f4e3b",
+              "id": "b80de5b6-20b1-430e-b525-1e21a62ebcb0",
               "name": "Resumen del carrito con el descuento de membresía aplicado",
               "originalRequest": {
                 "url": {
@@ -5816,7 +5816,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f3adf46e-7b16-426f-8ebe-6b00346a3d4c",
+              "id": "8c63aa93-ee8b-47aa-b620-1ffdbcfbad0f",
               "name": "Sin carrito activo o membresía sin descuento aplicable",
               "originalRequest": {
                 "url": {
@@ -5860,7 +5860,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "50b65ef8-2448-491b-9d85-6a76b42e9fb8",
+              "id": "31cade0f-3022-4dfb-b467-0c03ec861516",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -5904,7 +5904,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6bd941b8-599e-45dc-a706-3c0981262535",
+              "id": "7de21c44-7b79-44dd-9042-89771650fbb9",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -5954,7 +5954,7 @@
           }
         },
         {
-          "id": "957e682f-66d2-4f92-a3fb-0536baf6e49b",
+          "id": "f5327d7f-dc05-4e5b-9498-4440bd3a0237",
           "name": "Aplica bonos del wallet del usuario al total del carrito",
           "request": {
             "name": "Aplica bonos del wallet del usuario al total del carrito",
@@ -6002,7 +6002,7 @@
           },
           "response": [
             {
-              "id": "84038c5d-f576-413c-b8cd-b91bac1bc4f5",
+              "id": "577692ab-9ee8-4ad9-83f2-6bf4e5abc658",
               "name": "Resumen del carrito con los bonos aplicados",
               "originalRequest": {
                 "url": {
@@ -6054,7 +6054,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "768c8b23-437e-4a03-bc09-2fa396018faf",
+              "id": "8181e18c-4405-49f4-8d20-d1bcfc0ee565",
               "name": "Monto inválido o saldo insuficiente en el wallet",
               "originalRequest": {
                 "url": {
@@ -6106,7 +6106,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6dcadd84-798d-4a8d-9f8c-28b57096843a",
+              "id": "db4612d9-736d-46d1-b25e-ffc10b68225c",
               "name": "No autenticado",
               "originalRequest": {
                 "url": {
@@ -6158,7 +6158,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f2f8d7fa-3f46-481a-b7e5-c5186450ecf9",
+              "id": "afb5dbe1-9edb-4b21-9d32-94924b9a60f6",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -6219,7 +6219,7 @@
       "event": []
     },
     {
-      "id": "3edd025a-a339-42a1-aea0-38c44a783a2d",
+      "id": "b7054af6-eda1-46c8-a9ac-7b663627e9f4",
       "name": "Users",
       "description": {
         "content": "",
@@ -6227,7 +6227,7 @@
       },
       "item": [
         {
-          "id": "f65375e5-f3e8-4095-8665-7c8088030f90",
+          "id": "2c15dde1-5a37-4b09-afd7-a97785e5cb33",
           "name": "Crear un nuevo usuario",
           "request": {
             "name": "Crear un nuevo usuario",
@@ -6266,7 +6266,7 @@
           },
           "response": [
             {
-              "id": "9740d4f0-989a-413a-aa83-06f40d644eb5",
+              "id": "181b713d-48f3-4af5-9b81-322bdf325cae",
               "name": "Usuario creado exitosamente",
               "originalRequest": {
                 "url": {
@@ -6309,7 +6309,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1d4ad797-cdcd-4894-85d5-de44920969a2",
+              "id": "cb2e72b6-18a0-40c0-ac57-7e063889c0f5",
               "name": "Datos inválidos",
               "originalRequest": {
                 "url": {
@@ -6352,7 +6352,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "de952c9c-e1b4-4eb1-98ba-fc1cdacd07be",
+              "id": "c3274815-21e2-4697-9799-ccc5ded0a1a3",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -6401,7 +6401,7 @@
           }
         },
         {
-          "id": "45528d2c-23eb-4775-8581-97adfa95b9e4",
+          "id": "1143011f-3731-47f9-af71-4f602f71162b",
           "name": "Obtener todos los usuarios",
           "request": {
             "name": "Obtener todos los usuarios",
@@ -6435,7 +6435,7 @@
           },
           "response": [
             {
-              "id": "543988de-5ef1-48ab-b5e0-59beb680c7ba",
+              "id": "6c03cff3-c376-4583-9848-9efd8eb79846",
               "name": "Lista de usuarios obtenida exitosamente",
               "originalRequest": {
                 "url": {
@@ -6478,7 +6478,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "64077e82-0c81-4f44-b577-28692b2ee1fa",
+              "id": "1896bb9c-609d-4ebc-9097-3f25fd52d0cf",
               "name": "Solicitud inválida",
               "originalRequest": {
                 "url": {
@@ -6521,7 +6521,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0efb74d9-a630-4d01-8ff7-9f8b7ab611db",
+              "id": "dc2ece78-d8bf-4a92-bfdb-e8734d7d39f6",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -6570,7 +6570,7 @@
           }
         },
         {
-          "id": "b81dcb75-556f-4228-9ab5-62692631d4a3",
+          "id": "acfef54f-9310-4cdd-b29a-982de651ba6d",
           "name": "Seleccionar y validar ubicación geográfica del usuario",
           "request": {
             "name": "Seleccionar y validar ubicación geográfica del usuario",
@@ -6610,7 +6610,7 @@
           },
           "response": [
             {
-              "id": "0b21badb-08e1-4c9e-b042-646c7dd00b3d",
+              "id": "ae1b106a-88f9-442b-90c6-55d0a58660c7",
               "name": "Ubicación seleccionada y validada correctamente",
               "originalRequest": {
                 "url": {
@@ -6649,12 +6649,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Ubicación seleccionada y validada correctamente.\",\n  \"location\": {\n    \"countryId\": 8235,\n    \"departmentId\": 4637,\n    \"cityId\": 9645\n  }\n}",
+              "body": "{\n  \"message\": \"Ubicación seleccionada y validada correctamente.\",\n  \"location\": {\n    \"countryId\": 9481,\n    \"departmentId\": 9773,\n    \"cityId\": 497\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a04bc4e4-ab4b-493d-928f-501dd9f62654",
+              "id": "f0402101-f5d9-4128-9457-e48d1e1670d2",
               "name": "Datos inválidos o faltantes, o la ciudad no está activa",
               "originalRequest": {
                 "url": {
@@ -6698,7 +6698,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "636869e4-8b59-48cc-8c8b-3b0c01bd22b0",
+              "id": "d25f1ae2-3557-49b3-8d49-710510265fc6",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -6745,7 +6745,7 @@
       "event": []
     },
     {
-      "id": "ce4cb02b-9512-43fd-960a-66cf663a2d42",
+      "id": "f7257cd9-ac10-411b-a99b-0b5a4cd15087",
       "name": "Seed",
       "description": {
         "content": "",
@@ -6753,7 +6753,7 @@
       },
       "item": [
         {
-          "id": "8cc0a80d-f452-4759-bf38-d43f7a1c79f7",
+          "id": "e2c1c0c7-6b4e-4851-a675-b46f1b3a517a",
           "name": "Poblar base de datos desde un archivo JSON",
           "request": {
             "name": "Poblar base de datos desde un archivo JSON",
@@ -6776,15 +6776,7 @@
               }
             ],
             "method": "POST",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            },
+            "auth": null,
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -6798,7 +6790,7 @@
           },
           "response": [
             {
-              "id": "1067eb50-c8c4-4c57-b660-17685c014045",
+              "id": "f88e33f7-c7b3-4e80-aa85-da72cfac2e37",
               "name": "Base de datos poblada exitosamente",
               "originalRequest": {
                 "url": {
@@ -6812,16 +6804,6 @@
                   "query": [],
                   "variable": []
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
                 "method": "POST",
                 "body": {
                   "mode": "formdata",
@@ -6850,7 +6832,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "68a75056-ace1-4187-8476-1369052f77b3",
+              "id": "3a78c396-9a9b-42e1-9f1b-dd47667aa51f",
               "name": "Archivo inválido o formato incorrecto",
               "originalRequest": {
                 "url": {
@@ -6864,16 +6846,6 @@
                   "query": [],
                   "variable": []
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
                 "method": "POST",
                 "body": {
                   "mode": "formdata",
@@ -6908,7 +6880,7 @@
           }
         },
         {
-          "id": "c746d93b-ffe9-4c30-96a4-8911a8e3e8ee",
+          "id": "6928c708-3512-459c-abbc-17a550002561",
           "name": "Poblar base de datos desde un payload JSON directo",
           "request": {
             "name": "Poblar base de datos desde un payload JSON directo",
@@ -6931,15 +6903,7 @@
               }
             ],
             "method": "POST",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            },
+            "auth": null,
             "body": {
               "mode": "raw",
               "raw": "{}",
@@ -6952,7 +6916,7 @@
           },
           "response": [
             {
-              "id": "65a56c38-e51d-4510-a623-b2b481dab60f",
+              "id": "aea059fa-f53d-4fde-8347-d31b34b063df",
               "name": "Base de datos poblada exitosamente",
               "originalRequest": {
                 "url": {
@@ -6966,16 +6930,6 @@
                   "query": [],
                   "variable": []
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
                 "method": "POST",
                 "body": {
                   "mode": "raw",
@@ -7000,7 +6954,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "0c90d574-6616-4d07-a99e-c06a8399010b",
+              "id": "3e8fa094-f9bc-42fe-b388-7c0669c9fc5b",
               "name": "Datos inválidos",
               "originalRequest": {
                 "url": {
@@ -7014,16 +6968,6 @@
                   "query": [],
                   "variable": []
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
                 "method": "POST",
                 "body": {
                   "mode": "raw",
@@ -7057,7 +7001,7 @@
       "event": []
     },
     {
-      "id": "20e702d0-e0bb-4b37-9cce-dbbb9b86782f",
+      "id": "a30813f6-32bf-4d3c-a816-85e53ea659d8",
       "name": "Health",
       "description": {
         "content": "",
@@ -7065,7 +7009,7 @@
       },
       "item": [
         {
-          "id": "da37aaf7-c804-4a9b-b3e1-b29da6b11e94",
+          "id": "670624ad-633c-4e05-8bd8-7c3c5dcde128",
           "name": "Verificar estado de la API y servicios",
           "request": {
             "name": "Verificar estado de la API y servicios",
@@ -7094,7 +7038,7 @@
           },
           "response": [
             {
-              "id": "6fb1cc30-2e3e-4aea-9af8-d7adf4bbcf20",
+              "id": "2b0aff0a-2884-45de-bd43-95e21b55d0f6",
               "name": "API en funcionamiento",
               "originalRequest": {
                 "url": {
@@ -7129,7 +7073,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "789c5e88-ce89-445a-a0e2-802a25418b5b",
+              "id": "ec83e47b-e35c-4dc6-93c3-7879c33454b7",
               "name": "API o servicios fuera de línea",
               "originalRequest": {
                 "url": {
@@ -7173,7 +7117,7 @@
       "event": []
     },
     {
-      "id": "d799320f-c159-4bbd-bfc1-2965222e2950",
+      "id": "37f08693-3b75-4fc8-9609-859207905a49",
       "name": "Departments",
       "description": {
         "content": "",
@@ -7181,7 +7125,7 @@
       },
       "item": [
         {
-          "id": "48fdec3d-1cfa-4a1f-91a6-d54b16087380",
+          "id": "04af7367-853c-4199-ae66-c133b09f7be0",
           "name": "Obtener departamentos por país",
           "request": {
             "name": "Obtener departamentos por país",
@@ -7199,7 +7143,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "countryId",
                   "description": "(Required) ID del país"
                 }
@@ -7216,7 +7160,7 @@
           },
           "response": [
             {
-              "id": "e0cc33f0-2fed-424b-92e7-7133369be9e2",
+              "id": "02dd71d8-0e2a-4588-8816-7b3b0c132864",
               "name": "Lista de departamentos obtenida exitosamente",
               "originalRequest": {
                 "url": {
@@ -7232,7 +7176,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "countryId",
                       "description": "(Required) ID del país"
                     }
@@ -7260,7 +7204,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e45f6cd4-cbee-4e67-a0da-f79347a8d6d4",
+              "id": "f19516c8-4d7f-4f02-b1bd-b975524f3747",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -7276,7 +7220,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "countryId",
                       "description": "(Required) ID del país"
                     }
@@ -7313,7 +7257,7 @@
       "event": []
     },
     {
-      "id": "4a9d16ec-6190-4a93-819a-8724b25cddaf",
+      "id": "d30eda2a-76e5-4ac6-8c35-31f053889f79",
       "name": "Countries",
       "description": {
         "content": "",
@@ -7321,7 +7265,7 @@
       },
       "item": [
         {
-          "id": "7e0221a9-3cb2-49bf-b5a2-c54433d1a37c",
+          "id": "6f39cff8-7399-4098-bdf9-013d1174d89f",
           "name": "Obtener todos los países",
           "request": {
             "name": "Obtener todos los países",
@@ -7347,7 +7291,7 @@
           },
           "response": [
             {
-              "id": "ffd71e72-2ad2-45c4-8042-7ffb7621b6b8",
+              "id": "bcd6b03f-86aa-4a37-95fa-00430ae22a64",
               "name": "Lista de países obtenida exitosamente",
               "originalRequest": {
                 "url": {
@@ -7382,7 +7326,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "16bf6303-2bca-4102-a5f3-54d1a2638f43",
+              "id": "d6d150bb-ce37-4ae9-a2df-1ca71f2ba147",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -7426,7 +7370,7 @@
       "event": []
     },
     {
-      "id": "0191917e-3cb0-4cec-bab3-95d8d6a5b5ee",
+      "id": "c7544c16-cf50-49c6-ae82-79426993fa09",
       "name": "Cities",
       "description": {
         "content": "",
@@ -7434,7 +7378,7 @@
       },
       "item": [
         {
-          "id": "db663af0-ca12-46d5-aa06-cd69a5bc3b80",
+          "id": "fa1ffa93-4092-4be6-8fde-222c7272d01e",
           "name": "Obtener ciudades activas por departamento (solo con cine activo)",
           "request": {
             "name": "Obtener ciudades activas por departamento (solo con cine activo)",
@@ -7452,7 +7396,7 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "5108",
+                  "value": "6227",
                   "key": "departmentId",
                   "description": "(Required) ID del departamento"
                 }
@@ -7469,7 +7413,7 @@
           },
           "response": [
             {
-              "id": "5d6deeae-598a-451a-bc37-0340cf4681b5",
+              "id": "84463900-18a1-49c7-b7ae-a9a7f3f3ff86",
               "name": "Lista de ciudades obtenida exitosamente",
               "originalRequest": {
                 "url": {
@@ -7485,7 +7429,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "departmentId",
                       "description": "(Required) ID del departamento"
                     }
@@ -7513,7 +7457,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7dff409c-9607-42bd-aa87-7a618f1fde36",
+              "id": "4d2dbacc-25aa-4d42-8c62-854785d720d8",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -7529,7 +7473,7 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "5108",
+                      "value": "6227",
                       "key": "departmentId",
                       "description": "(Required) ID del departamento"
                     }
@@ -7566,7 +7510,7 @@
       "event": []
     },
     {
-      "id": "8b7786f8-9627-4a6c-8ad4-9fbb3f3a5289",
+      "id": "3d633cf8-b8df-4f27-ad51-888896442d3d",
       "name": "Auth",
       "description": {
         "content": "",
@@ -7574,7 +7518,7 @@
       },
       "item": [
         {
-          "id": "776df044-24bc-4a87-8679-ba67d8069de8",
+          "id": "220f6d0b-d906-426c-bcda-d84fa23b1336",
           "name": "Autenticar usuario y generar token",
           "request": {
             "name": "Autenticar usuario y generar token",
@@ -7614,7 +7558,7 @@
           },
           "response": [
             {
-              "id": "6560118c-f6b6-4c83-b0cb-fb0f0ad3fa8b",
+              "id": "86ccc059-f26f-459b-9444-5147b5c9dd55",
               "name": "Autenticación exitosa",
               "originalRequest": {
                 "url": {
@@ -7658,7 +7602,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "dc941aa0-95fe-4827-a945-cfa007d034c6",
+              "id": "ae857621-c2ff-4d42-9ed2-2ac54ffe8ec8",
               "name": "Datos inválidos o credenciales incorrectas",
               "originalRequest": {
                 "url": {
@@ -7702,7 +7646,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "346b633d-4f14-40e6-a1df-cd2a120d8310",
+              "id": "1d900bf7-14ca-407c-912b-b5745e31309a",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -7746,7 +7690,7 @@
           }
         },
         {
-          "id": "3fa356f0-73fd-4eb2-b561-173e466a0d0d",
+          "id": "e35d7da8-3abe-4561-8694-f5d10696bd9d",
           "name": "Registrar un nuevo usuario y membresía digital",
           "request": {
             "name": "Registrar un nuevo usuario y membresía digital",
@@ -7786,7 +7730,7 @@
           },
           "response": [
             {
-              "id": "69ccb86d-fb33-444a-b473-0cf1161cb3a9",
+              "id": "51c0d61b-fc56-49eb-9480-795833051b3a",
               "name": "Registro exitoso",
               "originalRequest": {
                 "url": {
@@ -7830,7 +7774,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ab3f2d47-d6b6-470b-80b5-3d2d3abaf1d1",
+              "id": "d2c5b291-33f7-4586-bd9a-8c5fd0308397",
               "name": "Error de validación o datos incorrectos",
               "originalRequest": {
                 "url": {
@@ -7874,7 +7818,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "77a493e9-da63-482e-8556-d6dc29b5eb00",
+              "id": "e6fb7a83-fa33-498b-a9e5-1f5a4d2deb06",
               "name": "Verificación capthca fallido",
               "originalRequest": {
                 "url": {
@@ -7918,7 +7862,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ad78da24-ad46-4ca9-a295-a625d8fb41ec",
+              "id": "7411fc3f-c9b0-46da-94b6-98537a35c764",
               "name": "El correo electrónico ya se encuentra registrado",
               "originalRequest": {
                 "url": {
@@ -7962,7 +7906,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2d696bd8-3eae-400c-9038-1f9458a41705",
+              "id": "4f74e89d-3d3a-46e3-9468-6f3ccdefaae4",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {
@@ -8006,7 +7950,7 @@
           }
         },
         {
-          "id": "69a0cee8-82f4-4a82-a87d-0e3dff4f46ae",
+          "id": "8e7ab3cf-267b-46f8-ad70-925a25a9fd3c",
           "name": "Verificar correo y activar cuenta",
           "request": {
             "name": "Verificar correo y activar cuenta",
@@ -8046,7 +7990,7 @@
           },
           "response": [
             {
-              "id": "4777897e-9ab0-4a7a-bc28-ff581905a15a",
+              "id": "9854793c-e8dc-49be-aa58-5493176c6550",
               "name": "Cuenta activada correctamente",
               "originalRequest": {
                 "url": {
@@ -8090,7 +8034,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7a2eddfa-a3b9-4a12-9fa4-630de9e2c52a",
+              "id": "3e2baef6-c7b3-403c-a39e-ebfb176d6407",
               "name": "Token inválido, expirado o correo no registrado",
               "originalRequest": {
                 "url": {
@@ -8134,7 +8078,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "381070e5-3a48-4e78-89da-fad83c3a2bed",
+              "id": "f7d2cdd7-1665-4386-88de-f8c00cf97ba8",
               "name": "Error interno del servidor",
               "originalRequest": {
                 "url": {

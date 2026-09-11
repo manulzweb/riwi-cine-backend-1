@@ -863,11 +863,6 @@
         "tags": [
           "Seed"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -899,11 +894,6 @@
         "summary": "Poblar base de datos desde un payload JSON directo",
         "tags": [
           "Seed"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
         ],
         "requestBody": {
           "required": true,
