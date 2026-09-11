@@ -1,0 +1,3915 @@
+{
+  "info": {
+    "_postman_id": "riwi-cine-backend-api-v1-57",
+    "name": "MultiCine Riwi Backend API (v1)",
+    "description": "Colección completa y oficial con los 57 endpoints del backend MultiCine Riwi. Incluye contratos reales con la envoltura { success: true, data: ... }, parámetros, encabezados, cuerpos de solicitud y ejemplos de respuesta (Saved Examples) listos para Postman Mock Server o pruebas locales.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "functionId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "reservationId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Autenticación (Auth)",
+      "description": "Endpoints para inicio de sesión, registro, activación de cuenta, renovación de tokens y restablecimiento de contraseña.",
+      "item": [
+        {
+          "name": "Login de Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@multicine.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Autentica a un usuario y genera access token y refresh token."
+          },
+          "response": [
+            {
+              "name": "Login de Usuario - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@multicine.com\",\n  \"password\": \"Password123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Authentication successful\",\n  \"data\": {\n    \"userId\": 1,\n    \"profile\": {\n      \"id\": 1,\n      \"firstName\": \"Carlos\",\n      \"lastName\": \"Pérez\",\n      \"documentType\": \"CC\",\n      \"documentNumber\": \"1020304050\",\n      \"phone\": \"3001234567\"\n    },\n    \"membership\": {\n      \"id\": 1,\n      \"code\": \"MC-987654\",\n      \"pointsBalance\": 150\n    },\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo_access_token\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo_refresh_token\",\n    \"tokenType\": \"Bearer\"\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    var data = json.data || json;",
+                  "    if (data.accessToken) pm.collectionVariables.set('accessToken', data.accessToken);",
+                  "    if (data.refreshToken) pm.collectionVariables.set('refreshToken', data.refreshToken);",
+                  "    if (data.userId) pm.collectionVariables.set('userId', String(data.userId));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro de Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nuevo.usuario@multicine.com\",\n  \"password\": \"Password123!\",\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"1098765432\",\n  \"phone\": \"3109876543\",\n  \"recaptchaToken\": \"valid_mock_captcha_token\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registra un nuevo usuario con perfil, billetera y membresía inicial."
+          },
+          "response": [
+            {
+              "name": "Registro de Usuario - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"nuevo.usuario@multicine.com\",\n  \"password\": \"Password123!\",\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"1098765432\",\n  \"phone\": \"3109876543\",\n  \"recaptchaToken\": \"valid_mock_captcha_token\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"userId\": 2\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verificar Correo Electrónico (Activar Cuenta)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify-email"
+              ]
+            },
+            "description": "Activa la cuenta del usuario validando el token enviado por correo."
+          },
+          "response": [
+            {
+              "name": "Verificar Correo Electrónico (Activar Cuenta) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"token\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/verify-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "verify-email"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Cuenta Activada correctamente\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refrescar Token de Acceso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Renueva el JWT de acceso utilizando un refresh token válido."
+          },
+          "response": [
+            {
+              "name": "Refrescar Token de Acceso - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/refresh",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Token refreshed successfully\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.new_access_token\",\n    \"tokenType\": \"Bearer\"\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    var data = json.data || json;",
+                  "    if (data.accessToken) pm.collectionVariables.set('accessToken', data.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cerrar Sesión (Logout)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Revoca los tokens y cierra la sesión del usuario."
+          },
+          "response": [
+            {
+              "name": "Cerrar Sesión (Logout) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Logged out successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Solicitar Recuperación de Contraseña",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@multicine.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "description": "Envía un enlace con token temporal al correo para restablecer la contraseña."
+          },
+          "response": [
+            {
+              "name": "Solicitar Recuperación de Contraseña - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@multicine.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/forgot-password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "forgot-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Password reset email sent if account exists\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Restablecer Contraseña (Reset Password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset-token-uuid-12345\",\n  \"newPassword\": \"NewPassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            },
+            "description": "Actualiza la contraseña del usuario utilizando el token recibido."
+          },
+          "response": [
+            {
+              "name": "Restablecer Contraseña (Reset Password) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"token\": \"reset-token-uuid-12345\",\n  \"newPassword\": \"NewPassword123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/reset-password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Password has been reset successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02. Perfil de Usuario (Profile)",
+      "description": "Consulta y actualización de perfil, datos de contacto y preferencias.",
+      "item": [
+        {
+          "name": "Obtener Perfil Completo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profile"
+              ]
+            },
+            "description": "Obtiene los datos personales, membresía QR y billetera del usuario autenticado."
+          },
+          "response": [
+            {
+              "name": "Obtener Perfil Completo - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"email\": \"usuario@multicine.com\",\n    \"firstName\": \"Carlos\",\n    \"lastName\": \"Pérez\",\n    \"documentType\": \"CC\",\n    \"documentNumber\": \"1020304050\",\n    \"phone\": \"3001234567\",\n    \"cityId\": 1,\n    \"cinemaId\": 1,\n    \"preferredLanguage\": \"es\",\n    \"membership\": {\n      \"id\": 1,\n      \"code\": \"MC-987654\",\n      \"pointsBalance\": 150,\n      \"qrCodeUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...\",\n      \"level\": {\n        \"id\": 1,\n        \"name\": \"Clásica\",\n        \"discountPercentage\": 5\n      }\n    },\n    \"wallet\": {\n      \"id\": 1,\n      \"balance\": 25000\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar Perfil de Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"3007654321\",\n  \"cityId\": 2,\n  \"cinemaId\": 3,\n  \"preferredLanguage\": \"es\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profile"
+              ]
+            },
+            "description": "Modifica el teléfono, ciudad y cine preferido del usuario."
+          },
+          "response": [
+            {
+              "name": "Actualizar Perfil de Usuario - 200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"phone\": \"3007654321\",\n  \"cityId\": 2,\n  \"cinemaId\": 3,\n  \"preferredLanguage\": \"es\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Perfil actualizado exitosamente.\",\n  \"data\": {\n    \"id\": 1,\n    \"phone\": \"3007654321\",\n    \"cityId\": 2,\n    \"cinemaId\": 3,\n    \"preferredLanguage\": \"es\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03. Membresía & Beneficios (Membership)",
+      "description": "Gestión de la membresía digital, consulta de nivel, código QR y beneficios.",
+      "item": [
+        {
+          "name": "Detalle de Membresía Digital con QR",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "membership"
+              ]
+            },
+            "description": "Obtiene el código de membresía, puntos y QR oficial generado."
+          },
+          "response": [
+            {
+              "name": "Detalle de Membresía Digital con QR - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/membership",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membership"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"userId\": 1,\n    \"code\": \"MC-987654\",\n    \"status\": \"Activa\",\n    \"pointsBalance\": 150,\n    \"qrCodeUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...\",\n    \"level\": {\n      \"id\": 1,\n      \"name\": \"Clásica\",\n      \"discountPercentage\": 5,\n      \"pointsMultiplier\": 1\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Beneficios y Descuentos del Nivel",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/membership/benefits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "membership",
+                "benefits"
+              ]
+            },
+            "description": "Calcula los beneficios vigentes según el nivel de fidelidad."
+          },
+          "response": [
+            {
+              "name": "Beneficios y Descuentos del Nivel - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/membership/benefits",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membership",
+                    "benefits"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"levelName\": \"Clásica\",\n    \"discountPercentage\": 5,\n    \"benefits\": [\n      \"5% de descuento en boletería y confitería\",\n      \"Acumulación de 1 punto por cada $1.000 gastados\",\n      \"Fila preferencial en taquillas\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Crear Membresía Digital Manualmente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/membership/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "membership",
+                "create"
+              ]
+            },
+            "description": "Genera manualmente una tarjeta de membresía digital para un usuario."
+          },
+          "response": [
+            {
+              "name": "Crear Membresía Digital Manualmente - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/membership/create",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "membership",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Membresía digital creada exitosamente\",\n  \"data\": {\n    \"id\": 2,\n    \"userId\": 2,\n    \"code\": \"MC-102938\",\n    \"status\": \"Activa\",\n    \"pointsBalance\": 0,\n    \"qrCodeUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04. Películas (Movies)",
+      "description": "Catálogo de cartelera, próximos estrenos, filtros avanzados y recomendaciones.",
+      "item": [
+        {
+          "name": "Listar Películas Activas en Cartelera",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies"
+              ]
+            },
+            "description": "Lista todas las películas disponibles en cartelera."
+          },
+          "response": [
+            {
+              "name": "Listar Películas Activas en Cartelera - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Dune: Parte 2\",\n      \"synopsis\": \"Paul Atreides se une a Chani y a los Fremen mientras busca venganza.\",\n      \"duration\": 166,\n      \"genre\": \"Ciencia Ficción\",\n      \"rating\": \"PG-13\",\n      \"imageUrl\": \"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800\",\n      \"bannerUrl\": \"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200\",\n      \"trailerUrl\": \"https://www.youtube.com/watch?v=Way9Dexny3w\",\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Próximos Estrenos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/upcoming",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "upcoming"
+              ]
+            },
+            "description": "Lista las películas programadas para futuros lanzamientos."
+          },
+          "response": [
+            {
+              "name": "Próximos Estrenos - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/upcoming",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "upcoming"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 5,\n      \"title\": \"Deadpool & Wolverine\",\n      \"synopsis\": \"Wade Wilson recibe una misión de la TVA...\",\n      \"duration\": 128,\n      \"genre\": \"Acción / Comedia\",\n      \"rating\": \"R\",\n      \"releaseDate\": \"2026-11-20\",\n      \"imageUrl\": \"https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800\",\n      \"bannerUrl\": \"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200\",\n      \"trailerUrl\": \"https://www.youtube.com/watch?v=73_1biulkYk\",\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Detalle de Próximo Estreno por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/upcoming/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "upcoming",
+                "5"
+              ]
+            },
+            "description": "Obtiene información detallada de una película de estreno futuro."
+          },
+          "response": [
+            {
+              "name": "Detalle de Próximo Estreno por ID - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/upcoming/5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "upcoming",
+                    "5"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 5,\n    \"title\": \"Deadpool & Wolverine\",\n    \"synopsis\": \"Wade Wilson recibe una misión de la TVA...\",\n    \"duration\": 128,\n    \"genre\": \"Acción / Comedia\",\n    \"rating\": \"R\",\n    \"releaseDate\": \"2026-11-20\",\n    \"imageUrl\": \"https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800\",\n    \"bannerUrl\": \"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200\",\n    \"trailerUrl\": \"https://www.youtube.com/watch?v=73_1biulkYk\",\n    \"isActive\": true\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cartelera Semanal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/weekly",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "weekly"
+              ]
+            },
+            "description": "Películas con funciones programadas durante la semana actual."
+          },
+          "response": [
+            {
+              "name": "Cartelera Semanal - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/weekly",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "weekly"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Dune: Parte 2\",\n      \"duration\": 166,\n      \"genre\": \"Ciencia Ficción\",\n      \"rating\": \"PG-13\",\n      \"imageUrl\": \"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cartelera del Día (Hoy)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/today",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "today"
+              ]
+            },
+            "description": "Películas que cuentan con funciones programadas el día de hoy."
+          },
+          "response": [
+            {
+              "name": "Cartelera del Día (Hoy) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/today",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "today"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Dune: Parte 2\",\n      \"duration\": 166,\n      \"genre\": \"Ciencia Ficción\",\n      \"rating\": \"PG-13\",\n      \"imageUrl\": \"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Filtrar Películas (Búsqueda Avanzada)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/filter?genre=Ciencia%20Ficci%C3%B3n&rating=PG-13",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "filter"
+              ],
+              "query": [
+                {
+                  "key": "genre",
+                  "value": "Ciencia Ficción",
+                  "description": "Género cinematográfico"
+                },
+                {
+                  "key": "rating",
+                  "value": "PG-13",
+                  "description": "Clasificación de edad"
+                }
+              ]
+            },
+            "description": "Busca películas filtrando por género, formato, clasificación o fecha."
+          },
+          "response": [
+            {
+              "name": "Filtrar Películas (Búsqueda Avanzada) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/filter?genre=Ciencia%20Ficci%C3%B3n&rating=PG-13",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "filter"
+                  ],
+                  "query": [
+                    {
+                      "key": "genre",
+                      "value": "Ciencia Ficción",
+                      "description": "Género cinematográfico"
+                    },
+                    {
+                      "key": "rating",
+                      "value": "PG-13",
+                      "description": "Clasificación de edad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Dune: Parte 2\",\n      \"genre\": \"Ciencia Ficción\",\n      \"rating\": \"PG-13\",\n      \"duration\": 166,\n      \"imageUrl\": \"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Detalle de Película por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "1"
+              ]
+            },
+            "description": "Obtiene la sinopsis, elenco, director y metadatos de una película."
+          },
+          "response": [
+            {
+              "name": "Detalle de Película por ID - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Dune: Parte 2\",\n    \"synopsis\": \"Paul Atreides se une a Chani y a los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia.\",\n    \"duration\": 166,\n    \"director\": \"Denis Villeneuve\",\n    \"cast\": \"Timothée Chalamet, Zendaya, Rebecca Ferguson, Javier Bardem\",\n    \"genre\": \"Ciencia Ficción / Aventura\",\n    \"rating\": \"PG-13\",\n    \"releaseDate\": \"2026-03-01\",\n    \"imageUrl\": \"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800\",\n    \"bannerUrl\": \"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200\",\n    \"trailerUrl\": \"https://www.youtube.com/watch?v=Way9Dexny3w\",\n    \"isActive\": true\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Funciones de una Película (Ruta Movies)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/1/functions?cityId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "1",
+                "functions"
+              ],
+              "query": [
+                {
+                  "key": "cityId",
+                  "value": "1",
+                  "description": "ID de la ciudad"
+                }
+              ]
+            },
+            "description": "Horarios y salas disponibles para una película específica."
+          },
+          "response": [
+            {
+              "name": "Funciones de una Película (Ruta Movies) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/1/functions?cityId=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "1",
+                    "functions"
+                  ],
+                  "query": [
+                    {
+                      "key": "cityId",
+                      "value": "1",
+                      "description": "ID de la ciudad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"movieId\": 1,\n      \"cinemaId\": 1,\n      \"room\": \"Sala 1\",\n      \"format\": \"2D\",\n      \"startTime\": \"2026-09-10T14:30:00.000Z\",\n      \"price\": 18000\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Recomendaciones de Películas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/1/recommendations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "1",
+                "recommendations"
+              ]
+            },
+            "description": "Películas sugeridas basadas en el género y atributos de la película consultada."
+          },
+          "response": [
+            {
+              "name": "Recomendaciones de Películas - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/1/recommendations",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "movies",
+                    "1",
+                    "recommendations"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 2,\n      \"title\": \"Spider-Man: Beyond the Spider-Verse\",\n      \"genre\": \"Animación / Acción\",\n      \"imageUrl\": \"https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05. Funciones & Horarios (Functions)",
+      "description": "Gestión de horarios, salas, formatos, precios y mapa de asientos.",
+      "item": [
+        {
+          "name": "Funciones por Película (con Filtros)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/functions/movie/1?format=2D&date=2026-09-10&cinemaId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "functions",
+                "movie",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "2D",
+                  "description": "Formato de proyección (2D, 3D, IMAX)"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-09-10",
+                  "description": "Fecha YYYY-MM-DD"
+                },
+                {
+                  "key": "cinemaId",
+                  "value": "1",
+                  "description": "ID de cine"
+                }
+              ]
+            },
+            "description": "Consulta de funciones filtrando por fecha, formato y cine."
+          },
+          "response": [
+            {
+              "name": "Funciones por Película (con Filtros) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/functions/movie/1?format=2D&date=2026-09-10&cinemaId=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "functions",
+                    "movie",
+                    "1"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "2D",
+                      "description": "Formato de proyección (2D, 3D, IMAX)"
+                    },
+                    {
+                      "key": "date",
+                      "value": "2026-09-10",
+                      "description": "Fecha YYYY-MM-DD"
+                    },
+                    {
+                      "key": "cinemaId",
+                      "value": "1",
+                      "description": "ID de cine"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"movieId\": 1,\n      \"cinemaId\": 1,\n      \"room\": \"Sala 1\",\n      \"format\": \"2D\",\n      \"startTime\": \"2026-09-10T14:30:00.000Z\",\n      \"price\": 18000\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Precios y Promociones de Función",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/functions/{{functionId}}/prices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "functions",
+                "{{functionId}}",
+                "prices"
+              ]
+            },
+            "description": "Desglose de precios base, recargos por tipo de silla y promociones."
+          },
+          "response": [
+            {
+              "name": "Precios y Promociones de Función - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/functions/{{functionId}}/prices",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "functions",
+                    "{{functionId}}",
+                    "prices"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"functionId\": 1,\n    \"basePrice\": 18000,\n    \"seatTypes\": [\n      {\n        \"type\": \"General\",\n        \"surcharge\": 0,\n        \"finalPrice\": 18000\n      },\n      {\n        \"type\": \"Preferencial\",\n        \"surcharge\": 4000,\n        \"finalPrice\": 22000\n      },\n      {\n        \"type\": \"VIP\",\n        \"surcharge\": 17000,\n        \"finalPrice\": 35000\n      }\n    ],\n    \"promotions\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Mapa Interactivo de Sillas de Función",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/functions/{{functionId}}/seats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "functions",
+                "{{functionId}}",
+                "seats"
+              ]
+            },
+            "description": "Disponibilidad en tiempo real de cada silla de la sala (AVAILABLE, LOCKED, SOLD)."
+          },
+          "response": [
+            {
+              "name": "Mapa Interactivo de Sillas de Función - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/functions/{{functionId}}/seats",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "functions",
+                    "{{functionId}}",
+                    "seats"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"functionId\": 1,\n    \"room\": \"Sala 1\",\n    \"totalSeats\": 80,\n    \"availableSeats\": 78,\n    \"seats\": [\n      {\n        \"id\": 1,\n        \"row\": \"A\",\n        \"number\": 1,\n        \"type\": \"General\",\n        \"status\": \"AVAILABLE\",\n        \"price\": 18000\n      },\n      {\n        \"id\": 2,\n        \"row\": \"A\",\n        \"number\": 2,\n        \"type\": \"General\",\n        \"status\": \"LOCKED\",\n        \"price\": 18000\n      }\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Detalle de Función por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/functions/{{functionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "functions",
+                "{{functionId}}"
+              ]
+            },
+            "description": "Información general de sala, película y horario de la función."
+          },
+          "response": [
+            {
+              "name": "Detalle de Función por ID - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/functions/{{functionId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "functions",
+                    "{{functionId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"movieId\": 1,\n    \"cinemaId\": 1,\n    \"room\": \"Sala 1\",\n    \"format\": \"2D\",\n    \"startTime\": \"2026-09-10T14:30:00.000Z\",\n    \"price\": 18000,\n    \"movie\": {\n      \"id\": 1,\n      \"title\": \"Dune: Parte 2\",\n      \"duration\": 166\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06. Selección & Reserva de Sillas (Reservations)",
+      "description": "Bloqueo temporal atómico de asientos por 10 minutos (RN-039) y liberación voluntaria.",
+      "item": [
+        {
+          "name": "Bloquear Sillas (Lock Seats - 10 Min)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"functionId\": 1,\n  \"seatIds\": [\n    4,\n    5\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/lock-seats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "lock-seats"
+              ]
+            },
+            "description": "Bloquea sillas temporalmente con transacción atómica pesimista por 10 minutos."
+          },
+          "response": [
+            {
+              "name": "Bloquear Sillas (Lock Seats - 10 Min) - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"functionId\": 1,\n  \"seatIds\": [\n    4,\n    5\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/reservations/lock-seats",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reservations",
+                    "lock-seats"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"reservationId\": 1,\n    \"functionId\": 1,\n    \"userId\": 1,\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"totalSeats\": 2,\n    \"subtotal\": 44000,\n    \"seats\": [\n      {\n        \"seatId\": 4,\n        \"row\": \"B\",\n        \"number\": 4,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      },\n      {\n        \"seatId\": 5,\n        \"row\": \"B\",\n        \"number\": 5,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      }\n    ]\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    var data = json.data || json;",
+                  "    if (data.reservationId) pm.collectionVariables.set('reservationId', String(data.reservationId));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Liberar Sillas Voluntariamente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/release-seats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "release-seats"
+              ]
+            },
+            "description": "Cancela el bloqueo temporal de sillas liberándolas de inmediato."
+          },
+          "response": [
+            {
+              "name": "Liberar Sillas Voluntariamente - 200 OK",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reservationId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/reservations/release-seats",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reservations",
+                    "release-seats"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Las sillas fueron liberadas exitosamente.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Resumen de Reserva Activa (Query Param)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/summary?reservationId=%7B%7BreservationId%7D%7D",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "reservationId",
+                  "value": "{{reservationId}}",
+                  "description": "ID de reserva activa"
+                }
+              ]
+            },
+            "description": "Consulta el resumen de la reserva usando parámetro de consulta."
+          },
+          "response": [
+            {
+              "name": "Resumen de Reserva Activa (Query Param) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/reservations/summary?reservationId=%7B%7BreservationId%7D%7D",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reservations",
+                    "summary"
+                  ],
+                  "query": [
+                    {
+                      "key": "reservationId",
+                      "value": "{{reservationId}}",
+                      "description": "ID de reserva activa"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"reservationId\": 1,\n    \"functionId\": 1,\n    \"userId\": 1,\n    \"movieTitle\": \"Dune: Parte 2\",\n    \"format\": \"2D\",\n    \"room\": \"Sala 1\",\n    \"startTime\": \"2026-09-10T14:30:00.000Z\",\n    \"status\": \"ACTIVE\",\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"totalSeats\": 2,\n    \"subtotal\": 44000,\n    \"seats\": [\n      {\n        \"seatId\": 4,\n        \"row\": \"B\",\n        \"number\": 4,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      },\n      {\n        \"seatId\": 5,\n        \"row\": \"B\",\n        \"number\": 5,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      }\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Resumen de Reserva Activa (Path Param)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservationId}}",
+                "summary"
+              ]
+            },
+            "description": "Consulta el resumen de la reserva mediante parámetro en ruta."
+          },
+          "response": [
+            {
+              "name": "Resumen de Reserva Activa (Path Param) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/reservations/{{reservationId}}/summary",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reservations",
+                    "{{reservationId}}",
+                    "summary"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"reservationId\": 1,\n    \"functionId\": 1,\n    \"userId\": 1,\n    \"movieTitle\": \"Dune: Parte 2\",\n    \"format\": \"2D\",\n    \"room\": \"Sala 1\",\n    \"startTime\": \"2026-09-10T14:30:00.000Z\",\n    \"status\": \"ACTIVE\",\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"totalSeats\": 2,\n    \"subtotal\": 44000,\n    \"seats\": [\n      {\n        \"seatId\": 4,\n        \"row\": \"B\",\n        \"number\": 4,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      },\n      {\n        \"seatId\": 5,\n        \"row\": \"B\",\n        \"number\": 5,\n        \"type\": \"Preferencial\",\n        \"price\": 22000\n      }\n    ]\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07. Carrito de Compras (Cart - HU-011)",
+      "description": "Flujo completo de carrito activo, aplicación de bonos, membresía y confitería asociada.",
+      "item": [
+        {
+          "name": "Crear Carrito con Sillas Seleccionadas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"functionId\": 1,\n  \"seatIds\": [\n    4,\n    5\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            },
+            "description": "Crea un carrito activo bloqueando las sillas en una sola operación (RN-044)."
+          },
+          "response": [
+            {
+              "name": "Crear Carrito con Sillas Seleccionadas - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"functionId\": 1,\n  \"seatIds\": [\n    4,\n    5\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"cartId\": 1,\n    \"status\": \"ACTIVE\",\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"tickets\": [\n      {\n        \"ticketId\": 1,\n        \"reservationId\": 1,\n        \"movieTitle\": \"Dune: Parte 2\",\n        \"functionDate\": \"2026-09-10\",\n        \"functionTime\": \"14:30\",\n        \"roomName\": \"Sala 1\",\n        \"format\": \"2D\",\n        \"quantity\": 2,\n        \"seatNumbers\": [\n          \"B4\",\n          \"B5\"\n        ],\n        \"unitPrice\": 22000,\n        \"discountAmount\": 0,\n        \"total\": 44000\n      }\n    ],\n    \"snacks\": [],\n    \"summary\": {\n      \"subtotal\": 44000,\n      \"membershipDiscountPercentage\": 5,\n      \"membershipDiscount\": 2200,\n      \"promotionsDiscount\": 0,\n      \"giftcardApplied\": 0,\n      \"taxes\": 7942,\n      \"taxRate\": 0.19,\n      \"total\": 49742\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Obtener Detalle del Carrito Activo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            },
+            "description": "Consulta el estado, entradas, confitería y liquidación impositiva del carrito activo."
+          },
+          "response": [
+            {
+              "name": "Obtener Detalle del Carrito Activo - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"cartId\": 1,\n    \"status\": \"ACTIVE\",\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"tickets\": [\n      {\n        \"ticketId\": 1,\n        \"reservationId\": 1,\n        \"movieTitle\": \"Dune: Parte 2\",\n        \"functionDate\": \"2026-09-10\",\n        \"functionTime\": \"14:30\",\n        \"roomName\": \"Sala 1\",\n        \"format\": \"2D\",\n        \"quantity\": 2,\n        \"seatNumbers\": [\n          \"B4\",\n          \"B5\"\n        ],\n        \"unitPrice\": 22000,\n        \"discountAmount\": 0,\n        \"total\": 44000\n      }\n    ],\n    \"snacks\": [\n      {\n        \"itemId\": 1,\n        \"snackId\": 1,\n        \"name\": \"Combo Mega Familiar\",\n        \"quantity\": 1,\n        \"unitPrice\": 31500,\n        \"total\": 31500\n      }\n    ],\n    \"summary\": {\n      \"subtotal\": 75500,\n      \"membershipDiscountPercentage\": 5,\n      \"membershipDiscount\": 3775,\n      \"promotionsDiscount\": 3500,\n      \"giftcardApplied\": 0,\n      \"taxes\": 13627,\n      \"taxRate\": 0.19,\n      \"total\": 85352\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar Carrito (Confitería / Entradas)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"snacks\": [\n    {\n      \"snackId\": 1,\n      \"quantity\": 2\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            },
+            "description": "Modifica ítems de confitería o remueve entradas del carrito."
+          },
+          "response": [
+            {
+              "name": "Actualizar Carrito (Confitería / Entradas) - 200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"snacks\": [\n    {\n      \"snackId\": 1,\n      \"quantity\": 2\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"cartId\": 1,\n    \"status\": \"ACTIVE\",\n    \"expiresAt\": \"2026-09-10T02:40:00.000Z\",\n    \"tickets\": [],\n    \"snacks\": [],\n    \"summary\": {\n      \"subtotal\": 63000,\n      \"membershipDiscountPercentage\": 5,\n      \"membershipDiscount\": 3150,\n      \"promotionsDiscount\": 7000,\n      \"giftcardApplied\": 0,\n      \"taxes\": 11371,\n      \"taxRate\": 0.19,\n      \"total\": 71221\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancelar Carrito Activo (Liberar Sillas)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            },
+            "description": "Cancela el carrito y libera inmediatamente las sillas asociadas (RN-045)."
+          },
+          "response": [
+            {
+              "name": "Cancelar Carrito Activo (Liberar Sillas) - 200 OK",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"cartId\": 1\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Aplicar Descuento de Membresía al Carrito",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "apply-membership"
+              ]
+            },
+            "description": "Calcula y aplica el porcentaje de descuento del nivel de fidelidad (RN-047)."
+          },
+          "response": [
+            {
+              "name": "Aplicar Descuento de Membresía al Carrito - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/apply-membership",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "apply-membership"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"membershipLevel\": \"Clásica\",\n    \"discountPercentage\": 5,\n    \"discountAmount\": 2200,\n    \"newTotal\": 47542\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Aplicar Bonos de Billetera (Giftcard)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 10000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-giftcard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "apply-giftcard"
+              ]
+            },
+            "description": "Descuenta saldo de la BonusWallet con validación atómica pesimista."
+          },
+          "response": [
+            {
+              "name": "Aplicar Bonos de Billetera (Giftcard) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/apply-giftcard",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "apply-giftcard"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"appliedAmount\": 10000,\n    \"walletBalance\": 15000\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Agregar Snack al Carrito (vía /cart/snacks)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"snackId\": 1,\n  \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/snacks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "snacks"
+              ]
+            },
+            "description": "Añade un producto de confitería al carrito activo."
+          },
+          "response": [
+            {
+              "name": "Agregar Snack al Carrito (vía /cart/snacks) - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"snackId\": 1,\n  \"quantity\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/snacks",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "snacks"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Producto agregado al carrito con éxito.\",\n  \"data\": {\n    \"id\": 1,\n    \"cartId\": 1,\n    \"snackId\": 1,\n    \"quantity\": 1,\n    \"unitPrice\": 31500,\n    \"totalPrice\": 31500\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Consultar Snacks en el Carrito (vía /cart/snacks)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/snacks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "snacks"
+              ]
+            },
+            "description": "Lista los productos de confitería agregados al carrito."
+          },
+          "response": [
+            {
+              "name": "Consultar Snacks en el Carrito (vía /cart/snacks) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/snacks",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "snacks"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"snackId\": 1,\n        \"name\": \"Combo Mega Familiar\",\n        \"quantity\": 1,\n        \"unitPrice\": 31500,\n        \"total\": 31500\n      }\n    ],\n    \"total\": 31500\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar Cantidad de Snack (vía /cart/snacks/:cartItemId)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/snacks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "snacks",
+                "1"
+              ]
+            },
+            "description": "Actualiza la cantidad de un ítem de confitería validando inventario."
+          },
+          "response": [
+            {
+              "name": "Actualizar Cantidad de Snack (vía /cart/snacks/:cartItemId) - 200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/snacks/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "snacks",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Ítem de carrito actualizado con éxito.\",\n  \"data\": {\n    \"id\": 1,\n    \"quantity\": 2,\n    \"totalPrice\": 63000\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Eliminar Snack del Carrito (vía /cart/snacks/:cartItemId)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/snacks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "snacks",
+                "1"
+              ]
+            },
+            "description": "Remueve un ítem de confitería del carrito activo."
+          },
+          "response": [
+            {
+              "name": "Eliminar Snack del Carrito (vía /cart/snacks/:cartItemId) - 200 OK",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/snacks/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cart",
+                    "snacks",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Producto eliminado del carrito con éxito.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "08. Confitería (Snacks - HU-012)",
+      "description": "Catálogo de confitería, precios dinámicos, promociones e inventario en tiempo real.",
+      "item": [
+        {
+          "name": "Catálogo de Confitería con Precios Efectivos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/snacks?category=Combos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Combos",
+                  "description": "Filtrar por categoría"
+                }
+              ]
+            },
+            "description": "Lista el menú de confitería con promociones aplicadas (RN-050)."
+          },
+          "response": [
+            {
+              "name": "Catálogo de Confitería con Precios Efectivos - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks?category=Combos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "Combos",
+                      "description": "Filtrar por categoría"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Combo Mega Familiar\",\n      \"description\": \"1 Crispeta extragrande + 2 Gaseosas grandes + 1 Chocolatina\",\n      \"price\": 35000,\n      \"category\": \"Combos\",\n      \"stock\": 50,\n      \"imageUrl\": \"https://images.unsplash.com/photo-1585647347483-22b66260dfff?w=800\",\n      \"discountPercentage\": 10,\n      \"finalPrice\": 31500,\n      \"available\": true,\n      \"activePromotion\": {\n        \"id\": 1,\n        \"name\": \"Descuento de Temporada\",\n        \"discountType\": \"percent\",\n        \"discountValue\": 10\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listado de Categorías de Confitería",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/snacks/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "categories"
+              ]
+            },
+            "description": "Obtiene el arreglo oficial de categorías disponibles."
+          },
+          "response": [
+            {
+              "name": "Listado de Categorías de Confitería - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/categories",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "categories"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    \"Combos\",\n    \"Crispetas\",\n    \"Bebidas\",\n    \"Comidas Rápidas\",\n    \"Dulces\",\n    \"Chocolates\",\n    \"Nachos\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Disponibilidad e Inventario en Tiempo Real",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/snacks/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "availability"
+              ]
+            },
+            "description": "Valida existencias en stock de cada producto (RN-049)."
+          },
+          "response": [
+            {
+              "name": "Disponibilidad e Inventario en Tiempo Real - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/availability",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "availability"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Combo Mega Familiar\",\n      \"category\": \"Combos\",\n      \"stock\": 50,\n      \"available\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Agregar Snack al Carrito (vía /snacks/cart)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"snackId\": 1,\n  \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/snacks/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "cart"
+              ]
+            },
+            "description": "Agrega un snack al carrito activo."
+          },
+          "response": [
+            {
+              "name": "Agregar Snack al Carrito (vía /snacks/cart) - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"snackId\": 1,\n  \"quantity\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "cart"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Producto agregado al carrito con éxito.\",\n  \"data\": {\n    \"id\": 1,\n    \"cartId\": 1,\n    \"snackId\": 1,\n    \"quantity\": 1,\n    \"unitPrice\": 31500,\n    \"totalPrice\": 31500\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Consultar Snacks en el Carrito (vía /snacks/cart)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/snacks/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "cart"
+              ]
+            },
+            "description": "Consulta los ítems de confitería presentes en el carrito."
+          },
+          "response": [
+            {
+              "name": "Consultar Snacks en el Carrito (vía /snacks/cart) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/cart",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "cart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"snackId\": 1,\n        \"name\": \"Combo Mega Familiar\",\n        \"quantity\": 1,\n        \"unitPrice\": 31500,\n        \"total\": 31500\n      }\n    ],\n    \"total\": 31500\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar Cantidad de Snack (vía /snacks/cart/:cartItemId)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/snacks/cart/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "cart",
+                "1"
+              ]
+            },
+            "description": "Modifica la cantidad de un ítem de confitería."
+          },
+          "response": [
+            {
+              "name": "Actualizar Cantidad de Snack (vía /snacks/cart/:cartItemId) - 200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/cart/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "cart",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Ítem de carrito actualizado con éxito.\",\n  \"data\": {\n    \"id\": 1,\n    \"quantity\": 2,\n    \"totalPrice\": 63000\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Eliminar Snack del Carrito (vía /snacks/cart/:cartItemId)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/snacks/cart/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "cart",
+                "1"
+              ]
+            },
+            "description": "Elimina el ítem de confitería seleccionado."
+          },
+          "response": [
+            {
+              "name": "Eliminar Snack del Carrito (vía /snacks/cart/:cartItemId) - 200 OK",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/cart/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "cart",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Producto eliminado del carrito con éxito.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Detalle de Producto de Confitería por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/snacks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "snacks",
+                "1"
+              ]
+            },
+            "description": "Obtiene la descripción y precio efectivo de un producto."
+          },
+          "response": [
+            {
+              "name": "Detalle de Producto de Confitería por ID - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/snacks/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "snacks",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Combo Mega Familiar\",\n    \"description\": \"1 Crispeta extragrande + 2 Gaseosas grandes + 1 Chocolatina\",\n    \"price\": 35000,\n    \"category\": \"Combos\",\n    \"stock\": 50,\n    \"imageUrl\": \"https://images.unsplash.com/photo-1585647347483-22b66260dfff?w=800\",\n    \"discountPercentage\": 10,\n    \"finalPrice\": 31500,\n    \"available\": true,\n    \"activePromotion\": {\n      \"id\": 1,\n      \"name\": \"Descuento de Temporada\",\n      \"discountType\": \"percent\",\n      \"discountValue\": 10\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "09. Geografía & Ubicación (Locations)",
+      "description": "Catálogo territorial de países, departamentos y ciudades con cines activos.",
+      "item": [
+        {
+          "name": "Listar Países",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/countries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "countries"
+              ]
+            },
+            "description": "Lista los países configurados en el sistema."
+          },
+          "response": [
+            {
+              "name": "Listar Países - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/countries",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "countries"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Colombia\",\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar Departamentos por País",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "1"
+              ]
+            },
+            "description": "Lista los departamentos pertenecientes al país especificado."
+          },
+          "response": [
+            {
+              "name": "Listar Departamentos por País - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Antioquia\",\n      \"countryId\": 1,\n      \"isActive\": true\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Cundinamarca\",\n      \"countryId\": 1,\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar Ciudades por Departamento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cities/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cities",
+                "1"
+              ]
+            },
+            "description": "Lista las ciudades con cines activos para el departamento dado."
+          },
+          "response": [
+            {
+              "name": "Listar Ciudades por Departamento - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/cities/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cities",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Medellín\",\n      \"departmentId\": 1,\n      \"isActive\": true\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Envigado\",\n      \"departmentId\": 1,\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10. Notificaciones (Notifications)",
+      "description": "Registro de alertas de estreno para clientes interesados.",
+      "item": [
+        {
+          "name": "Registrar Notificación para Próximo Estreno",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 5,\n  \"email\": \"usuario@multicine.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/notifications/upcoming",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "upcoming"
+              ]
+            },
+            "description": "Registra un aviso para alertar al usuario cuando abran las reservas."
+          },
+          "response": [
+            {
+              "name": "Registrar Notificación para Próximo Estreno - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"movieId\": 5,\n  \"email\": \"usuario@multicine.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/notifications/upcoming",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "upcoming"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Solicitud de notificación registrada exitosamente.\",\n  \"data\": {\n    \"id\": 1,\n    \"movieId\": 5,\n    \"email\": \"usuario@multicine.com\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "11. Administración de Usuarios (Users)",
+      "description": "Gestión administrativa de cuentas y selección de ubicación de usuario.",
+      "item": [
+        {
+          "name": "Listar Usuarios Registrados (Requiere Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Lista todos los usuarios (sin contraseñas). Protegido con RBAC rol 1."
+          },
+          "response": [
+            {
+              "name": "Listar Usuarios Registrados (Requiere Admin) - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"email\": \"admin@multicine.com\",\n      \"roleId\": 1,\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Crear Usuario Directo (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin2@multicine.com\",\n  \"password\": \"Password123!\",\n  \"roleId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Crea una cuenta directamente en el controlador de usuarios."
+          },
+          "response": [
+            {
+              "name": "Crear Usuario Directo (Admin) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin2@multicine.com\",\n  \"password\": \"Password123!\",\n  \"roleId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"email\": \"admin@multicine.com\",\n      \"roleId\": 1,\n      \"isActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Seleccionar y Validar Ubicación de Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"countryId\": 1,\n  \"departmentId\": 1,\n  \"cityId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/location",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "location"
+              ]
+            },
+            "description": "Actualiza y valida la ubicación territorial seleccionada por el usuario."
+          },
+          "response": [
+            {
+              "name": "Seleccionar y Validar Ubicación de Usuario - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"countryId\": 1,\n  \"departmentId\": 1,\n  \"cityId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/location",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "location"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Ubicación seleccionada y validada correctamente.\",\n  \"data\": {\n    \"location\": {\n      \"countryId\": 1,\n      \"departmentId\": 1,\n      \"cityId\": 1\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "12. Base de Datos & Seeders (Seed)",
+      "description": "Endpoints administrativos protegidos para poblar la base de datos.",
+      "item": [
+        {
+          "name": "Seed Base de Datos desde JSON (Requiere Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"users\": [],\n  \"movies\": [],\n  \"cinemas\": [],\n  \"functions\": [],\n  \"snacks\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/seed/json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "seed",
+                "json"
+              ]
+            },
+            "description": "Puebla el catálogo de cines, salas, películas y confitería desde un payload JSON."
+          },
+          "response": [
+            {
+              "name": "Seed Base de Datos desde JSON (Requiere Admin) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"users\": [],\n  \"movies\": [],\n  \"cinemas\": [],\n  \"functions\": [],\n  \"snacks\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/seed/json",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "seed",
+                    "json"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Base de datos poblada exitosamente.\",\n  \"data\": {\n    \"moviesCount\": 15,\n    \"cinemasCount\": 5,\n    \"functionsCount\": 120,\n    \"snacksCount\": 26\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Seed Base de Datos desde Archivo Multipart (Requiere Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "seed-cine.json",
+                  "description": "Archivo JSON de seeding"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/seed/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "seed",
+                "upload"
+              ]
+            },
+            "description": "Carga un archivo multipart con la data inicial de la aplicación."
+          },
+          "response": [
+            {
+              "name": "Seed Base de Datos desde Archivo Multipart (Requiere Admin) - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": "seed-cine.json",
+                      "description": "Archivo JSON de seeding"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/seed/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "seed",
+                    "upload"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Base de datos poblada exitosamente.\",\n  \"data\": {\n    \"moviesCount\": 15,\n    \"cinemasCount\": 5,\n    \"functionsCount\": 120,\n    \"snacksCount\": 26\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "13. Health Check (Health)",
+      "description": "Diagnóstico de operatividad y verificación de conexión a PostgreSQL.",
+      "item": [
+        {
+          "name": "Verificar Estado de API y Base de Datos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Verifica la salud del servicio y la conectividad con Sequelize y la base de datos."
+          },
+          "response": [
+            {
+              "name": "Verificar Estado de API y Base de Datos - 200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"status\": \"OK\",\n    \"uptime\": 124.5,\n    \"timestamp\": \"2026-09-10T11:20:00.000Z\",\n    \"services\": {\n      \"database\": \"UP\"\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

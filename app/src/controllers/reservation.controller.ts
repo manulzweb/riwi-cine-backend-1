@@ -76,21 +76,23 @@ export class ReservationController {
    * GET /reservations/summary o GET /reservations/:id/summary
    * Obtiene el resumen de una reserva activa para transferir al carrito.
    */
-  public getReservationSummary = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.userId ?? req.query.userId;
-    const reservationId = req.params.id ?? req.query.reservationId;
+  public getReservationSummary = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const userId = req.userId ?? req.query.userId;
+      const reservationId = req.params.id ?? req.query.reservationId;
 
-    if (!reservationId || Number.isNaN(Number(reservationId))) {
-      throw new InvalidReservationIdError();
-    }
+      if (!reservationId || Number.isNaN(Number(reservationId))) {
+        throw new InvalidReservationIdError();
+      }
 
-    const data = await this.reservationService.getReservationSummary(
-      Number(reservationId),
-      Number(userId),
-    );
+      const data = await this.reservationService.getReservationSummary(
+        Number(reservationId),
+        Number(userId),
+      );
 
-    res.status(200).json(data);
-  });
+      res.status(200).json(data);
+    },
+  );
 }
 
 export default ReservationController;

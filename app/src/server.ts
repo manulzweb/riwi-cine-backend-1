@@ -16,6 +16,7 @@ import { rateLimit } from 'express-rate-limit';
 import { envConfig } from './config/env.js';
 import router from './routes/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
+import { envelopeMiddleware } from './middleware/envelope.middleware.js';
 
 const app = express();
 
@@ -36,8 +37,10 @@ app.use(
 // Configuración de CORS
 app.use(cors(corsOptions));
 
-// Router principal
+// Envoltura estandarizada de respuestas (Envelope Pattern)
+app.use(envelopeMiddleware);
 
+// Router principal
 app.use('/api/v1', router);
 
 // Swagger - disponible en /api/docs y /api/v1/docs para no romper con versionado RN-113

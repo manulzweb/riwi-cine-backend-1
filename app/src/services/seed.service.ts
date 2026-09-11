@@ -322,7 +322,9 @@ export class SeedService implements ISeedService {
             1;
 
           const startTime = new Date(item.startTime);
-          const endTime = item.endTime ? new Date(item.endTime) : new Date(startTime.getTime() + 120 * 60 * 1000);
+          const endTime = item.endTime
+            ? new Date(item.endTime)
+            : new Date(startTime.getTime() + 120 * 60 * 1000);
 
           await CinemaFunction.findOrCreate({
             where: { movieId, roomId, startTime },

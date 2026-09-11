@@ -125,4 +125,3 @@ export class InvalidFunctionIdError extends DomainError {
     super(message, 400, 'INVALID_FUNCTION_ID');
   }
 }
-
