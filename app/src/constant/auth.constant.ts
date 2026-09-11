@@ -10,3 +10,25 @@ export const COOKIE_NAMES = {
   ACCESS_TOKEN: 'access_token',
   REFRESH_TOKEN: 'refresh_token',
 } as const;
+
+export const ROLES = {
+  CLIENT: 'cliente',
+  ADMIN: 'admin',
+} as const;
+
+export const MEMBERSHIP_LEVELS = {
+  BASIC: 'BÁSICA',
+  STANDARD: 'ESTÁNDAR',
+  PREMIUM: 'PREMIUM',
+} as const;
+
+export const MEMBERSHIP_STATUSES = {
+  ACTIVE: 'Activa',
+  INACTIVE: 'Inactiva',
+} as const;
+
+export const DEFAULT_USER_REGISTRATION = {
+  ROLE: ROLES.CLIENT,
+  MEMBERSHIP_LEVEL: MEMBERSHIP_LEVELS.BASIC,
+  MEMBERSHIP_STATUS: MEMBERSHIP_STATUSES.ACTIVE,
+} as const;

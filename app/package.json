@@ -16,6 +16,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "postman:generate": "node scripts/sync-postman.mjs --generate-only",
+    "postman:sync": "node scripts/sync-postman.mjs",
     "prepare": "cd .. && husky app/.husky"
   },
   "dependencies": {
@@ -58,6 +60,7 @@
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "lint-staged": "^17.3.0",
+    "openapi-to-postmanv2": "^6.3.3",
     "prettier": "^3.9.6",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",

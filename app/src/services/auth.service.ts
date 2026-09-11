@@ -54,11 +54,7 @@ import {
 } from '../errors/auth.errors.js';
 import User from '../models/user.model.js';
 import { PasswordResetTokenInstance } from '../models/password-reset-token.model.js';
-
-const ROLE_NAME = 'cliente';
-const MEMBERSHIP_LEVEL_NAME = 'BÁSICA';
-const MEMBERSHIP_STATUS_NAME = 'Activa';
-const DUMMY_BCRYPT_HASH = '$2b$10$cy6YxvetoHKT6gelchVC8.uoxe0nZx5OU0m68IFzDa2c8SHqWnbKe';
+import { DEFAULT_USER_REGISTRATION } from '../constant/auth.constant.js';
 
 /**
  * Servicio encargado de gestionar los procesos de autenticación,
@@ -408,17 +404,21 @@ export class AuthService implements IAuthService {
    * Resuelve y valida las referencias de catálogo necesarias para el registro.
    */
   private async resolveRegistrationReferences(dto: RegisterUserRequestDto) {
-    const defaultRole = await this.roleRepository.findByName(ROLE_NAME);
+    const defaultRole = await this.roleRepository.findByName(DEFAULT_USER_REGISTRATION.ROLE);
     if (!defaultRole) {
       throw new Error('No existe el rol por defecto configurado en el sistema');
     }
 
-    const defaultLevel = await this.membershipLevelRepository.findByName(MEMBERSHIP_LEVEL_NAME);
+    const defaultLevel = await this.membershipLevelRepository.findByName(
+      DEFAULT_USER_REGISTRATION.MEMBERSHIP_LEVEL,
+    );
     if (!defaultLevel) {
       throw new Error('No existe el nivel de membresía por defecto configurado en el sistema');
     }
 
-    const defaultStatus = await this.membershipStatusRepository.findByName(MEMBERSHIP_STATUS_NAME);
+    const defaultStatus = await this.membershipStatusRepository.findByName(
+      DEFAULT_USER_REGISTRATION.MEMBERSHIP_STATUS,
+    );
     if (!defaultStatus) {
       throw new Error('No existe el estado de membresía por defecto configurado en el sistema');
     }
@@ -485,7 +485,7 @@ export class AuthService implements IAuthService {
     deviceUserAgent?: string,
   ): Promise<void> {
     if (!user) {
-      await this.passwordService.verify(password ?? 'dummy_password', DUMMY_BCRYPT_HASH);
+      await this.passwordService.dummyVerify(password);
       await this.recordAudit('FAILED_USER_NOT_FOUND', email, null, ipAddress, deviceUserAgent);
       throw new InvalidCredentialsError();
     }

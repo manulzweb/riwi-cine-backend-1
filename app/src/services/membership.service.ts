@@ -17,14 +17,15 @@ import { generateMembershipCode } from '../utils/crypto.util.js';
 import User from '../models/user.model.js';
 import MembershipLevel from '../models/membership-level.model.js';
 import MembershipStatus from '../models/membership-status.model.js';
+import { MEMBERSHIP_LEVELS, MEMBERSHIP_STATUSES } from '../constant/auth.constant.js';
 
 const LEVEL_POINTS_REQUIREMENTS: Record<
   string,
   { nextLevel: string; points: number; discount: number }
 > = {
-  BÁSICA: { nextLevel: 'ESTÁNDAR', points: 300, discount: 5 },
-  ESTÁNDAR: { nextLevel: 'PREMIUM', points: 800, discount: 10 },
-  PREMIUM: { nextLevel: 'PREMIUM', points: 800, discount: 10 },
+  [MEMBERSHIP_LEVELS.BASIC]: { nextLevel: MEMBERSHIP_LEVELS.STANDARD, points: 300, discount: 5 },
+  [MEMBERSHIP_LEVELS.STANDARD]: { nextLevel: MEMBERSHIP_LEVELS.PREMIUM, points: 800, discount: 10 },
+  [MEMBERSHIP_LEVELS.PREMIUM]: { nextLevel: MEMBERSHIP_LEVELS.PREMIUM, points: 800, discount: 10 },
 };
 
 /**
@@ -171,12 +172,14 @@ export class MembershipService implements IMembershipService {
     defaultLevel: MembershipLevel;
     defaultStatus: MembershipStatus;
   }> {
-    const defaultLevel = await this.membershipLevelRepository.findByName('BÁSICA');
+    const defaultLevel = await this.membershipLevelRepository.findByName(MEMBERSHIP_LEVELS.BASIC);
     if (!defaultLevel) {
       throw new MembershipLevelNotFoundError('Nivel de membresía por defecto no configurado.');
     }
 
-    const defaultStatus = await this.membershipStatusRepository.findByName('Activa');
+    const defaultStatus = await this.membershipStatusRepository.findByName(
+      MEMBERSHIP_STATUSES.ACTIVE,
+    );
     if (!defaultStatus) {
       throw new MembershipStatusNotFoundError('Estado de membresía por defecto no configurado.');
     }

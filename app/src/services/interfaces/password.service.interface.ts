@@ -17,4 +17,13 @@ export interface PasswordHashResult {
 export interface IPasswordService {
   hash(password: string): Promise<PasswordHashResult>;
   verify(password: string, hash: string): Promise<boolean>;
+  /**
+   * Ejecuta una verificación simulada con costo computacional equivalente
+   * (mismo número de rondas BCRYPT_ROUNDS) para mitigar ataques de temporización
+   * (Timing Attacks) cuando una cuenta o usuario no existe.
+   *
+   * @param {string} [password] Contraseña opcional recibida en el login.
+   * @returns {Promise<boolean>} Retorna false.
+   */
+  dummyVerify(password?: string): Promise<boolean>;
 }

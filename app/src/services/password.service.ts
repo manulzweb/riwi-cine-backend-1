@@ -85,6 +85,33 @@ export class PasswordService implements IPasswordService {
   async verify(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
+
+  private dummyHashPromise: Promise<string> | null = null;
+
+  private async getDummyHash(): Promise<string> {
+    if (!this.dummyHashPromise) {
+      this.dummyHashPromise = (async () => {
+        const salt = await bcrypt.genSalt(envConfig.BCRYPT.ROUNDS);
+        return bcrypt.hash('dummy_timing_mitigation_password', salt);
+      })();
+    }
+    return this.dummyHashPromise;
+  }
+
+  /**
+   * Ejecuta una verificación simulada utilizando un hash generado con el mismo
+   * factor de costo (`envConfig.BCRYPT.ROUNDS`) que las contraseñas reales.
+   *
+   * Garantiza tiempo de cómputo uniforme para evitar ataques de temporización
+   * y enumeración de usuarios (RN-027).
+   *
+   * @param {string} [password] Contraseña proporcionada en el login.
+   * @returns {Promise<boolean>} Siempre `false` al comparar contra el hash dummy.
+   */
+  async dummyVerify(password?: string): Promise<boolean> {
+    const dummyHash = await this.getDummyHash();
+    return bcrypt.compare(password ?? 'dummy_password', dummyHash);
+  }
 }
 
 /**

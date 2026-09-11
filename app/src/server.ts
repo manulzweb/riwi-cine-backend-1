@@ -43,9 +43,19 @@ app.use(envelopeMiddleware);
 // Router principal
 app.use('/api/v1', router);
 
-// Swagger - disponible en /api/docs y /api/v1/docs para no romper con versionado RN-113
+// Swagger UI - disponible en /api/docs y /api/v1/docs para no romper con versionado RN-113
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Especificación OpenAPI en crudo (JSON) para Postman, CI/CD y clientes externos
+app.get('/api/docs.json', (_req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+app.get('/api/v1/docs.json', (_req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // Error handler centralizado — debe ir al final, después de todas las rutas
 app.use(errorHandler);
