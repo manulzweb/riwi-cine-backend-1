@@ -25,6 +25,7 @@ import {
   UserCartNotFoundError,
   UserIdRequiredError,
 } from '../errors/snack.errors.js';
+import { SNACK_CATEGORIES } from '../constant/index.js';
 
 /**
  * ============================================================================
@@ -112,7 +113,7 @@ class SnackService implements ISnackService {
       return categories;
     }
 
-    return ['Combos', 'Crispetas', 'Bebidas', 'Comidas Rápidas', 'Dulces', 'Chocolates', 'Nachos'];
+    return [...SNACK_CATEGORIES];
   }
 
   /**

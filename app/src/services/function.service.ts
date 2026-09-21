@@ -19,6 +19,7 @@ import {
   FunctionFiltersDto,
   FunctionSummaryDto,
 } from '../dto/function-detail.dto.js';
+import { MOVIE_FORMATS } from '../constant/index.js';
 
 /**
  * Servicio de Funciones y Formatos (HU-009)
@@ -110,7 +111,7 @@ export class FunctionService implements IFunctionService {
 
     return {
       functionId: fn.id,
-      format: fn.format || '2D',
+      format: fn.format || MOVIE_FORMATS.TWO_D,
       room: fn.room || 'Sala Estándar',
       dateTime: fn.startTime ? fn.startTime.toISOString() : new Date().toISOString(),
       basePrice,
@@ -129,7 +130,7 @@ export class FunctionService implements IFunctionService {
       id: fn.id,
       movieId: fn.movieId,
       dateTime: fn.startTime ? fn.startTime.toISOString() : new Date().toISOString(),
-      format: fn.format || '2D',
+      format: fn.format || MOVIE_FORMATS.TWO_D,
       room: fn.room || room?.name || 'Sala Estándar',
       cinemaId: room?.cinemaId ?? null,
       price: Number(fn.price),
@@ -151,7 +152,7 @@ export class FunctionService implements IFunctionService {
       movieId: fn.movieId,
       movieTitle: movie?.title ?? '',
       dateTime: fn.startTime ? fn.startTime.toISOString() : new Date().toISOString(),
-      format: fn.format || '2D',
+      format: fn.format || MOVIE_FORMATS.TWO_D,
       room: fn.room || room?.name || 'Sala Estándar',
       cinemaId: room?.cinemaId ?? null,
       price: Number(fn.price),

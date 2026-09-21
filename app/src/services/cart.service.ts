@@ -18,6 +18,7 @@ import { CartDetailResponseDto } from '../dto/response/cart-detail.dto.js';
 import { CreateCartRequestDto } from '../dto/request/create-cart.dto.js';
 import { UpdateCartRequestDto } from '../dto/request/update-cart.dto.js';
 import { ApplyGiftcardRequestDto } from '../dto/request/apply-giftcard.dto.js';
+import { CART_STATUS } from '../constant/index.js';
 import {
   CartExpiredError,
   CartNotFoundError,
@@ -172,7 +173,7 @@ export class CartService implements ICartService {
 
       const cart = await sequelize.transaction(async (transaction) => {
         const created = await this.cartRepository.create(
-          { userId, status: 'ACTIVE', expiresAt: this.newExpiry() },
+          { userId, status: CART_STATUS.ACTIVE, expiresAt: this.newExpiry() },
           transaction,
         );
 
@@ -225,7 +226,7 @@ export class CartService implements ICartService {
   async expireStaleCart(cartId: number): Promise<void> {
     const cart = await this.cartRepository.findDetailById(cartId);
 
-    if (cart?.status !== 'ACTIVE') return;
+    if (cart?.status !== CART_STATUS.ACTIVE) return;
 
     // Si se habían aplicado bonos, devolver el saldo a la billetera
     const giftcardAmount = Number(cart.giftcardAmount || 0);
@@ -249,7 +250,7 @@ export class CartService implements ICartService {
       }
     }
 
-    await this.cartRepository.update(cartId, { status: 'EXPIRED' });
+    await this.cartRepository.update(cartId, { status: CART_STATUS.EXPIRED });
   }
 
   async expireCarts(): Promise<IExpireCartsResult> {

@@ -25,24 +25,28 @@ const router = Router();
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la película
  *       - in: query
  *         name: format
  *         required: false
  *         schema:
  *           type: string
+ *           example: "2D"
  *         description: Formato de proyección (2D, 3D, IMAX, VIP)
  *       - in: query
  *         name: date
  *         required: false
  *         schema:
  *           type: string
+ *           example: "2026-08-24"
  *         description: Fecha de la función (YYYY-MM-DD)
  *       - in: query
  *         name: cinemaId
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID del cine o complejo
  *     responses:
  *       200:
@@ -64,6 +68,7 @@ router.get('/movie/:id', functionController.getFunctionsByMovie);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la función
  *     responses:
  *       200:
@@ -87,6 +92,7 @@ router.get('/:id/prices', functionController.getFunctionPrices);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la función
  *     responses:
  *       200:
@@ -110,6 +116,7 @@ router.get('/:id/seats', reservationController.getFunctionSeats);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la función
  *     responses:
  *       200:

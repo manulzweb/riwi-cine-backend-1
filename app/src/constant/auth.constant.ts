@@ -32,3 +32,12 @@ export const DEFAULT_USER_REGISTRATION = {
   MEMBERSHIP_LEVEL: MEMBERSHIP_LEVELS.BASIC,
   MEMBERSHIP_STATUS: MEMBERSHIP_STATUSES.ACTIVE,
 } as const;
+
+export const TOKEN_TYPES = {
+  ACCESS: 'access',
+  REFRESH: 'refresh',
+} as const;
+
+export const JWT_CONFIG = {
+  ALGORITHM: 'HS256',
+} as const;

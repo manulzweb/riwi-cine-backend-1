@@ -2,11 +2,10 @@
 
 import cron, { ScheduledTask } from 'node-cron';
 import emailNotificationService from '../services/email-notification.service.js';
-
-const CRON_SCHEDULE = '0 0 * * *';
+import { CRON_SCHEDULES } from '../constant/index.js';
 
 export const startUpcomingReleaseJob = (): ScheduledTask => {
-  return cron.schedule(CRON_SCHEDULE, async () => {
+  return cron.schedule(CRON_SCHEDULES.DAILY_MIDNIGHT, async () => {
     try {
       const result = await emailNotificationService.processTodayReleases();
       console.log(

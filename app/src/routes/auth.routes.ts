@@ -276,9 +276,222 @@ router.post('/register', registerLimiter, verifyCaptcha(), authController.regist
  */
 router.post('/verify-email', authController.verifyEmail);
 
+/**
+ * POST /auth/refresh
+ * -------------------
+ * Renueva el token de acceso utilizando un refresh token válido (RN-028, RN-029, RN-030).
+ *
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Renovar tokens de autenticación
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: Token de refresco (opcional si se envía vía cookie httpOnly)
+ *                 example: "{{refreshToken}}"
+ *     responses:
+ *       200:
+ *         description: Tokens renovados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Token refreshed successfully"
+ *                 userId:
+ *                   type: integer
+ *                   example: 1
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refreshToken:
+ *                   type: string
+ *                   example: "d3b07384d113edec49eaa6238ad5ff00..."
+ *                 tokenType:
+ *                   type: string
+ *                   example: "Bearer"
+ *       400:
+ *         description: Token de refresco no proporcionado o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Refresh token is required"
+ *       401:
+ *         description: Token inválido, expirado o revocado
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post('/refresh', authController.refreshToken);
+
+/**
+ * POST /auth/logout
+ * -----------------
+ * Cierra la sesión revocando los tokens activos y limpiando cookies (RN-030).
+ *
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Cerrar sesión y revocar tokens
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: Token de refresco a revocar (opcional si se envía vía cookie)
+ *                 example: "{{refreshToken}}"
+ *     responses:
+ *       200:
+ *         description: Sesión cerrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Logged out successfully"
+ *       400:
+ *         description: Token de refresco no proporcionado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Refresh token is required for logout"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post('/logout', authController.logoutUser);
+
+/**
+ * POST /auth/forgot-password
+ * --------------------------
+ * Inicia el flujo de recuperación de contraseña enviando un correo si la cuenta existe.
+ *
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Solicitar restablecimiento de contraseña
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "usuario@example.com"
+ *     responses:
+ *       200:
+ *         description: Correo de restablecimiento enviado si la cuenta existe
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "If the email exists, a reset link was sent"
+ *       400:
+ *         description: Correo electrónico requerido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Email is required"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post('/forgot-password', authController.forgotPassword);
+
+/**
+ * POST /auth/reset-password
+ * -------------------------
+ * Restablece la contraseña del usuario utilizando el token recibido por correo electrónico.
+ *
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Restablecer contraseña con token de recuperación
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - token
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "usuario@example.com"
+ *               token:
+ *                 type: string
+ *                 example: "a6b7c8d9e0f1g2h3i4j5k6l7m8n9o0p1"
+ *               newPassword:
+ *                 type: string
+ *                 example: "NewPassword123!"
+ *               confirmPassword:
+ *                 type: string
+ *                 example: "NewPassword123!"
+ *     responses:
+ *       200:
+ *         description: Contraseña restablecida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password has been reset successfully"
+ *       400:
+ *         description: Campos requeridos faltantes, contraseñas no coincidentes o token inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "All fields are required"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post('/reset-password', authController.resetPassword);
 
 export default router;

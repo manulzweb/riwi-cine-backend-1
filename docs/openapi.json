@@ -298,7 +298,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Crear un nuevo usuario\n\nEndpoint administrativo para la creación directa de usuarios en el sistema.\n\n- **Respuesta:** Devuelve `success` y `data` con el usuario creado."
       },
       "get": {
         "summary": "Obtener todos los usuarios",
@@ -350,7 +351,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener todos los usuarios\n\nEndpoint administrativo para el listado paginado de usuarios registrados.\n\n- **Respuesta:** Devuelve `success` y `data` con el listado de usuarios."
       }
     },
     "/users/location": {
@@ -409,13 +411,16 @@
                       "type": "object",
                       "properties": {
                         "countryId": {
-                          "type": "integer"
+                          "type": "integer",
+                          "example": 1
                         },
                         "departmentId": {
-                          "type": "integer"
+                          "type": "integer",
+                          "example": 1
                         },
                         "cityId": {
-                          "type": "integer"
+                          "type": "integer",
+                          "example": 1
                         }
                       }
                     }
@@ -443,7 +448,8 @@
           "500": {
             "description": "Error interno del servidor"
           }
-        }
+        },
+        "description": "### Seleccionar y validar ubicación geográfica del usuario\n\nValida la ciudad y departamento seleccionados por el usuario para fijar el contexto de salas, películas y cartelera.\n\n- **Respuesta:** Devuelve `success`, `message` y `data` con la ubicación validada."
       }
     },
     "/snacks": {
@@ -523,7 +529,8 @@
           "500": {
             "description": "Error interno del servidor"
           }
-        }
+        },
+        "description": "### Obtener catálogo completo de productos de confitería\n\nConsulta de productos disponibles (crispetas, gaseosas, nachos, chocolates, combos) con opción de filtro por categoría.\n\n- **Query Params:** `category` (ej. \"Combos\", \"Bebidas\", \"Snacks\").\n- **Respuesta:** Devuelve `success` y `data` con el listado de productos de dulcería."
       }
     },
     "/snacks/categories": {
@@ -552,7 +559,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener lista de categorías disponibles de confitería\n\nRetorna los grupos comerciales en los que se organizan los productos de confitería.\n\n- **Respuesta:** Devuelve `success` y `data` con las categorías disponibles."
       }
     },
     "/snacks/availability": {
@@ -597,7 +605,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Consultar disponibilidad e inventario en tiempo real (RN-049)\n\nVerifica el inventario disponible de un producto de confitería para evitar sobreventas.\n\n- **Query Params:** `snackId`, `cinemaId`, `quantity`.\n- **Respuesta:** Devuelve `success` y `data` con el indicador de stock disponible."
       }
     },
     "/snacks/cart": {
@@ -666,7 +675,8 @@
           "404": {
             "description": "Producto o usuario no encontrado"
           }
-        }
+        },
+        "description": "### Añadir un producto de confitería al carrito del usuario\n\nVariante de endpoint para registrar un ítem de confitería en el carrito activo.\n\n- **Respuesta:** Devuelve `success`, `message` y `data` con el ítem agregado."
       },
       "get": {
         "summary": "Obtener los productos de confitería en el carrito del usuario",
@@ -716,7 +726,8 @@
           "400": {
             "description": "Parámetro userId no provisto y token ausente"
           }
-        }
+        },
+        "description": "### Obtener productos de confitería en el carrito del usuario\n\nConsulta los productos de confitería asociados al carrito mediante identificador de usuario.\n\n- **Query Params:** `userId` (ID del usuario).\n- **Respuesta:** Devuelve `success` y `data` con el array de ítems."
       }
     },
     "/snacks/cart/{cartItemId}": {
@@ -782,7 +793,8 @@
           "404": {
             "description": "Ítem o carrito no encontrado"
           }
-        }
+        },
+        "description": "### Actualizar cantidad de confitería en carrito\n\nActualiza la cantidad de unidades para un producto de dulcería en el carrito.\n\n- **Parámetros de ruta:** `:cartItemId`.\n- **Respuesta:** Devuelve `success` y `data` con el ítem modificado."
       },
       "delete": {
         "summary": "Eliminar un producto de confitería del carrito",
@@ -823,7 +835,8 @@
           "404": {
             "description": "Ítem o carrito no encontrado"
           }
-        }
+        },
+        "description": "### Eliminar producto de confitería del carrito\n\nElimina un snack del carrito por su ID de ítem.\n\n- **Parámetros de ruta:** `:cartItemId`.\n- **Respuesta:** Devuelve `success` y `data` confirmando la eliminación."
       }
     },
     "/snacks/{id}": {
@@ -854,7 +867,8 @@
           "404": {
             "description": "Producto no encontrado"
           }
-        }
+        },
+        "description": "### Obtener detalle de un producto de confitería\n\nFicha técnica con precio unitario, descripción, alérgenos e imagen comercial del snack.\n\n- **Parámetros de ruta:** `:id` (ID del producto de confitería).\n- **Respuesta:** Devuelve `success` y `data` con el detalle del producto."
       }
     },
     "/seed/upload": {
@@ -886,7 +900,8 @@
           "400": {
             "description": "Archivo inválido o formato incorrecto"
           }
-        }
+        },
+        "description": "### Poblar base de datos desde un archivo JSON\n\nEndpoint de desarrollo y despliegue para sembrar catálogos de películas, cines, géneros y salas mediante la carga de un archivo JSON.\n\n- **Formato:** Multipart form-data con archivo JSON adjunto.\n- **Respuesta:** Devuelve `success`, `message` y `data` con el resumen de registros insertados."
       }
     },
     "/seed/json": {
@@ -900,7 +915,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "users": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "movies": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "cinemas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "genres": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "example": {
+                  "users": [],
+                  "movies": [],
+                  "cinemas": [],
+                  "genres": [],
+                  "categories": []
+                }
               }
             }
           }
@@ -912,7 +966,8 @@
           "400": {
             "description": "Datos inválidos"
           }
-        }
+        },
+        "description": "### Poblar base de datos desde un payload JSON directo\n\nEndpoint de desarrollo para inyectar datos semilla enviando directamente un objeto JSON con usuarios, películas, cines y funciones.\n\n- **Respuesta:** Devuelve `success`, `message` y `data` con el conteo de entidades insertadas."
       }
     },
     "/reservations/lock-seats": {
@@ -972,7 +1027,8 @@
           "409": {
             "description": "Silla ocupada o reservada"
           }
-        }
+        },
+        "description": "### Bloquear temporalmente las sillas seleccionadas (RN-039)\n\nRetiene las sillas elegidas durante una ventana máxima de 15 minutos para que el cliente complete el pago sin que otro usuario las tome.\n\n- **Regla de negocio (RN-039):** Bloqueo transaccional temporal. Si expira el tiempo sin concretar la compra, las sillas se liberan automáticamente.\n- **Respuesta:** Devuelve `success` y `data` con el `reservationId`, código de reserva y fecha límite de expiración."
       }
     },
     "/reservations/release-seats": {
@@ -1015,7 +1071,8 @@
           "404": {
             "description": "Reserva no encontrada"
           }
-        }
+        },
+        "description": "### Liberar voluntariamente las sillas de una reserva activa (RN-040)\n\nLibera anticipadamente las sillas retenidas cuando el cliente cancela la selección de asientos.\n\n- **Respuesta:** Devuelve exclusivamente `success: true` y `message: \"Las sillas fueron liberadas exitosamente.\"`. No expone entidades internas por diseño."
       }
     },
     "/reservations/summary": {
@@ -1035,7 +1092,8 @@
             "name": "reservationId",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la reserva"
           }
@@ -1050,7 +1108,8 @@
           "404": {
             "description": "Reserva no encontrada o expirada"
           }
-        }
+        },
+        "description": "### Obtener el resumen de una reserva activa por query param\n\nConsulta el estado, función asociada y sillas reservadas mediante el parámetro `reservationId`.\n\n- **Query Params:** `reservationId` (ID de la reserva).\n- **Respuesta:** Devuelve `success` y `data` con el consolidado de la reserva."
       }
     },
     "/reservations/{id}/summary": {
@@ -1070,7 +1129,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la reserva"
           }
@@ -1085,7 +1145,8 @@
           "404": {
             "description": "Reserva no encontrada o expirada"
           }
-        }
+        },
+        "description": "### Obtener el resumen de una reserva por ID en ruta\n\nConsulta el resumen consolidado de una reserva a partir de su ID en el path.\n\n- **Parámetros de ruta:** `:id` (ID de la reserva).\n- **Respuesta:** Devuelve `success` y `data` con los datos de la reserva."
       }
     },
     "/profile": {
@@ -1106,7 +1167,8 @@
           "401": {
             "description": "No autenticado"
           }
-        }
+        },
+        "description": "### Consultar el perfil del usuario autenticado\n\nRecupera la información del usuario en sesión: nombres, correo, teléfono, ciudad configurada y preferencias cinematográficas.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el perfil del usuario."
       },
       "put": {
         "summary": "Actualizar información personal y preferencias del usuario autenticado",
@@ -1158,13 +1220,16 @@
                     "type": "object",
                     "properties": {
                       "emailEnabled": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                       },
                       "smsEnabled": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                       },
                       "pushEnabled": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "example": true
                       }
                     }
                   }
@@ -1183,7 +1248,8 @@
           "401": {
             "description": "No autenticado"
           }
-        }
+        },
+        "description": "### Actualizar información personal y preferencias del usuario\n\nActualiza datos personales, teléfono y preferencias del usuario autenticado.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success`, `message` y `data` con el perfil actualizado."
       }
     },
     "/notifications/upcoming": {
@@ -1229,7 +1295,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Registrar solicitud de notificación para un próximo estreno\n\nPermite al usuario registrar su correo o número telefónico para recibir una alerta inmediata en cuanto se abra la preventa o cartelera de una película en estreno futuro.\n\n- **Respuesta:** Devuelve `success`, `message` y `data` con la confirmación de la suscripción."
       }
     },
     "/movies": {
@@ -1268,14 +1335,33 @@
                       }
                     }
                   }
-                }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "title": "Inception",
+                    "synopsis": "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños.",
+                    "duration": 148,
+                    "director": "Christopher Nolan",
+                    "isActive": true
+                  },
+                  {
+                    "id": 2,
+                    "title": "Interstellar",
+                    "synopsis": "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio.",
+                    "duration": 169,
+                    "director": "Christopher Nolan",
+                    "isActive": true
+                  }
+                ]
               }
             }
           },
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener catálogo de películas activas\n\nLista todas las películas disponibles en el catálogo con proyección activa.\n\n- **Autenticación requerida:** No (Público).\n- **Respuesta:** Devuelve `success` y `data` con el array de películas (título, sinopsis, duración, clasificación, director)."
       }
     },
     "/movies/upcoming": {
@@ -1330,14 +1416,32 @@
                       }
                     }
                   }
-                }
+                },
+                "example": [
+                  {
+                    "id": 10,
+                    "title": "Dune: Parte Tres",
+                    "posterUrl": "https://images.unsplash.com/photo-1534447677768-be436bb09401",
+                    "releaseDate": "2026-11-20",
+                    "genres": [
+                      "Ciencia Ficción",
+                      "Aventura"
+                    ],
+                    "classification": "+12",
+                    "duration": 165,
+                    "trailerUrl": "https://www.youtube.com/watch?v=mock-dune3",
+                    "synopsis": "Paul Atreides continúa su viaje épico liderando a los Fremen.",
+                    "daysUntil": 60
+                  }
+                ]
               }
             }
           },
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener películas en estado \"Próximo Estreno\"\n\nLista los títulos programados para estreno futuro en la plataforma.\n\n- **Autenticación requerida:** No (Público).\n- **Respuesta:** Devuelve `success` y `data` con las películas en próximo estreno."
       }
     },
     "/movies/upcoming/{id}": {
@@ -1352,7 +1456,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la película."
           }
@@ -1400,6 +1505,21 @@
                       "type": "integer"
                     }
                   }
+                },
+                "example": {
+                  "id": 10,
+                  "title": "Dune: Parte Tres",
+                  "posterUrl": "https://images.unsplash.com/photo-1534447677768-be436bb09401",
+                  "releaseDate": "2026-11-20",
+                  "genres": [
+                    "Ciencia Ficción",
+                    "Aventura"
+                  ],
+                  "classification": "+12",
+                  "duration": 165,
+                  "trailerUrl": "https://www.youtube.com/watch?v=mock-dune3",
+                  "synopsis": "Paul Atreides continúa su viaje épico liderando a los Fremen.",
+                  "daysUntil": 60
                 }
               }
             }
@@ -1413,7 +1533,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener detalle de una película en \"Próximo Estreno\"\n\nConsulta la ficha completa de un título en próximo estreno.\n\n- **Parámetros de ruta:** `:id` (ID de la película).\n- **Respuesta:** Devuelve `success` y `data` con el detalle técnico de la película."
       }
     },
     "/movies/weekly": {
@@ -1428,7 +1549,8 @@
             "name": "cityId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la ciudad para filtrar la cartelera."
           }
@@ -1440,7 +1562,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener cartelera semanal (próximos 7 días)\n\nRetorna la cartelera de películas programadas para los próximos 7 días a partir de la ciudad del usuario (HU-003).\n\n- **Query Params:** `cityId` (Obligatorio, ID de la ciudad para geolocalización).\n- **Respuesta:** Devuelve `success` y `data` con las películas y sus respectivas fechas de proyección."
       }
     },
     "/movies/today": {
@@ -1455,7 +1578,8 @@
             "name": "cityId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la ciudad."
           }
@@ -1467,7 +1591,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener películas programadas para el día de hoy\n\nRetorna los títulos con funciones programadas para la fecha actual en la ciudad seleccionada.\n\n- **Query Params:** `cityId` (Obligatorio, ID de la ciudad).\n- **Respuesta:** Devuelve `success` y `data` con la cartelera del día."
       }
     },
     "/movies/filter": {
@@ -1482,7 +1607,8 @@
             "name": "cityId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la ciudad."
           },
@@ -1492,7 +1618,8 @@
             "required": false,
             "schema": {
               "type": "string",
-              "format": "date"
+              "format": "date",
+              "example": "2026-08-24"
             },
             "description": "Fecha a consultar (YYYY-MM-DD)."
           },
@@ -1501,7 +1628,8 @@
             "name": "genre",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "Acción"
             },
             "description": "Género de la película."
           },
@@ -1510,7 +1638,8 @@
             "name": "rating",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "+12"
             },
             "description": "Clasificación por edad."
           },
@@ -1519,7 +1648,8 @@
             "name": "language",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "Doblada"
             },
             "description": "Idioma (Doblada/Subtitulada)."
           },
@@ -1528,7 +1658,8 @@
             "name": "format",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2D"
             },
             "description": "Formato de sala (2D, 3D, IMAX, VIP)."
           },
@@ -1537,7 +1668,8 @@
             "name": "cinemaId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "Complejo/cine específico."
           },
@@ -1546,7 +1678,8 @@
             "name": "available",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "true"
             },
             "description": "Filtro 'Disponible' para ocultar agotados (true/false)."
           }
@@ -1558,7 +1691,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Filtrar películas y funciones por criterios múltiples\n\nBúsqueda avanzada con filtros combinables: fecha, género, clasificación por edad, formato (2D, 3D, IMAX, VIP), idioma y complejo de cine.\n\n- **Query Params:** `cityId`, `date`, `genre`, `rating`, `language`, `format`, `cinemaId`, `available`.\n- **Respuesta:** Devuelve `success` y `data` con la lista filtrada de títulos y horarios disponibles."
       }
     },
     "/movies/{id}": {
@@ -1573,7 +1707,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la película."
           }
@@ -1588,7 +1723,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener detalle completo de una película por ID\n\nFicha técnica completa: título original, sinopsis, duración en minutos, género, director, clasificación y afiche promocional.\n\n- **Parámetros de ruta:** `:id` (ID de la película).\n- **Respuesta:** Devuelve `success` y `data` con el detalle de la película."
       }
     },
     "/movies/{id}/functions": {
@@ -1603,7 +1739,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la película."
           },
@@ -1612,7 +1749,8 @@
             "name": "cityId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la ciudad para filtrar funciones."
           }
@@ -1624,7 +1762,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener funciones activas y futuras de una película\n\nLista todas las funciones disponibles para la película indicada, con opción de filtro por ciudad.\n\n- **Parámetros de ruta:** `:id` (ID de la película).\n- **Query Params:** `cityId` (ID de la ciudad).\n- **Respuesta:** Devuelve `success` y `data` con las funciones asociadas."
       }
     },
     "/movies/{id}/recommendations": {
@@ -1639,7 +1778,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la película de referencia."
           }
@@ -1651,7 +1791,8 @@
           "500": {
             "description": "Error interno del servidor."
           }
-        }
+        },
+        "description": "### Obtener recomendaciones de películas similares\n\nRetorna títulos recomendados basados en afinidad de género y director respecto a la película consultada.\n\n- **Parámetros de ruta:** `:id` (ID de la película de referencia).\n- **Respuesta:** Devuelve `success` y `data` con la lista de títulos afines."
       }
     },
     "/membership": {
@@ -1672,7 +1813,8 @@
           "401": {
             "description": "No autenticado"
           }
-        }
+        },
+        "description": "### Consultar membresía digital del usuario autenticado\n\nObtiene los datos de la tarjeta digital de fidelización del usuario: código de membresía, nivel actual (Classic, Silver, Gold, Platinum) y puntos acumulados.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el estado de la membresía."
       }
     },
     "/membership/benefits": {
@@ -1693,7 +1835,8 @@
           "401": {
             "description": "No autenticado"
           }
-        }
+        },
+        "description": "### Consultar beneficios y descuentos vigentes por nivel de membresía (RN-032)\n\nRetorna la matriz oficial de porcentajes de descuento en boletas y confitería, accesos preferenciales y acumulación de puntos por nivel.\n\n- **Respuesta:** Devuelve `success` y `data` con la tabla de beneficios."
       }
     },
     "/membership/create": {
@@ -1731,7 +1874,8 @@
           "404": {
             "description": "Usuario no encontrado"
           }
-        }
+        },
+        "description": "### Crear membresía digital manualmente para un usuario\n\nOperación administrativa para generar o renovar la membresía de un usuario.\n\n- **Respuesta:** Devuelve `success`, `message` y `data` con la membresía creada."
       }
     },
     "/health": {
@@ -1740,7 +1884,7 @@
           "Health"
         ],
         "summary": "Verificar estado de la API y servicios",
-        "description": "Verifica el estado de la API y la conexión a la base de datos",
+        "description": "### Verificar estado de salud de la API y servicios\n\nComprueba el estado de la API, el tiempo de actividad (uptime) y la conectividad activa con el motor de base de datos PostgreSQL.\n\n- **Respuesta:** Devuelve `success` y `data` con el estado operativo de los servicios.",
         "responses": {
           "200": {
             "description": "API en funcionamiento",
@@ -1816,7 +1960,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la película"
           },
@@ -1825,7 +1970,8 @@
             "name": "format",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2D"
             },
             "description": "Formato de proyección (2D, 3D, IMAX, VIP)"
           },
@@ -1834,7 +1980,8 @@
             "name": "date",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2026-08-24"
             },
             "description": "Fecha de la función (YYYY-MM-DD)"
           },
@@ -1843,7 +1990,8 @@
             "name": "cinemaId",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID del cine o complejo"
           }
@@ -1855,7 +2003,8 @@
           "404": {
             "description": "Película no encontrada"
           }
-        }
+        },
+        "description": "### Obtener funciones de una película con filtros\n\nConsulta las funciones disponibles para una película según formato de proyección (2D, 3D, IMAX, VIP), fecha y complejo.\n\n- **Parámetros de ruta:** `:id` (ID de la película).\n- **Query Params:** `format`, `date`, `cinemaId`.\n- **Respuesta:** Devuelve `success` y `data` con el listado de funciones y salas."
       }
     },
     "/functions/{id}/prices": {
@@ -1870,7 +2019,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la función"
           }
@@ -1885,7 +2035,8 @@
           "404": {
             "description": "Función no encontrada"
           }
-        }
+        },
+        "description": "### Obtener desglose de precios y promociones de una función\n\nCalcula el valor base de la entrada, recargos por sala especializada (IMAX, 3D, VIP) y promociones del día aplicables.\n\n- **Parámetros de ruta:** `:id` (ID de la función).\n- **Respuesta:** Devuelve `success` y `data` con el desglose tarifario."
       }
     },
     "/functions/{id}/seats": {
@@ -1900,7 +2051,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la función"
           }
@@ -1915,7 +2067,8 @@
           "404": {
             "description": "Función no encontrada"
           }
-        }
+        },
+        "description": "### Obtener mapa de sillas y disponibilidad en tiempo real (HU-010)\n\nRepresentación matricial de la sala con estado en vivo de cada silla: disponible, ocupada, bloqueada o reservada.\n\n- **Parámetros de ruta:** `:id` (ID de la función).\n- **Respuesta:** Devuelve `success` y `data` con el layout de la sala y estado de asientos."
       }
     },
     "/functions/{id}": {
@@ -1930,7 +2083,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID de la función"
           }
@@ -1945,7 +2099,8 @@
           "404": {
             "description": "Función no encontrada"
           }
-        }
+        },
+        "description": "### Obtener detalle de una función\n\nInformación sobre sala, complejo, película, formato de proyección y horario de inicio.\n\n- **Parámetros de ruta:** `:id` (ID de la función).\n- **Respuesta:** Devuelve `success` y `data` con los datos de la función."
       }
     },
     "/departments/{countryId}": {
@@ -1960,7 +2115,8 @@
             "name": "countryId",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID del país"
           }
@@ -1995,7 +2151,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener departamentos por país\n\nLista los departamentos o provincias asociados al identificador de país especificado.\n\n- **Parámetros de ruta:** `:countryId` (ID del país).\n- **Respuesta:** Devuelve `success` y `data` con la lista de departamentos."
       }
     },
     "/countries": {
@@ -2032,7 +2189,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener catálogo de países\n\nRetorna todos los países admitidos con sus respectivos códigos ISO e identificadores.\n\n- **Respuesta:** Devuelve `success` y `data` con el array de países."
       }
     },
     "/cities/{departmentId}": {
@@ -2047,7 +2205,8 @@
             "name": "departmentId",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
             "description": "ID del departamento"
           }
@@ -2084,7 +2243,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener ciudades activas por departamento (solo con cine activo)\n\nFiltra y devuelve únicamente las ciudades que cuentan con al menos un complejo de cine operativo y salas disponibles para venta.\n\n- **Parámetros de ruta:** `:departmentId` (ID del departamento).\n- **Respuesta:** Devuelve `success` y `data` con las ciudades activas."
       }
     },
     "/cart": {
@@ -2111,7 +2271,7 @@
                 "properties": {
                   "functionId": {
                     "type": "integer",
-                    "example": 5
+                    "example": 1
                   },
                   "seatIds": {
                     "type": "array",
@@ -2119,8 +2279,8 @@
                       "type": "integer"
                     },
                     "example": [
-                      12,
-                      13
+                      1,
+                      2
                     ]
                   }
                 }
@@ -2169,7 +2329,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Crear carrito a partir de sillas seleccionadas\n\nInicia una sesión de compra creando el carrito activo asociado a la reserva de sillas del usuario.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el carrito creado (`cartId`, total estimado y tiempo de expiración)."
       },
       "get": {
         "summary": "Obtiene el detalle completo del carrito activo",
@@ -2222,7 +2383,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Obtener detalle completo del carrito activo\n\nConsulta los ítems actuales del carrito: entradas reservadas, confitería agregada, subtotales, descuentos y saldo pendiente.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el desglose integral del carrito."
       },
       "put": {
         "summary": "Modifica cantidades de confitería y/o quita entradas del carrito",
@@ -2327,7 +2489,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Modificar cantidades de confitería o quitar entradas del carrito\n\nPermite actualizar unidades de snacks o remover entradas reservadas recalculando automáticamente los subtotales.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el carrito actualizado."
       },
       "delete": {
         "summary": "Cancela el carrito activo y libera las sillas reservadas",
@@ -2386,7 +2549,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Cancelar carrito activo y liberar sillas reservadas (RN-045)\n\nDescarta la transacción en curso, anula el carrito activo y libera de inmediato las sillas retenidas para otros clientes.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` confirmando el ID del carrito cancelado."
       }
     },
     "/cart/apply-membership": {
@@ -2400,6 +2564,17 @@
             "bearerAuth": []
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {}
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Resumen del carrito con el descuento de membresía aplicado",
@@ -2451,7 +2626,8 @@
               }
             }
           }
-        }
+        },
+        "description": "### Aplicar descuento automático por membresía (RN-047)\n\nEvalúa el nivel de membresía del usuario autenticado (Classic, Silver, Gold, Platinum) y aplica el porcentaje de descuento a entradas y confitería.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el valor del descuento aplicado y el nuevo total."
       }
     },
     "/cart/apply-giftcard": {
@@ -2535,7 +2711,177 @@
               }
             }
           }
-        }
+        },
+        "description": "### Aplicar bonos del wallet del usuario al total del carrito\n\nDebita saldo disponible de la billetera de bonos del usuario y lo descuenta del total a pagar en la transacción.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con el saldo debitado y total neto restante."
+      }
+    },
+    "/cart/snacks": {
+      "post": {
+        "summary": "Añadir un producto de confitería al carrito activo",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "snackId",
+                  "quantity"
+                ],
+                "properties": {
+                  "snackId": {
+                    "type": "integer",
+                    "description": "ID del producto de confitería",
+                    "example": 1
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "description": "Cantidad de unidades deseadas (> 0)",
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Producto añadido al carrito exitosamente"
+          },
+          "400": {
+            "description": "Stock insuficiente, producto agotado o datos inválidos"
+          },
+          "401": {
+            "description": "No autenticado"
+          },
+          "404": {
+            "description": "Producto no encontrado"
+          }
+        },
+        "description": "### Añadir un producto de confitería al carrito activo\n\nAgrega una cantidad específica de un snack o combo al carrito validando stock previo.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success`, `message` y `data` con el ítem añadido."
+      },
+      "get": {
+        "summary": "Obtener los productos de confitería en el carrito activo",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carrito obtenido con ítems y total calculado"
+          },
+          "401": {
+            "description": "No autenticado"
+          }
+        },
+        "description": "### Obtener los productos de confitería en el carrito activo\n\nLista todos los snacks agregados a la compra actual con sus cantidades y subtotales.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Respuesta:** Devuelve `success` y `data` con los productos de confitería asociados."
+      }
+    },
+    "/cart/snacks/{cartItemId}": {
+      "put": {
+        "summary": "Actualizar la cantidad de un ítem de confitería en el carrito",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cartItemId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID del ítem en el carrito"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "quantity"
+                ],
+                "properties": {
+                  "quantity": {
+                    "type": "integer",
+                    "description": "Nueva cantidad deseada (> 0)",
+                    "example": 3
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cantidad actualizada exitosamente"
+          },
+          "400": {
+            "description": "Cantidad inválida o stock insuficiente"
+          },
+          "401": {
+            "description": "No autenticado"
+          },
+          "404": {
+            "description": "Ítem o carrito no encontrado"
+          }
+        },
+        "description": "### Actualizar cantidad de un ítem de confitería en el carrito\n\nModifica las unidades de un producto de dulcería en el carrito activo.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Parámetros de ruta:** `:cartItemId` (ID del ítem en el carrito).\n- **Respuesta:** Devuelve `success` y `data` con el ítem actualizado."
+      },
+      "delete": {
+        "summary": "Eliminar un ítem de confitería del carrito activo",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cartItemId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID del ítem en el carrito"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto eliminado del carrito exitosamente"
+          },
+          "401": {
+            "description": "No autenticado"
+          },
+          "404": {
+            "description": "Ítem o carrito no encontrado"
+          }
+        },
+        "description": "### Eliminar un ítem de confitería del carrito activo\n\nRemueve por completo un producto de confitería de la compra activa.\n\n- **Autenticación:** Requiere Bearer JWT (`{{accessToken}}`).\n- **Parámetros de ruta:** `:cartItemId` (ID del ítem en el carrito).\n- **Respuesta:** Devuelve `success` y `data` confirmando la remoción."
       }
     },
     "/auth/login": {
@@ -2618,7 +2964,8 @@
           "500": {
             "description": "Error interno del servidor"
           }
-        }
+        },
+        "description": "### Autenticar usuario y generar tokens JWT\n\nInicia sesión con credenciales registradas. Valida contraseña mediante bcrypt (12 rounds) y emite un par de tokens JWT.\n\n- **Autenticación requerida:** No (Público).\n- **Control de seguridad:** Bloqueo temporal tras 5 intentos fallidos durante 15 minutos.\n- **Respuesta:** Devuelve `success`, `message` y `data` con los datos del usuario y los tokens (`accessToken` y `refreshToken`).\n- **Postman Auto-Sync:** Guarda automáticamente los tokens en las variables `{{accessToken}}` y `{{refreshToken}}`."
       }
     },
     "/auth/register": {
@@ -2795,7 +3142,8 @@
           "500": {
             "description": "Error interno del servidor"
           }
-        }
+        },
+        "description": "### Registrar un nuevo usuario y membresía digital\n\nCrea una cuenta de usuario con estado pendiente de activación y asocia automáticamente una membresía digital inicial (HU-006).\n\n- **Autenticación requerida:** No (Público).\n- **Restricción de tasa:** Máximo 10 registros por ventana de 15 minutos por IP.\n- **Respuesta:** Devuelve `success`, `message` y `data` con el usuario creado y la membresía asignada."
       }
     },
     "/auth/verify-email": {
@@ -2864,42 +3212,367 @@
           "500": {
             "description": "Error interno del servidor"
           }
-        }
+        },
+        "description": "### Verificar correo electrónico y activar cuenta\n\nValida el token recibido por correo electrónico y activa la cuenta del usuario para permitir el inicio de sesión.\n\n- **Autenticación requerida:** No (Público).\n- **Respuesta:** Devuelve exclusivamente `success: true` y `message: \"Cuenta Activada correctamente\"`. No expone entidades internas por seguridad."
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Renovar tokens de autenticación",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "Token de refresco (opcional si se envía vía cookie httpOnly)",
+                    "example": "{{refreshToken}}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens renovados exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Token refreshed successfully"
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "d3b07384d113edec49eaa6238ad5ff00..."
+                    },
+                    "tokenType": {
+                      "type": "string",
+                      "example": "Bearer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token de refresco no proporcionado o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Refresh token is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido, expirado o revocado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        },
+        "description": "### Renovar tokens de autenticación\n\nEmite un nuevo `accessToken` a partir de un `refreshToken` válido y no expirado sin requerir reingreso de contraseña.\n\n- **Autenticación requerida:** Requiere `refreshToken` en el cuerpo de la petición.\n- **Respuesta:** Devuelve `success`, `message` y `data` con el nuevo token de acceso."
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Cerrar sesión y revocar tokens",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "Token de refresco a revocar (opcional si se envía vía cookie)",
+                    "example": "{{refreshToken}}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sesión cerrada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logged out successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token de refresco no proporcionado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Refresh token is required for logout"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        },
+        "description": "### Cerrar sesión y revocar tokens\n\nInvalida el `refreshToken` activo del usuario e impide renovaciones posteriores.\n\n- **Autenticación requerida:** Bearer JWT (`accessToken`) o `refreshToken` en el cuerpo.\n- **Respuesta:** Devuelve exclusivamente `success: true` y `message: \"Logged out successfully\"`.\n- **Postman Auto-Sync:** Limpia automáticamente las variables de entorno `{{accessToken}}` y `{{refreshToken}}`."
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Solicitar restablecimiento de contraseña",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "usuario@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Correo de restablecimiento enviado si la cuenta existe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "If the email exists, a reset link was sent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Correo electrónico requerido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        },
+        "description": "### Solicitar enlace de restablecimiento de contraseña\n\nGenera un token de recuperación y envía un correo electrónico si la dirección existe en el sistema.\n\n- **Autenticación requerida:** No (Público).\n- **Política de seguridad:** Siempre responde éxito para prevenir la enumeración de correos electrónicos.\n- **Respuesta:** Devuelve exclusivamente `success: true` y `message`. No expone datos de usuario."
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Restablecer contraseña con token de recuperación",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "token",
+                  "newPassword",
+                  "confirmPassword"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "usuario@example.com"
+                  },
+                  "token": {
+                    "type": "string",
+                    "example": "a6b7c8d9e0f1g2h3i4j5k6l7m8n9o0p1"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "NewPassword123!"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "NewPassword123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contraseña restablecida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Password has been reset successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos requeridos faltantes, contraseñas no coincidentes o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        },
+        "description": "### Restablecer contraseña con token de recuperación\n\nAplica una nueva contraseña segura para el usuario tras validar la vigencia del token de recuperación.\n\n- **Autenticación requerida:** No (Público).\n- **Respuesta:** Devuelve exclusivamente `success: true` y `message`. No expone datos internos."
       }
     }
   },
   "tags": [
     {
-      "name": "Confitería",
-      "description": "Catálogo de confitería, promociones e ítems del carrito (HU-012)"
-    },
-    {
-      "name": "Reservations",
-      "description": "Gestión de selección interactiva y bloqueo temporal de sillas (HU-010)"
-    },
-    {
-      "name": "Profile",
-      "description": "Consulta y actualización de perfil de usuario y preferencias (HU-008)"
-    },
-    {
-      "name": "Notifications",
-      "description": "Endpoints para la gestión de notificaciones de próximos estrenos."
+      "name": "Auth",
+      "description": "Gestión completa del ciclo de vida de usuarios y credenciales:\n- Registro de cuentas con generación de membresía digital inmediata.\n- Autenticación segura mediante contraseñas cifradas con bcrypt (12 rounds).\n- Emisión y rotación de tokens JWT (Access Token y Refresh Token).\n- Verificación de correo electrónico y activación de cuenta.\n- Recuperación y restablecimiento seguro de contraseñas.\n- Cierre de sesión y revocación de tokens."
     },
     {
       "name": "Movies",
-      "description": "Endpoints para la gestión de películas, cartelera semanal y detalles."
-    },
-    {
-      "name": "Membership",
-      "description": "Gestión de membresía digital y beneficios (HU-008)"
+      "description": "Consulta del catálogo de películas activas y programación de exhibición:\n- Cartelera semanal (próximos 7 días) geolocalizada por ciudad del usuario.\n- Cartelera para el día de hoy con validación de horarios vigentes.\n- Búsqueda y filtrado multicriterio (fecha, género, formato 2D/3D/IMAX, idioma, complejo).\n- Próximos estrenos con sistema de alertas y suscripción a notificaciones.\n- Detalle técnico completo, directores, sinopsis y recomendaciones similares."
     },
     {
       "name": "Functions",
-      "description": "Consulta de funciones, horarios y formatos de proyección (HU-009)"
+      "description": "Gestión de funciones de proyección en salas y complejos de cine:\n- Consulta de funciones disponibles por película, formato y sala.\n- Desglose de precios base, recargos por formato (VIP, IMAX, 3D) y promociones activas.\n- Mapa interactivo de sillas en tiempo real (HU-010): disponibilidad, ocupación y sillas bloqueadas temporalmente."
     },
     {
       "name": "Cart",
-      "description": "Carrito de compras de entradas y confitería (HU-011)"
+      "description": "Orquestación del carrito de compras para reserva de entradas y confitería:\n- Creación de carrito a partir de sillas bloqueadas.\n- Consulta del estado activo, expiración automática (TTL) y cálculo de totales.\n- Modificación de cantidades de confitería y liberación de entradas.\n- Cancelación voluntaria del carrito y liberación inmediata de sillas (RN-045).\n- Aplicación de descuento automático por nivel de membresía (RN-047).\n- Aplicación de saldo de bonos wallet o tarjetas de regalo."
+    },
+    {
+      "name": "Snacks",
+      "description": "Catálogo comercial y gestión de inventario para dulcería y combos:\n- Catálogo general de productos de confitería agrupados por categorías (Combos, Bebidas, Popcorn, Dulces).\n- Consulta de disponibilidad e inventario en tiempo real por complejo (RN-049).\n- Adición, actualización y eliminación de productos de confitería en el carrito activo."
+    },
+    {
+      "name": "Confitería",
+      "description": "Catálogo comercial y gestión de inventario para dulcería y combos:\n- Catálogo general de productos de confitería agrupados por categorías (Combos, Bebidas, Popcorn, Dulces).\n- Consulta de disponibilidad e inventario en tiempo real por complejo (RN-049).\n- Adición, actualización y eliminación de productos de confitería en el carrito activo."
+    },
+    {
+      "name": "Reservations",
+      "description": "Gestión interactiva del bloqueo temporal de sillas para una función:\n- Bloqueo temporal con expiración de 15 minutos (RN-039).\n- Liberación voluntaria de sillas reservadas (RN-040).\n- Consulta de resumen y desglose de la reserva antes de confirmar la compra."
+    },
+    {
+      "name": "Membership",
+      "description": "Beneficios, niveles y promociones del programa de lealtad:\n- Consulta del estado, puntos acumulados y nivel de membresía del usuario (Classic, Silver, Gold, Platinum).\n- Matriz de beneficios y descuentos vigentes por nivel (RN-032).\n- Creación administrativa manual de membresías."
+    },
+    {
+      "name": "Profile",
+      "description": "Gestión de información personal y preferencias del usuario autenticado:\n- Consulta del perfil de usuario y datos de contacto.\n- Actualización de información personal, fecha de nacimiento, ciudad preferida y canales de notificación."
+    },
+    {
+      "name": "Notifications",
+      "description": "Suscripción a alertas personalizadas:\n- Registro de solicitudes para notificación de próximos estrenos al abrir cartelera."
+    },
+    {
+      "name": "Users",
+      "description": "Gestión administrativa y contexto geográfico:\n- Registro y listado general de usuarios.\n- Selección y validación de ciudad/ubicación activa para filtrar la cartelera y complejos cercanos."
+    },
+    {
+      "name": "Countries",
+      "description": "Catálogo de países admitidos por la plataforma de cine."
+    },
+    {
+      "name": "Departments",
+      "description": "Catálogo de departamentos y provincias vinculadas a cada país."
+    },
+    {
+      "name": "Cities",
+      "description": "Catálogo de ciudades activas con complejos de cine y salas operativas."
+    },
+    {
+      "name": "Seed",
+      "description": "Utilidades administrativas para inicialización de base de datos desde payloads JSON estructurados o archivos."
+    },
+    {
+      "name": "Health",
+      "description": "Monitoreo de estado operativo, uptime y conectividad con la base de datos PostgreSQL."
     }
   ]
 }

@@ -18,20 +18,7 @@ import {
   MovieFilterValidationError,
   MovieNotFoundError,
 } from '../errors/movie.errors.js';
-
-/**
- * Límite máximo de películas similares devueltas como recomendaciones.
- *
- * @constant {number}
- */
-const RECOMMENDATIONS_LIMIT = 6;
-
-/**
- * Expresión regular para validar fechas en formato ISO YYYY-MM-DD.
- *
- * @constant {RegExp}
- */
-const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+import { MOVIE_LIMITS, ISO_DATE_REGEX } from '../constant/index.js';
 
 /**
  * Servicio encargado de gestionar la lógica de negocio relacionada
@@ -237,7 +224,7 @@ class MovieService implements IMovieService {
     const similar = await this.movieRepository.findByGenres(
       genres,
       movie.id,
-      RECOMMENDATIONS_LIMIT,
+      MOVIE_LIMITS.RECOMMENDATIONS_LIMIT,
     );
 
     return this.toMovieRecommendationDtos(similar);

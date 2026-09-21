@@ -8,6 +8,7 @@ import Cinema from '../models/cinema.model.js';
 import { IMovieRepository } from './interfaces/movie.repository.interface.js';
 import { FilterMoviesDto } from '../dto/request/filter-movies.dto.js';
 import { getTodayDate } from '../utils/date.util.js';
+import { MOVIE_LIMITS } from '../constant/index.js';
 
 /**
  * Repositorio de Películas
@@ -135,7 +136,7 @@ class MovieRepository implements IMovieRepository {
     today.setHours(0, 0, 0, 0);
 
     const in7Days = new Date(today);
-    in7Days.setDate(today.getDate() + 7);
+    in7Days.setDate(today.getDate() + MOVIE_LIMITS.BILLBOARD_DAYS);
     in7Days.setHours(23, 59, 59, 999);
 
     return await Movie.findAll({

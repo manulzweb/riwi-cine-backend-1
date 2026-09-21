@@ -28,6 +28,7 @@ import {
 } from '../models/index.js';
 import { generateMembershipCode } from '../utils/crypto.util.js';
 import { ISeedService, SeedPayload, SeedResult } from './interfaces/seed.service.interface.js';
+import { ROLES, MEMBERSHIP_LEVELS, MEMBERSHIP_STATUSES, SEAT_TYPES } from '../constant/index.js';
 
 export class SeedService implements ISeedService {
   private parseJson(buffer: Buffer): SeedPayload {
@@ -187,9 +188,9 @@ export class SeedService implements ISeedService {
       }
 
       // 6.1 Sillas para cada sala
-      const generalTypeId = seatTypeMap.get('general') ?? 1;
-      const prefTypeId = seatTypeMap.get('preferencial') ?? generalTypeId;
-      const vipTypeId = seatTypeMap.get('vip') ?? generalTypeId;
+      const generalTypeId = seatTypeMap.get(SEAT_TYPES.GENERAL.toLowerCase()) ?? 1;
+      const prefTypeId = seatTypeMap.get(SEAT_TYPES.PREFERENCIAL.toLowerCase()) ?? generalTypeId;
+      const vipTypeId = seatTypeMap.get(SEAT_TYPES.VIP.toLowerCase()) ?? generalTypeId;
 
       for (const roomId of roomMap.values()) {
         const existingCount = await Seat.count({ where: { roomId }, transaction: t });
@@ -349,14 +350,20 @@ export class SeedService implements ISeedService {
 
       // 10. Usuarios
       if (payload.users?.length) {
-        const defaultRole = await Role.findOne({ where: { name: 'cliente' }, transaction: t });
-        const adminRole = await Role.findOne({ where: { name: 'admin' }, transaction: t });
+        const defaultRole = await Role.findOne({
+          where: { name: ROLES.CLIENT },
+          transaction: t,
+        });
+        const adminRole = await Role.findOne({
+          where: { name: ROLES.ADMIN },
+          transaction: t,
+        });
         const defaultLevel = await MembershipLevel.findOne({
-          where: { name: 'BÁSICA' },
+          where: { name: MEMBERSHIP_LEVELS.BASIC },
           transaction: t,
         });
         const defaultStatus = await MembershipStatus.findOne({
-          where: { name: 'Activa' },
+          where: { name: MEMBERSHIP_STATUSES.ACTIVE },
           transaction: t,
         });
 
@@ -367,7 +374,7 @@ export class SeedService implements ISeedService {
           });
           if (existingUser) continue;
 
-          const role = u.roleName === 'admin' ? adminRole : defaultRole;
+          const role = u.roleName === ROLES.ADMIN ? adminRole : defaultRole;
           const passwordHash = await bcrypt.hash(u.password, envConfig.BCRYPT.ROUNDS);
 
           const user = await User.create(

@@ -36,9 +36,7 @@ import {
   SeatNotFoundError,
   UnauthorizedReservationAccessError,
 } from '../errors/reservation.errors.js';
-
-const RESERVATION_DURATION_MINUTES = 10;
-const MAX_SEATS_PER_RESERVATION = 10;
+import { RESERVATION_LIMITS } from '../constant/index.js';
 
 /**
  * Servicio de Selección y Reserva de Sillas (HU-010)
@@ -247,8 +245,8 @@ export class ReservationService implements IReservationService {
       throw new InvalidSeatSelectionError();
     }
 
-    if (dto.seatIds.length > MAX_SEATS_PER_RESERVATION) {
-      throw new SeatLimitExceededError(MAX_SEATS_PER_RESERVATION);
+    if (dto.seatIds.length > RESERVATION_LIMITS.MAX_SEATS) {
+      throw new SeatLimitExceededError(RESERVATION_LIMITS.MAX_SEATS);
     }
   }
 
@@ -346,7 +344,7 @@ export class ReservationService implements IReservationService {
    * Calcula el timestamp de expiración (10 minutos a partir de ahora).
    */
   private calculateExpiresAt(): Date {
-    return new Date(Date.now() + RESERVATION_DURATION_MINUTES * 60 * 1000);
+    return new Date(Date.now() + RESERVATION_LIMITS.DURATION_MINUTES * 60 * 1000);
   }
 
   /**

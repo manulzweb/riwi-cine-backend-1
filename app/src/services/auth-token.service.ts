@@ -4,6 +4,7 @@ import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envConfig } from '../config/env.js';
 import type { AccessTokenPayload, RefreshTokenPayload } from '../types/auth.types.js';
 import { ITokenService } from './interfaces/auth-token.service.interface.js';
+import { TOKEN_TYPES, JWT_CONFIG } from '../constant/index.js';
 
 /**
  * Servicio encargado de generar y verificar tokens JWT de acceso.
@@ -43,13 +44,13 @@ export class TokenService implements ITokenService {
    */
   generateAccessToken(userId: number, roleId?: number): string {
     return jwt.sign(
-      { sub: String(userId), role: roleId ?? 1, type: 'access' },
+      { sub: String(userId), role: roleId ?? 1, type: TOKEN_TYPES.ACCESS },
       envConfig.JWT.ACCESS_SECRET,
       {
         expiresIn: envConfig.JWT.ACCESS_EXPIRES_IN,
         issuer: envConfig.JWT.ISSUER,
         audience: envConfig.JWT.AUDIENCE,
-        algorithm: 'HS256',
+        algorithm: JWT_CONFIG.ALGORITHM,
       } as SignOptions,
     );
   }
@@ -74,19 +75,23 @@ export class TokenService implements ITokenService {
    * almacenamientos accesibles a terceros.
    */
   generateRefreshToken(userId: number): string {
-    return jwt.sign({ sub: String(userId), type: 'refresh' }, envConfig.JWT.REFRESH_SECRET, {
-      expiresIn: envConfig.JWT.REFRESH_EXPIRES_IN,
-      issuer: envConfig.JWT.ISSUER,
-      audience: envConfig.JWT.AUDIENCE,
-      algorithm: 'HS256',
-    } as SignOptions);
+    return jwt.sign(
+      { sub: String(userId), type: TOKEN_TYPES.REFRESH },
+      envConfig.JWT.REFRESH_SECRET,
+      {
+        expiresIn: envConfig.JWT.REFRESH_EXPIRES_IN,
+        issuer: envConfig.JWT.ISSUER,
+        audience: envConfig.JWT.AUDIENCE,
+        algorithm: JWT_CONFIG.ALGORITHM,
+      } as SignOptions,
+    );
   }
 
   /**
    * Verifica y decodifica un token JWT de acceso.
    *
-   * La verificación incluye firma, emisor, audiencia y algoritmo.
-   * Cualquier fallo se traduce en un retorno `null` para que el
+   * Retorna el payload decodificado si el token es válido y no ha expirado.
+   * Si el token es inválido o la firma no coincide, retorna `null` para que el
    * llamador decida cómo rechazar la solicitud.
    *
    * @param {string} token
@@ -100,7 +105,7 @@ export class TokenService implements ITokenService {
       return jwt.verify(token, envConfig.JWT.ACCESS_SECRET, {
         issuer: envConfig.JWT.ISSUER,
         audience: envConfig.JWT.AUDIENCE,
-        algorithms: ['HS256'],
+        algorithms: [JWT_CONFIG.ALGORITHM],
       }) as AccessTokenPayload;
     } catch {
       return null;
@@ -126,10 +131,10 @@ export class TokenService implements ITokenService {
       const decoded = jwt.verify(token, envConfig.JWT.REFRESH_SECRET, {
         issuer: envConfig.JWT.ISSUER,
         audience: envConfig.JWT.AUDIENCE,
-        algorithms: ['HS256'],
+        algorithms: [JWT_CONFIG.ALGORITHM],
       }) as RefreshTokenPayload;
 
-      if (decoded.type !== 'refresh') return null;
+      if (decoded.type !== TOKEN_TYPES.REFRESH) return null;
 
       return decoded;
     } catch {

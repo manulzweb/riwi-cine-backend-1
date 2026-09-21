@@ -71,10 +71,13 @@ router.get('/', requireAuth, profileController.getProfile);
  *                 properties:
  *                   emailEnabled:
  *                     type: boolean
+ *                     example: true
  *                   smsEnabled:
  *                     type: boolean
+ *                     example: true
  *                   pushEnabled:
  *                     type: boolean
+ *                     example: true
  *     responses:
  *       200:
  *         description: Perfil actualizado exitosamente

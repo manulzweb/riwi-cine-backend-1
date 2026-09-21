@@ -5,25 +5,9 @@ import sequelize from '../config/database.js';
 import User from './user.model.js';
 import { CartItem } from './cart-item.model.js';
 import { CartTicket } from './cart-ticket.model.js';
+import { CART_STATUS } from '../constant/index.js';
 
-/**
- * Modelo de Carrito de Compras
- * ----------------------------
- * Este archivo define el modelo `Cart` de Sequelize, que representa
- * la tabla `carts` en la base de datos (HU-011).
- *
- * Cada usuario puede tener un único carrito ACTIVO a la vez (RN-044).
- * El carrito es temporal y expira después de diez minutos sin actividad
- * (RN-046). Mientras exista un carrito activo, las sillas seleccionadas
- * permanecen bloqueadas mediante una reserva (RN-045).
- *
- * Estados posibles:
- *  - `ACTIVE`: carrito en uso, dentro del tiempo de expiración.
- *  - `EXPIRED`: carrito vencido por inactividad.
- *  - `CONVERTED`: carrito convertido en compra (pago realizado).
- */
-
-export type CartStatus = 'ACTIVE' | 'EXPIRED' | 'CONVERTED';
+export type CartStatus = (typeof CART_STATUS)[keyof typeof CART_STATUS];
 
 /**
  * Atributos principales de la entidad `Cart`.
@@ -83,9 +67,9 @@ Cart.init(
       },
     },
     status: {
-      type: DataTypes.ENUM('ACTIVE', 'EXPIRED', 'CONVERTED'),
+      type: DataTypes.ENUM(...Object.values(CART_STATUS)),
       allowNull: false,
-      defaultValue: 'ACTIVE',
+      defaultValue: CART_STATUS.ACTIVE,
     },
     expiresAt: {
       type: DataTypes.DATE,

@@ -4,8 +4,9 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database.js';
 import User from './user.model.js';
 import CinemaFunction from './function.model.js';
+import { RESERVATION_STATUS } from '../constant/index.js';
 
-export type ReservationStatus = 'ACTIVE' | 'EXPIRED' | 'RELEASED' | 'CONFIRMED';
+export type ReservationStatus = (typeof RESERVATION_STATUS)[keyof typeof RESERVATION_STATUS];
 
 export interface ReservationAttributes {
   id: number;
@@ -57,9 +58,9 @@ Reservation.init(
       },
     },
     status: {
-      type: DataTypes.ENUM('ACTIVE', 'EXPIRED', 'RELEASED', 'CONFIRMED'),
+      type: DataTypes.ENUM(...Object.values(RESERVATION_STATUS)),
       allowNull: false,
-      defaultValue: 'ACTIVE',
+      defaultValue: RESERVATION_STATUS.ACTIVE,
     },
     expiresAt: {
       type: DataTypes.DATE,

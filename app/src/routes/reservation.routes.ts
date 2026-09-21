@@ -97,6 +97,7 @@ router.delete('/release-seats', requireAuth, reservationController.releaseSeats)
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la reserva
  *     responses:
  *       200:
@@ -122,6 +123,7 @@ router.get('/summary', requireAuth, reservationController.getReservationSummary)
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la reserva
  *     responses:
  *       200:

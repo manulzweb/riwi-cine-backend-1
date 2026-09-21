@@ -54,6 +54,33 @@ router.post('/upload', upload.single('file'), seedController.seedFromFile);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               users:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               movies:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               cinemas:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               genres:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               categories:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *             example:
+ *               users: []
+ *               movies: []
+ *               cinemas: []
+ *               genres: []
+ *               categories: []
  *     responses:
  *       200:
  *         description: Base de datos poblada exitosamente

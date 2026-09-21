@@ -17,6 +17,7 @@ const router = Router();
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID del departamento
  *     responses:
  *       200:

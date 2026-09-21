@@ -17,16 +17,11 @@ import { generateMembershipCode } from '../utils/crypto.util.js';
 import User from '../models/user.model.js';
 import MembershipLevel from '../models/membership-level.model.js';
 import MembershipStatus from '../models/membership-status.model.js';
-import { MEMBERSHIP_LEVELS, MEMBERSHIP_STATUSES } from '../constant/auth.constant.js';
-
-const LEVEL_POINTS_REQUIREMENTS: Record<
-  string,
-  { nextLevel: string; points: number; discount: number }
-> = {
-  [MEMBERSHIP_LEVELS.BASIC]: { nextLevel: MEMBERSHIP_LEVELS.STANDARD, points: 300, discount: 5 },
-  [MEMBERSHIP_LEVELS.STANDARD]: { nextLevel: MEMBERSHIP_LEVELS.PREMIUM, points: 800, discount: 10 },
-  [MEMBERSHIP_LEVELS.PREMIUM]: { nextLevel: MEMBERSHIP_LEVELS.PREMIUM, points: 800, discount: 10 },
-};
+import {
+  MEMBERSHIP_LEVELS,
+  MEMBERSHIP_STATUSES,
+  LEVEL_POINTS_REQUIREMENTS,
+} from '../constant/index.js';
 
 /**
  * Servicio encargado de la gestión de Membresías Digitales y Beneficios (HU-008).

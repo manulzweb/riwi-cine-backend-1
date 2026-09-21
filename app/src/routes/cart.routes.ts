@@ -48,12 +48,12 @@ const router = Router();
  *             properties:
  *               functionId:
  *                 type: integer
- *                 example: 5
+ *                 example: 1
  *               seatIds:
  *                 type: array
  *                 items:
  *                   type: integer
- *                 example: [12, 13]
+ *                 example: [1, 2]
  *     responses:
  *       201:
  *         description: Carrito creado con su detalle completo
@@ -233,6 +233,13 @@ router.delete('/', requireAuth, cartController.remove);
  *     tags: [Cart]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example: {}
  *     responses:
  *       200:
  *         description: Resumen del carrito con el descuento de membresía aplicado
@@ -326,9 +333,126 @@ router.post('/apply-giftcard', requireAuth, cartController.applyGiftcard);
 /**
  * Endpoints específicos de Confitería en el Carrito (HU-012)
  */
+
+/**
+ * @swagger
+ * /cart/snacks:
+ *   post:
+ *     summary: Añadir un producto de confitería al carrito activo
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - snackId
+ *               - quantity
+ *             properties:
+ *               snackId:
+ *                 type: integer
+ *                 description: ID del producto de confitería
+ *                 example: 1
+ *               quantity:
+ *                 type: integer
+ *                 description: Cantidad de unidades deseadas (> 0)
+ *                 example: 2
+ *     responses:
+ *       201:
+ *         description: Producto añadido al carrito exitosamente
+ *       400:
+ *         description: Stock insuficiente, producto agotado o datos inválidos
+ *       401:
+ *         description: No autenticado
+ *       404:
+ *         description: Producto no encontrado
+ */
 router.post('/snacks', requireAuth, snackController.addSnackToCart);
+
+/**
+ * @swagger
+ * /cart/snacks:
+ *   get:
+ *     summary: Obtener los productos de confitería en el carrito activo
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Carrito obtenido con ítems y total calculado
+ *       401:
+ *         description: No autenticado
+ */
 router.get('/snacks', requireAuth, snackController.getCart);
+
+/**
+ * @swagger
+ * /cart/snacks/{cartItemId}:
+ *   put:
+ *     summary: Actualizar la cantidad de un ítem de confitería en el carrito
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID del ítem en el carrito
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - quantity
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *                 description: Nueva cantidad deseada (> 0)
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: Cantidad actualizada exitosamente
+ *       400:
+ *         description: Cantidad inválida o stock insuficiente
+ *       401:
+ *         description: No autenticado
+ *       404:
+ *         description: Ítem o carrito no encontrado
+ */
 router.put('/snacks/:cartItemId', requireAuth, snackController.updateCartItem);
+
+/**
+ * @swagger
+ * /cart/snacks/{cartItemId}:
+ *   delete:
+ *     summary: Eliminar un ítem de confitería del carrito activo
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID del ítem en el carrito
+ *     responses:
+ *       200:
+ *         description: Producto eliminado del carrito exitosamente
+ *       401:
+ *         description: No autenticado
+ *       404:
+ *         description: Ítem o carrito no encontrado
+ */
 router.delete('/snacks/:cartItemId', requireAuth, snackController.removeCartItem);
 
 export default router;

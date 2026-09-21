@@ -2,8 +2,7 @@
 
 import cron, { ScheduledTask } from 'node-cron';
 import { cartService } from '../containers/cart.container.js';
-
-const CRON_SCHEDULE = '* * * * *';
+import { CRON_SCHEDULES } from '../constant/index.js';
 
 /**
  * Job programado que expira los carritos vencidos (RN-046) y libera
@@ -13,7 +12,7 @@ const CRON_SCHEDULE = '* * * * *';
  * inactividad con precisión razonable.
  */
 export const startCartExpiryJob = (): ScheduledTask => {
-  return cron.schedule(CRON_SCHEDULE, async () => {
+  return cron.schedule(CRON_SCHEDULES.EVERY_MINUTE, async () => {
     try {
       const result = await cartService.expireCarts();
 

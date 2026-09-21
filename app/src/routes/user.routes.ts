@@ -177,10 +177,13 @@ router.get('/', authMiddleware([1]), userController.getUsers);
  *                   properties:
  *                     countryId:
  *                       type: integer
+ *                       example: 1
  *                     departmentId:
  *                       type: integer
+ *                       example: 1
  *                     cityId:
  *                       type: integer
+ *                       example: 1
  *       400:
  *         description: Datos inválidos o faltantes, o la ciudad no está activa
  *         content:

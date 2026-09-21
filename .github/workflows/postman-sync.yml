@@ -1,4 +1,4 @@
-name: "Postman Sync & Mock Server Update"
+name: "Postman Sync & Automated API Tests"
 
 on:
   push:
@@ -37,5 +37,25 @@ jobs:
         working-directory: ./app
         env:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
-          POSTMAN_COLLECTION_UID: ${{ secrets.POSTMAN_COLLECTION_UID }}
+          POSTMAN_COLLECTION_UID: ${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}
         run: npm run postman:sync
+
+  automated-api-tests:
+    name: Automated API Tests using Postman CLI
+    needs: [sync-postman]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      - name: Run API Tests against Mock Server
+        run: |
+          postman collection run "${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}" -e "${{ secrets.POSTMAN_ENVIRONMENT_UID || '57233881-703dbe92-a3b0-4bc4-b733-8dfd8fb81281' }}"

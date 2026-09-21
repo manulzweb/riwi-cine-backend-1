@@ -40,6 +40,19 @@ const router = Router();
  *                     type: string
  *                   isActive:
  *                     type: boolean
+ *             example:
+ *               - id: 1
+ *                 title: "Inception"
+ *                 synopsis: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños."
+ *                 duration: 148
+ *                 director: "Christopher Nolan"
+ *                 isActive: true
+ *               - id: 2
+ *                 title: "Interstellar"
+ *                 synopsis: "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio."
+ *                 duration: 169
+ *                 director: "Christopher Nolan"
+ *                 isActive: true
  *       500:
  *         description: Error interno del servidor.
  */
@@ -84,6 +97,17 @@ router.get('/', movieController.getMovies);
  *                     type: string
  *                   daysUntil:
  *                     type: integer
+ *             example:
+ *               - id: 10
+ *                 title: "Dune: Parte Tres"
+ *                 posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401"
+ *                 releaseDate: "2026-11-20"
+ *                 genres: ["Ciencia Ficción", "Aventura"]
+ *                 classification: "+12"
+ *                 duration: 165
+ *                 trailerUrl: "https://www.youtube.com/watch?v=mock-dune3"
+ *                 synopsis: "Paul Atreides continúa su viaje épico liderando a los Fremen."
+ *                 daysUntil: 60
  *       500:
  *         description: Error interno del servidor.
  */
@@ -101,6 +125,7 @@ router.get('/upcoming', movieController.getUpcomingMovies);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la película.
  *     responses:
  *       200:
@@ -133,6 +158,17 @@ router.get('/upcoming', movieController.getUpcomingMovies);
  *                   type: string
  *                 daysUntil:
  *                   type: integer
+ *             example:
+ *               id: 10
+ *               title: "Dune: Parte Tres"
+ *               posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401"
+ *               releaseDate: "2026-11-20"
+ *               genres: ["Ciencia Ficción", "Aventura"]
+ *               classification: "+12"
+ *               duration: 165
+ *               trailerUrl: "https://www.youtube.com/watch?v=mock-dune3"
+ *               synopsis: "Paul Atreides continúa su viaje épico liderando a los Fremen."
+ *               daysUntil: 60
  *       400:
  *         description: Id de la película inválido.
  *       404:
@@ -154,6 +190,7 @@ router.get('/upcoming/:id', movieController.getUpcomingMovie);
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la ciudad para filtrar la cartelera.
  *     responses:
  *       200:
@@ -175,6 +212,7 @@ router.get('/weekly', movieController.getWeeklyMovies);
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la ciudad.
  *     responses:
  *       200:
@@ -196,6 +234,7 @@ router.get('/today', movieController.getTodayMovies);
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la ciudad.
  *       - in: query
  *         name: date
@@ -203,42 +242,49 @@ router.get('/today', movieController.getTodayMovies);
  *         schema:
  *           type: string
  *           format: date
+ *           example: "2026-08-24"
  *         description: Fecha a consultar (YYYY-MM-DD).
  *       - in: query
  *         name: genre
  *         required: false
  *         schema:
  *           type: string
+ *           example: "Acción"
  *         description: Género de la película.
  *       - in: query
  *         name: rating
  *         required: false
  *         schema:
  *           type: string
+ *           example: "+12"
  *         description: Clasificación por edad.
  *       - in: query
  *         name: language
  *         required: false
  *         schema:
  *           type: string
+ *           example: "Doblada"
  *         description: Idioma (Doblada/Subtitulada).
  *       - in: query
  *         name: format
  *         required: false
  *         schema:
  *           type: string
+ *           example: "2D"
  *         description: Formato de sala (2D, 3D, IMAX, VIP).
  *       - in: query
  *         name: cinemaId
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: Complejo/cine específico.
  *       - in: query
  *         name: available
  *         required: false
  *         schema:
  *           type: string
+ *           example: "true"
  *         description: "Filtro 'Disponible' para ocultar agotados (true/false)."
  *     responses:
  *       200:
@@ -260,6 +306,7 @@ router.get('/filter', movieController.getMoviesByFilter);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la película.
  *     responses:
  *       200:
@@ -283,12 +330,14 @@ router.get('/:id', movieController.getMovieDetail);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la película.
  *       - in: query
  *         name: cityId
  *         required: false
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la ciudad para filtrar funciones.
  *     responses:
  *       200:
@@ -310,6 +359,7 @@ router.get('/:id/functions', movieController.getMovieFunctions);
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la película de referencia.
  *     responses:
  *       200:
