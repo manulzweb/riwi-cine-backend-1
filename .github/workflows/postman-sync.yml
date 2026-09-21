@@ -57,8 +57,17 @@ jobs:
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
       - name: Login to Postman CLI
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+        env:
+          PM_KEY: ${{ secrets.POSTMAN_API_KEY }}
+        run: |
+          API_KEY=$(echo "$PM_KEY" | xargs)
+          postman login --with-api-key "$API_KEY"
 
       - name: Run API Tests against Mock Server
+        env:
+          RAW_COL_UID: ${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}
+          RAW_ENV_UID: ${{ secrets.POSTMAN_ENVIRONMENT_UID || '57233881-703dbe92-a3b0-4bc4-b733-8dfd8fb81281' }}
         run: |
-          postman collection run "${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}" -e "${{ secrets.POSTMAN_ENVIRONMENT_UID || '57233881-703dbe92-a3b0-4bc4-b733-8dfd8fb81281' }}"
+          COL_UID=$(echo "$RAW_COL_UID" | xargs)
+          ENV_UID=$(echo "$RAW_ENV_UID" | xargs)
+          postman collection run "$COL_UID" -e "$ENV_UID"
