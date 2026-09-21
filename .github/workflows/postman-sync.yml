@@ -1,0 +1,73 @@
+name: "Postman Sync & Automated API Tests"
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - "app/src/routes/**"
+      - "app/src/docs/**"
+      - "app/src/dto/**"
+      - "app/scripts/sync-postman.mjs"
+      - ".github/workflows/postman-sync.yml"
+  workflow_dispatch:
+
+jobs:
+  sync-postman:
+    name: Sync OpenAPI to Postman Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Synchronize Postman Collection and Mock Server
+        working-directory: ./app
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+          POSTMAN_COLLECTION_UID: ${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}
+        run: npm run postman:sync
+
+  automated-api-tests:
+    name: Automated API Tests using Postman CLI
+    needs: [sync-postman]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Login to Postman CLI
+        env:
+          PM_KEY: ${{ secrets.POSTMAN_API_KEY }}
+        run: |
+          API_KEY=$(echo "$PM_KEY" | xargs)
+          postman login --with-api-key "$API_KEY"
+
+      - name: Run API Tests against Mock Server
+        env:
+          RAW_COL_UID: ${{ secrets.POSTMAN_COLLECTION_UID || '57233881-73046d96-409b-450a-a063-5efbfa5f815f' }}
+          RAW_ENV_UID: ${{ secrets.POSTMAN_ENVIRONMENT_UID || '57233881-703dbe92-a3b0-4bc4-b733-8dfd8fb81281' }}
+        run: |
+          COL_UID=$(echo "$RAW_COL_UID" | xargs)
+          ENV_UID=$(echo "$RAW_ENV_UID" | xargs)
+          postman collection run "$COL_UID" -e "$ENV_UID"

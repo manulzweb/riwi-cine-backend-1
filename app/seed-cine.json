@@ -1,0 +1,882 @@
+{
+  "countries": [{ "name": "Colombia" }],
+  "departments": [
+    { "name": "Antioquia", "countryName": "colombia" },
+    { "name": "Bogotá D.C.", "countryName": "colombia" },
+    { "name": "Valle del Cauca", "countryName": "colombia" },
+    { "name": "Santander", "countryName": "colombia" },
+    { "name": "Atlántico", "countryName": "colombia" }
+  ],
+  "cities": [
+    { "name": "Medellín", "departmentName": "antioquia" },
+    { "name": "Bogotá", "departmentName": "bogotá d.c." },
+    { "name": "Cali", "departmentName": "valle del cauca" },
+    { "name": "Bucaramanga", "departmentName": "santander" },
+    { "name": "Barranquilla", "departmentName": "atlántico" }
+  ],
+  "cinemas": [
+    {
+      "name": "MultiCine El Tesoro",
+      "address": "Cra. 25A #1A Sur 45, Medellín",
+      "cityName": "medellín"
+    },
+    {
+      "name": "MultiCine Andino",
+      "address": "Cra. 11 #82-71, Bogotá",
+      "cityName": "bogotá"
+    },
+    {
+      "name": "MultiCine Chipichape",
+      "address": "Calle 38 Norte #6N-35, Cali",
+      "cityName": "cali"
+    },
+    {
+      "name": "MultiCine Cacique",
+      "address": "Transversal 93 #34-99, Bucaramanga",
+      "cityName": "bucaramanga"
+    },
+    {
+      "name": "MultiCine Mallplaza",
+      "address": "Calle 98 #52-115, Barranquilla",
+      "cityName": "barranquilla"
+    }
+  ],
+  "rooms": [
+    {
+      "name": "Sala 1 IMAX - El Tesoro",
+      "cinemaName": "multicine el tesoro",
+      "format": "IMAX",
+      "capacity": 120
+    },
+    {
+      "name": "Sala 2 VIP - El Tesoro",
+      "cinemaName": "multicine el tesoro",
+      "format": "VIP",
+      "capacity": 60
+    },
+    {
+      "name": "Sala 3 3D - El Tesoro",
+      "cinemaName": "multicine el tesoro",
+      "format": "3D",
+      "capacity": 100
+    },
+    {
+      "name": "Sala 4 2D - El Tesoro",
+      "cinemaName": "multicine el tesoro",
+      "format": "2D",
+      "capacity": 100
+    },
+    {
+      "name": "Sala 1 3D MacroXE - Andino",
+      "cinemaName": "multicine andino",
+      "format": "3D",
+      "capacity": 150
+    },
+    {
+      "name": "Sala 2 VIP Prime - Andino",
+      "cinemaName": "multicine andino",
+      "format": "VIP",
+      "capacity": 50
+    },
+    {
+      "name": "Sala 3 IMAX Laser - Andino",
+      "cinemaName": "multicine andino",
+      "format": "IMAX",
+      "capacity": 130
+    },
+    {
+      "name": "Sala 4 2D Estándar - Andino",
+      "cinemaName": "multicine andino",
+      "format": "2D",
+      "capacity": 110
+    },
+    {
+      "name": "Sala 1 2D Estándar - Chipichape",
+      "cinemaName": "multicine chipichape",
+      "format": "2D",
+      "capacity": 100
+    },
+    {
+      "name": "Sala 2 3D Dinámica - Chipichape",
+      "cinemaName": "multicine chipichape",
+      "format": "3D",
+      "capacity": 90
+    },
+    {
+      "name": "Sala 3 VIP - Chipichape",
+      "cinemaName": "multicine chipichape",
+      "format": "VIP",
+      "capacity": 55
+    },
+    {
+      "name": "Sala 1 3D MacroXE - Cacique",
+      "cinemaName": "multicine cacique",
+      "format": "3D",
+      "capacity": 120
+    },
+    {
+      "name": "Sala 2 2D Estándar - Cacique",
+      "cinemaName": "multicine cacique",
+      "format": "2D",
+      "capacity": 90
+    },
+    {
+      "name": "Sala 1 IMAX - Mallplaza",
+      "cinemaName": "multicine mallplaza",
+      "format": "IMAX",
+      "capacity": 110
+    },
+    {
+      "name": "Sala 2 2D Estándar - Mallplaza",
+      "cinemaName": "multicine mallplaza",
+      "format": "2D",
+      "capacity": 85
+    }
+  ],
+  "seatTypes": [
+    {
+      "name": "General",
+      "priceFactor": 1.0,
+      "description": "Silla estándar con excelente visibilidad y confort ergonómico."
+    },
+    {
+      "name": "Preferencial",
+      "priceFactor": 1.3,
+      "description": "Silla central reclinable con mayor espacio entre filas y apoyabrazos doble."
+    },
+    {
+      "name": "VIP",
+      "priceFactor": 1.8,
+      "description": "Silla de piel premium totalmente reclinable con reposapiés y servicio a la sala."
+    }
+  ],
+  "movies": [
+    {
+      "title": "Dune: Parte Dos",
+      "synopsis": "Paul Atreides se une a Chani y a los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia, enfrentándose a una elección entre el amor de su vida y el destino del universo.",
+      "director": "Denis Villeneuve",
+      "actors": ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Javier Bardem"],
+      "genres": ["Ciencia Ficción", "Aventura", "Drama"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["2D", "3D", "IMAX", "VIP"],
+      "duration": 166,
+      "rating": "PG-13",
+      "genre": "Ciencia Ficción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s520b4q.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=Way9Dexny3w",
+      "releaseDate": "2024-03-01",
+      "isActive": true
+    },
+    {
+      "title": "Spider-Man: Across the Spider-Verse",
+      "synopsis": "Miles Morales es catapultado a través del Multiverso, donde se encuentra con un equipo de Spider-People encargados de proteger su existencia frente a una nueva amenaza multidimensional.",
+      "director": "Joaquim Dos Santos",
+      "actors": ["Shameik Moore", "Hailee Steinfeld", "Oscar Isaac", "Daniel Kaluuya"],
+      "genres": ["Animación", "Acción", "Aventura"],
+      "languages": ["Español", "Doblada", "Subtitulada"],
+      "formats": ["2D", "3D", "IMAX"],
+      "duration": 140,
+      "rating": "PG",
+      "genre": "Animación",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/4HodYYKEIsGOdinkGi2Ucz6X9i0.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=cqGjhVJWtEg",
+      "releaseDate": "2023-06-02",
+      "isActive": true
+    },
+    {
+      "title": "Oppenheimer",
+      "synopsis": "La fascinante historia del físico teórico estadounidense J. Robert Oppenheimer, su liderazgo en el Proyecto Manhattan y el desarrollo de la primera arma nuclear de la historia.",
+      "director": "Christopher Nolan",
+      "actors": ["Cillian Murphy", "Emily Blunt", "Matt Damon", "Robert Downey Jr."],
+      "genres": ["Drama", "Historia", "Biografía"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["2D", "IMAX", "VIP"],
+      "duration": 180,
+      "rating": "R",
+      "genre": "Drama",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=uYPbbksJxIg",
+      "releaseDate": "2023-07-21",
+      "isActive": true
+    },
+    {
+      "title": "Intensamente 2",
+      "synopsis": "Riley entra en la adolescencia y su cuartel general sufre una repentina demolición para hacer sitio a nuevas emociones inesperadas: Ansiedad, Envidia, Ennui y Vergüenza.",
+      "director": "Kelsey Mann",
+      "actors": ["Amy Poehler", "Maya Hawke", "Phyllis Smith", "Lewis Black"],
+      "genres": ["Animación", "Comedia", "Familiar"],
+      "languages": ["Español", "Doblada"],
+      "formats": ["2D", "3D"],
+      "duration": 96,
+      "rating": "G",
+      "genre": "Animación",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/xg270vgjbkHN9VeJJWo33CTAbRZ.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=LEjhY15eCx0",
+      "releaseDate": "2024-06-14",
+      "isActive": true
+    },
+    {
+      "title": "Deadpool & Wolverine",
+      "synopsis": "Un apático Wade Wilson se esfuerza por adaptarse a la vida civil hasta que la TVA lo recluta para una misión urgente, obligándolo a asociarse con un reacio y herido Wolverine.",
+      "director": "Shawn Levy",
+      "actors": ["Ryan Reynolds", "Hugh Jackman", "Emma Corrin", "Morena Baccarin"],
+      "genres": ["Acción", "Comedia", "Ciencia Ficción"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["2D", "3D", "IMAX", "VIP"],
+      "duration": 127,
+      "rating": "R",
+      "genre": "Acción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/yDHYTfA3R0jFYba16jBB1jv8v2C.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=73_1biulkYk",
+      "releaseDate": "2024-07-26",
+      "isActive": true
+    },
+    {
+      "title": "The Batman: Part II",
+      "synopsis": "Bruce Wayne continúa desentrañando la red de corrupción y crimen enquistada en Gotham City mientras nuevos y siniestros antagonistas emergen tras las catastróficas inundaciones.",
+      "director": "Matt Reeves",
+      "actors": ["Robert Pattinson", "Andy Serkis", "Colin Farrell", "Jeffrey Wright"],
+      "genres": ["Acción", "Crimen", "Drama"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["2D", "IMAX", "VIP"],
+      "duration": 165,
+      "rating": "R",
+      "genre": "Acción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=mqqft2x_Aa4",
+      "releaseDate": "2026-10-02",
+      "isActive": true
+    },
+    {
+      "title": "Avatar: Fuego y Ceniza",
+      "synopsis": "Jake Sully y Neytiri se enfrentan al Pueblo de la Ceniza, una tribu hostil de Na'vi arraigada en los territorios volcánicos de Pandora, desencadenando un conflicto que cambiará el destino del planeta.",
+      "director": "James Cameron",
+      "actors": ["Sam Worthington", "Zoe Saldaña", "Sigourney Weaver", "Stephen Lang"],
+      "genres": ["Ciencia Ficción", "Aventura", "Acción"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["3D", "IMAX"],
+      "duration": 190,
+      "rating": "PG-13",
+      "genre": "Ciencia Ficción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/o07FGQiUV9oQ8u3ZtZ2v8Zz53i0.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=d9MyW72ELq0",
+      "releaseDate": "2026-12-18",
+      "isActive": true
+    },
+    {
+      "title": "Avengers: Secret Wars",
+      "synopsis": "Los héroes más poderosos del multiverso colisionan en Battleworld tras el colapso definitivo de las realidades espaciotemporales, en una batalla final que definirá el porvenir de la existencia.",
+      "director": "Anthony Russo, Joe Russo",
+      "actors": ["Robert Downey Jr.", "Pedro Pascal", "Benedict Cumberbatch", "Tom Holland"],
+      "genres": ["Acción", "Aventura", "Ciencia Ficción"],
+      "languages": ["Español", "Subtitulada"],
+      "formats": ["2D", "3D", "IMAX", "VIP"],
+      "duration": 180,
+      "rating": "PG-13",
+      "genre": "Acción",
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+      "bannerUrl": "https://image.tmdb.org/t/p/original/mDeUmV6p2pY3Z5d4P9lK1i3W5zK.jpg",
+      "trailerUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "releaseDate": "2027-05-07",
+      "isActive": true
+    }
+  ],
+  "snacks": [
+    {
+      "name": "Crispeta Salada Gigante",
+      "description": "Crispeta clásica de maíz seleccionada con el toque perfecto de sal marina.",
+      "category": "Crispetas",
+      "price": 16000,
+      "stock": 350,
+      "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505e9610f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Crispeta Caramelo Grande",
+      "description": "Crispeta artesanal bañada en caramelo dorado crujiente de alta confitería.",
+      "category": "Crispetas",
+      "price": 17500,
+      "stock": 280,
+      "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505e9610f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Crispeta Mixta Especial",
+      "description": "Combinación perfecta entre crispeta salada y crispeta acaramelada en empaque gigante.",
+      "category": "Crispetas",
+      "price": 19000,
+      "stock": 200,
+      "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505e9610f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Crispeta Mantequilla Mediana (Agotada)",
+      "description": "Crispeta bañada con deliciosa mantequilla fundida artesanal.",
+      "category": "Crispetas",
+      "price": 13000,
+      "stock": 0,
+      "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505e9610f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Combo Dúo Crispeta Salada",
+      "description": "1 Crispeta gigante salada + 2 Gaseosas dispensador de 22oz + 1 Chocolatina Jet.",
+      "category": "Combos",
+      "price": 29000,
+      "stock": 400,
+      "imageUrl": "https://images.unsplash.com/photo-1585647347483-22b66260dfff",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Combo Mega Familiar",
+      "description": "1 Crispeta gigante, 4 Gaseosas medianas, 2 Perros calientes clásicos y 1 Chocolatina.",
+      "category": "Combos",
+      "price": 46000,
+      "stock": 60,
+      "imageUrl": "https://images.unsplash.com/photo-1585647347483-22b66260dfff",
+      "discountPercentage": 10
+    },
+    {
+      "name": "Combo Individual Cine",
+      "description": "1 Crispeta mediana salada o caramelo + 1 Gaseosa 22oz + 1 Paquete de gomas.",
+      "category": "Combos",
+      "price": 22000,
+      "stock": 220,
+      "imageUrl": "https://images.unsplash.com/photo-1585647347483-22b66260dfff",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Combo Nachos + Gaseosa",
+      "description": "Nachos crujientes con doble queso cheddar caliente fundido + 1 Gaseosa 32oz.",
+      "category": "Combos",
+      "price": 26000,
+      "stock": 150,
+      "imageUrl": "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Gaseosa Dispensador 32oz",
+      "description": "Bebida gaseosa helada dispensador tamaño grande (Coca-Cola, Cuatro, Sprite).",
+      "category": "Gaseosas",
+      "price": 8500,
+      "stock": 700,
+      "imageUrl": "https://images.unsplash.com/photo-1554866585-cd94860890b7",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Gaseosa Dispensador 22oz",
+      "description": "Bebida gaseosa helada dispensador tamaño mediano.",
+      "category": "Gaseosas",
+      "price": 7000,
+      "stock": 600,
+      "imageUrl": "https://images.unsplash.com/photo-1554866585-cd94860890b7",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Gaseosa Zero Azúcar 32oz",
+      "description": "Bebida refrescante sin calorías dispensador tamaño grande.",
+      "category": "Gaseosas",
+      "price": 8500,
+      "stock": 450,
+      "imageUrl": "https://images.unsplash.com/photo-1554866585-cd94860890b7",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Botella de Agua Mineral 600ml",
+      "description": "Agua purificada sin gas bien fría.",
+      "category": "Gaseosas",
+      "price": 6000,
+      "stock": 500,
+      "imageUrl": "https://images.unsplash.com/photo-1523362628745-0c100150b504",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Gomas Ácidas Mix 150g",
+      "description": "Surtido de gomitas masticables con cobertura ácida de sabores frutales.",
+      "category": "Dulces",
+      "price": 7500,
+      "stock": 240,
+      "imageUrl": "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "M&Ms Maní Grande",
+      "description": "Chocolates confitados rellenos de maní crujiente tamaño fiesta.",
+      "category": "Dulces",
+      "price": 9000,
+      "stock": 260,
+      "imageUrl": "https://images.unsplash.com/photo-1581798459219-318e76aecc7b",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Skittles Frutas Original",
+      "description": "Caramelos masticables confitados sabor a frutas del bosque.",
+      "category": "Dulces",
+      "price": 8000,
+      "stock": 190,
+      "imageUrl": "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Chocolatina Jet Gigante",
+      "description": "Chocolatina tradicional con leche tamaño especial para cine.",
+      "category": "Chocolates",
+      "price": 6500,
+      "stock": 320,
+      "imageUrl": "https://images.unsplash.com/photo-1548907040-4baa42d10919",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Barra Chocolate Suizo con Almendras",
+      "description": "Chocolate suizo premium 70% cacao con almendras tostadas.",
+      "category": "Chocolates",
+      "price": 11500,
+      "stock": 130,
+      "imageUrl": "https://images.unsplash.com/photo-1511381939415-e44015466834",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Galletas Cubiertas de Chocolate (Agotado)",
+      "description": "Galletas crujientes con doble baño de chocolate oscuro.",
+      "category": "Chocolates",
+      "price": 8000,
+      "stock": 0,
+      "imageUrl": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Nachos con Queso Cheddar Caliente",
+      "description": "Totopos de maíz crujientes acompañados de abundante queso cheddar fundido.",
+      "category": "Nachos",
+      "price": 16500,
+      "stock": 220,
+      "imageUrl": "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Nachos Especiales con Guacamole y Jalapeños",
+      "description": "Nachos crocantes con queso cheddar, guacamole fresco y rodajas de jalapeño.",
+      "category": "Nachos",
+      "price": 19500,
+      "stock": 150,
+      "imageUrl": "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hot Dog Clásico Cine",
+      "description": "Perro caliente con salchicha tipo americana, queso fundido y papas trituradas.",
+      "category": "Perros calientes",
+      "price": 14500,
+      "stock": 210,
+      "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hot Dog Especial Tocineta y Queso",
+      "description": "Salchicha premium envuelta en tocineta crujiente, ripio de papa y doble queso.",
+      "category": "Perros calientes",
+      "price": 17500,
+      "stock": 160,
+      "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hot Dog Vegetariano (Agotado)",
+      "description": "Salchicha a base de soya con guacamole, cebolla caramelizada y salsa tártara.",
+      "category": "Perros calientes",
+      "price": 15000,
+      "stock": 0,
+      "imageUrl": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hamburguesa Clásica con Queso y Papas",
+      "description": "Carne 100% de res a la parrilla (150g), queso cheddar, lechuga, tomate y papas.",
+      "category": "Hamburguesas",
+      "price": 22000,
+      "stock": 110,
+      "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Hamburguesa Doble Carne Angus BBQ",
+      "description": "Doble carne Angus (300g), tocineta ahumada, queso suizo y salsa BBQ especial.",
+      "category": "Hamburguesas",
+      "price": 27000,
+      "stock": 90,
+      "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Café Espresso Doble",
+      "description": "Café colombiano de origen 100% arábica recién molido y extraído.",
+      "category": "Café",
+      "price": 5500,
+      "stock": 260,
+      "imageUrl": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Cappuccino Vainilla 12oz",
+      "description": "Espresso con leche vaporizada, abundante espuma y sirope de vainilla francesa.",
+      "category": "Café",
+      "price": 8000,
+      "stock": 190,
+      "imageUrl": "https://images.unsplash.com/photo-1534778101976-62847782c213",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Mocaccino con Crema Batida",
+      "description": "Combinación cremosa de café espresso, chocolate artesanal fundido y crema chantilly.",
+      "category": "Café",
+      "price": 9500,
+      "stock": 160,
+      "imageUrl": "https://images.unsplash.com/photo-1572442388796-11668a67e53d",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Cono de Helado Vainilla Artesanal",
+      "description": "Cono crujiente de galleta waffle con helado cremoso de vainilla.",
+      "category": "Helados",
+      "price": 7000,
+      "stock": 140,
+      "imageUrl": "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Copa de Helado Chocolate y Brownie",
+      "description": "Helado de chocolate belga con trozos de brownie húmedo y sirope de fudge.",
+      "category": "Helados",
+      "price": 12500,
+      "stock": 110,
+      "imageUrl": "https://images.unsplash.com/photo-1563805042-7684c019e1cb",
+      "discountPercentage": 0
+    },
+    {
+      "name": "Paleta Artesanal Frutos Rojos",
+      "description": "Paleta natural de agua a base de mora, fresa y arándanos frescos.",
+      "category": "Helados",
+      "price": 6500,
+      "stock": 180,
+      "imageUrl": "https://images.unsplash.com/photo-1505394033641-40c6ad1178d7",
+      "discountPercentage": 0
+    }
+  ],
+  "promotions": [
+    {
+      "name": "Miércoles de Cine - Descuento en Confitería",
+      "snackName": "combo dúo crispeta salada",
+      "discountType": "percent",
+      "discountValue": 20,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Promo Nachos con Queso",
+      "snackName": "nachos con queso cheddar caliente",
+      "discountType": "percent",
+      "discountValue": 15,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Rebaja Especial en Gaseosas 32oz",
+      "snackName": "gaseosa dispensador 32oz",
+      "discountType": "fixed",
+      "discountValue": 1500,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Ahorro Dulce Caramelo",
+      "snackName": "crispeta caramelo grande",
+      "discountType": "percent",
+      "discountValue": 10,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Especial Hamburguesa Clásica",
+      "snackName": "hamburguesa clásica con queso y papas",
+      "discountType": "fixed",
+      "discountValue": 2000,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "name": "Matinal Cappuccino Vainilla",
+      "snackName": "cappuccino vainilla 12oz",
+      "discountType": "fixed",
+      "discountValue": 1000,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "isActive": true
+    }
+  ],
+  "users": [
+    {
+      "email": "admin@multicine.co",
+      "password": "Password123!",
+      "firstName": "Admin",
+      "lastName": "Principal",
+      "roleName": "admin",
+      "phone": "3100000001",
+      "documentType": "CC",
+      "documentNumber": "1000000001",
+      "cityName": "medellín",
+      "membershipLevelName": "PREMIUM",
+      "pointsBalance": 1000,
+      "bonusBalance": 50000
+    },
+    {
+      "email": "cliente.demo@multicine.co",
+      "password": "Password123!",
+      "firstName": "Carlos",
+      "lastName": "Charris",
+      "roleName": "cliente",
+      "phone": "3001234567",
+      "documentType": "CC",
+      "documentNumber": "1098765432",
+      "cityName": "bogotá",
+      "membershipLevelName": "BÁSICA",
+      "pointsBalance": 120,
+      "bonusBalance": 0
+    },
+    {
+      "email": "cliente.estandar@multicine.co",
+      "password": "Password123!",
+      "firstName": "Mariana",
+      "lastName": "Ríos",
+      "roleName": "cliente",
+      "phone": "3012345678",
+      "documentType": "CC",
+      "documentNumber": "1020304050",
+      "cityName": "medellín",
+      "membershipLevelName": "ESTÁNDAR",
+      "pointsBalance": 280,
+      "bonusBalance": 15000
+    },
+    {
+      "email": "cliente.premium@multicine.co",
+      "password": "Password123!",
+      "firstName": "Santiago",
+      "lastName": "Gómez",
+      "roleName": "cliente",
+      "phone": "3023456789",
+      "documentType": "CC",
+      "documentNumber": "1030405060",
+      "cityName": "cali",
+      "membershipLevelName": "PREMIUM",
+      "pointsBalance": 650,
+      "bonusBalance": 35000
+    },
+    {
+      "email": "cliente.nuevo@multicine.co",
+      "password": "Password123!",
+      "firstName": "Valentina",
+      "lastName": "Pérez",
+      "roleName": "cliente",
+      "phone": "3045678901",
+      "documentType": "CC",
+      "documentNumber": "1050607080",
+      "cityName": "bucaramanga",
+      "membershipLevelName": "BÁSICA",
+      "pointsBalance": 50,
+      "bonusBalance": 0
+    }
+  ],
+  "functions": [
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 1 IMAX - El Tesoro",
+      "format": "IMAX",
+      "startTime": "2026-09-11T18:00:00.000Z",
+      "endTime": "2026-09-11T20:50:00.000Z",
+      "price": 26000,
+      "availableSeats": 120,
+      "totalSeats": 120,
+      "room": "Sala 1 IMAX - El Tesoro",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 2 VIP - El Tesoro",
+      "format": "VIP",
+      "startTime": "2026-09-11T21:15:00.000Z",
+      "endTime": "2026-09-12T00:05:00.000Z",
+      "price": 34000,
+      "availableSeats": 60,
+      "totalSeats": 60,
+      "room": "Sala 2 VIP - El Tesoro",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Spider-Man: Across the Spider-Verse",
+      "roomName": "Sala 3 3D - El Tesoro",
+      "format": "3D",
+      "startTime": "2026-09-11T15:30:00.000Z",
+      "endTime": "2026-09-11T17:50:00.000Z",
+      "price": 19000,
+      "availableSeats": 100,
+      "totalSeats": 100,
+      "room": "Sala 3 3D - El Tesoro",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Oppenheimer",
+      "roomName": "Sala 4 2D - El Tesoro",
+      "format": "2D",
+      "startTime": "2026-09-11T19:00:00.000Z",
+      "endTime": "2026-09-11T22:00:00.000Z",
+      "price": 14000,
+      "availableSeats": 100,
+      "totalSeats": 100,
+      "room": "Sala 4 2D - El Tesoro",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Deadpool & Wolverine",
+      "roomName": "Sala 3 IMAX Laser - Andino",
+      "format": "IMAX",
+      "startTime": "2026-09-12T17:00:00.000Z",
+      "endTime": "2026-09-12T19:10:00.000Z",
+      "price": 28000,
+      "availableSeats": 130,
+      "totalSeats": 130,
+      "room": "Sala 3 IMAX Laser - Andino",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Deadpool & Wolverine",
+      "roomName": "Sala 2 VIP Prime - Andino",
+      "format": "VIP",
+      "startTime": "2026-09-12T20:00:00.000Z",
+      "endTime": "2026-09-12T22:10:00.000Z",
+      "price": 35000,
+      "availableSeats": 50,
+      "totalSeats": 50,
+      "room": "Sala 2 VIP Prime - Andino",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Intensamente 2",
+      "roomName": "Sala 1 3D MacroXE - Andino",
+      "format": "3D",
+      "startTime": "2026-09-12T14:30:00.000Z",
+      "endTime": "2026-09-12T16:10:00.000Z",
+      "price": 19000,
+      "availableSeats": 150,
+      "totalSeats": 150,
+      "room": "Sala 1 3D MacroXE - Andino",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 4 2D Estándar - Andino",
+      "format": "2D",
+      "startTime": "2026-09-13T16:00:00.000Z",
+      "endTime": "2026-09-13T18:50:00.000Z",
+      "price": 15000,
+      "availableSeats": 110,
+      "totalSeats": 110,
+      "room": "Sala 4 2D Estándar - Andino",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Spider-Man: Across the Spider-Verse",
+      "roomName": "Sala 2 3D Dinámica - Chipichape",
+      "format": "3D",
+      "startTime": "2026-09-13T18:30:00.000Z",
+      "endTime": "2026-09-13T20:50:00.000Z",
+      "price": 18000,
+      "availableSeats": 90,
+      "totalSeats": 90,
+      "room": "Sala 2 3D Dinámica - Chipichape",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Oppenheimer",
+      "roomName": "Sala 3 VIP - Chipichape",
+      "format": "VIP",
+      "startTime": "2026-09-14T19:30:00.000Z",
+      "endTime": "2026-09-14T22:30:00.000Z",
+      "price": 32000,
+      "availableSeats": 55,
+      "totalSeats": 55,
+      "room": "Sala 3 VIP - Chipichape",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Deadpool & Wolverine",
+      "roomName": "Sala 1 2D Estándar - Chipichape",
+      "format": "2D",
+      "startTime": "2026-09-15T18:00:00.000Z",
+      "endTime": "2026-09-15T20:10:00.000Z",
+      "price": 14000,
+      "availableSeats": 100,
+      "totalSeats": 100,
+      "room": "Sala 1 2D Estándar - Chipichape",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Intensamente 2",
+      "roomName": "Sala 1 3D MacroXE - Cacique",
+      "format": "3D",
+      "startTime": "2026-09-16T16:00:00.000Z",
+      "endTime": "2026-09-16T17:40:00.000Z",
+      "price": 18000,
+      "availableSeats": 120,
+      "totalSeats": 120,
+      "room": "Sala 1 3D MacroXE - Cacique",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 1 IMAX - Mallplaza",
+      "format": "IMAX",
+      "startTime": "2026-09-17T18:30:00.000Z",
+      "endTime": "2026-09-17T21:20:00.000Z",
+      "price": 26000,
+      "availableSeats": 110,
+      "totalSeats": 110,
+      "room": "Sala 1 IMAX - Mallplaza",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Dune: Parte Dos",
+      "roomName": "Sala 1 IMAX - El Tesoro",
+      "format": "IMAX",
+      "startTime": "2026-10-15T18:00:00.000Z",
+      "endTime": "2026-10-15T20:50:00.000Z",
+      "price": 26000,
+      "availableSeats": 120,
+      "totalSeats": 120,
+      "room": "Sala 1 IMAX - El Tesoro",
+      "isActive": true
+    },
+    {
+      "movieTitle": "Spider-Man: Across the Spider-Verse",
+      "roomName": "Sala 1 3D MacroXE - Andino",
+      "format": "3D",
+      "startTime": "2026-10-16T15:30:00.000Z",
+      "endTime": "2026-10-16T17:50:00.000Z",
+      "price": 19000,
+      "availableSeats": 150,
+      "totalSeats": 150,
+      "room": "Sala 1 3D MacroXE - Andino",
+      "isActive": true
+    }
+  ]
+}

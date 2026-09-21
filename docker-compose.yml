@@ -4,7 +4,7 @@ services:
     container_name: ${APP_CONTAINER_NAME}
     working_dir: /usr/src/app
     ports:
-      - "${APP_PORT}:3000"
+      - "${APP_PORT}:${APP_PORT}"
     volumes:
       - ./app:/usr/src/app
     env_file:

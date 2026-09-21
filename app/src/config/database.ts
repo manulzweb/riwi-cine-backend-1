@@ -1,9 +1,9 @@
-// /app/src/config/database.ts
+// app/src/config/database.ts
 
 /**
  * Configuración de Sequelize para PostgreSQL
  * ------------------------------------------
- * Este módulo inicializa y exporta una instancia de Sequelize, 
+ * Este módulo inicializa y exporta una instancia de Sequelize,
  * se configurada con las variables de entorno definidas en `.env` o en `docker-compose`.
  *
  * Uso principal:
@@ -18,22 +18,18 @@
  *  - POSTGRES_PORT: Puerto de conexión (por defecto `5432`).
  */
 
-import { Sequelize } from "sequelize";
+import { Sequelize } from 'sequelize';
+import { envConfig } from './env.js';
 
 /**
  * Instancia de Sequelize configurada para PostgreSQL.
  * Se conecta utilizando las credenciales y parámetros definidos en las variables de entorno.
  */
-const sequelize = new Sequelize(
-  process.env.POSTGRES_DB as string,
-  process.env.POSTGRES_USER as string,
-  process.env.POSTGRES_PASSWORD as string,
-  {
-    host: process.env.POSTGRES_HOST || "db", // En docker-compose, el servicio de la BD se llama "db"
-    port: parseInt(process.env.POSTGRES_PORT || "5432", 10),
-    dialect: "postgres",
-    logging: false, // Desactiva logs SQL en consola (útil en producción)
-  }
-);
+const sequelize = new Sequelize(envConfig.DB.NAME, envConfig.DB.USER, envConfig.DB.PASSWORD, {
+  host: envConfig.DB.HOST || 'db', // En docker-compose, el servicio de la BD se llama "db"
+  port: Number.parseInt(envConfig.DB.PORT.toString() || '5432', 10),
+  dialect: 'postgres',
+  logging: false, // Desactiva logs SQL en consola (útil en producción)
+});
 
 export default sequelize;

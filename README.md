@@ -108,7 +108,17 @@ app/src/
 
 ##  Documentation
 
-Detailed documentation available in `/docs`:
+- **Public Postman Documentation**: [MultiCine Riwi Backend API Docs](https://documenter.getpostman.com/view/57233881/2sBYB2q6qE)
+- **Active Mock Server**: `https://c9ae4de7-f186-405e-a663-f9040d3c74a4.mock.pstmn.io`
+- **Interactive Swagger UI**: `http://localhost:3000/api-docs`
+- **OpenAPI 3.0 Contract**: [`docs/openapi.json`](docs/openapi.json)
+- **Postman Collection (v2.1)**: [`riwi_cine_api.postman_collection.json`](riwi_cine_api.postman_collection.json)
+- **Postman Mock Environment**: [`riwi_cine_mock.postman_environment.json`](riwi_cine_mock.postman_environment.json)
+
+Detailed technical specifications and business rules are also available in `/docs`:
+- [HU-003: Cartelera Semanal](docs/HU-003-cartelera-semanal.md)
+- [HU-007: Autenticación Segura](docs/HU-007-autenticacion-segura.md)
+- [HU-008: Perfil y Membresía](docs/HU-008-perfil-beneficios-membresia.md)
 
 
 

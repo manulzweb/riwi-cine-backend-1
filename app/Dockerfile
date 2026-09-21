@@ -12,5 +12,5 @@ RUN npm install
 # Exponer el puerto
 EXPOSE 3000
 
-# Comando por defecto
-CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/index.ts"]
+# Comando por defecto (ESM)
+CMD ["npm", "run", "dev"]

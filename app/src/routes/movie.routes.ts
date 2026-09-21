@@ -1,0 +1,372 @@
+// app/src/routes/movie.routes.ts
+
+import { Router } from 'express';
+import { movieController } from '../containers/movie.container.js';
+
+const router = Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Movies
+ *   description: Endpoints para la gestión de películas, cartelera semanal y detalles.
+ */
+
+/**
+ * @swagger
+ * /movies:
+ *   get:
+ *     summary: Obtener todas las películas activas
+ *     tags: [Movies]
+ *     responses:
+ *       200:
+ *         description: Lista de películas obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   title:
+ *                     type: string
+ *                   synopsis:
+ *                     type: string
+ *                   duration:
+ *                     type: integer
+ *                   director:
+ *                     type: string
+ *                   isActive:
+ *                     type: boolean
+ *             example:
+ *               - id: 1
+ *                 title: "Inception"
+ *                 synopsis: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños."
+ *                 duration: 148
+ *                 director: "Christopher Nolan"
+ *                 isActive: true
+ *               - id: 2
+ *                 title: "Interstellar"
+ *                 synopsis: "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio."
+ *                 duration: 169
+ *                 director: "Christopher Nolan"
+ *                 isActive: true
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/', movieController.getMovies);
+
+/**
+ * @swagger
+ * /movies/upcoming:
+ *   get:
+ *     summary: Obtener las películas en estado "Próximo Estreno"
+ *     tags: [Movies]
+ *     responses:
+ *       200:
+ *         description: Lista de próximos estrenos obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   title:
+ *                     type: string
+ *                   posterUrl:
+ *                     type: string
+ *                   releaseDate:
+ *                     type: string
+ *                     format: date
+ *                   genres:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   classification:
+ *                     type: string
+ *                   duration:
+ *                     type: integer
+ *                   trailerUrl:
+ *                     type: string
+ *                   synopsis:
+ *                     type: string
+ *                   daysUntil:
+ *                     type: integer
+ *             example:
+ *               - id: 10
+ *                 title: "Dune: Parte Tres"
+ *                 posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401"
+ *                 releaseDate: "2026-11-20"
+ *                 genres: ["Ciencia Ficción", "Aventura"]
+ *                 classification: "+12"
+ *                 duration: 165
+ *                 trailerUrl: "https://www.youtube.com/watch?v=mock-dune3"
+ *                 synopsis: "Paul Atreides continúa su viaje épico liderando a los Fremen."
+ *                 daysUntil: 60
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/upcoming', movieController.getUpcomingMovies);
+
+/**
+ * @swagger
+ * /movies/upcoming/{id}:
+ *   get:
+ *     summary: Obtener el detalle de una película en estado "Próximo Estreno"
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la película.
+ *     responses:
+ *       200:
+ *         description: Detalle del próximo estreno obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 title:
+ *                   type: string
+ *                 posterUrl:
+ *                   type: string
+ *                 releaseDate:
+ *                   type: string
+ *                   format: date
+ *                 genres:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 classification:
+ *                   type: string
+ *                 duration:
+ *                   type: integer
+ *                 trailerUrl:
+ *                   type: string
+ *                 synopsis:
+ *                   type: string
+ *                 daysUntil:
+ *                   type: integer
+ *             example:
+ *               id: 10
+ *               title: "Dune: Parte Tres"
+ *               posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401"
+ *               releaseDate: "2026-11-20"
+ *               genres: ["Ciencia Ficción", "Aventura"]
+ *               classification: "+12"
+ *               duration: 165
+ *               trailerUrl: "https://www.youtube.com/watch?v=mock-dune3"
+ *               synopsis: "Paul Atreides continúa su viaje épico liderando a los Fremen."
+ *               daysUntil: 60
+ *       400:
+ *         description: Id de la película inválido.
+ *       404:
+ *         description: Próximo estreno no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/upcoming/:id', movieController.getUpcomingMovie);
+
+/**
+ * @swagger
+ * /movies/weekly:
+ *   get:
+ *     summary: Obtener cartelera semanal (próximos 7 días) para la ubicación del usuario
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: cityId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la ciudad para filtrar la cartelera.
+ *     responses:
+ *       200:
+ *         description: Cartelera semanal obtenida exitosamente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/weekly', movieController.getWeeklyMovies);
+
+/**
+ * @swagger
+ * /movies/today:
+ *   get:
+ *     summary: Obtener películas programadas para el día de hoy
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: cityId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la ciudad.
+ *     responses:
+ *       200:
+ *         description: Películas de hoy obtenidas exitosamente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/today', movieController.getTodayMovies);
+
+/**
+ * @swagger
+ * /movies/filter:
+ *   get:
+ *     summary: Filtrar películas/funciones por criterios (Fecha, Género, Idioma, Formato, etc.)
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: cityId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la ciudad.
+ *       - in: query
+ *         name: date
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example: "2026-08-24"
+ *         description: Fecha a consultar (YYYY-MM-DD).
+ *       - in: query
+ *         name: genre
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: "Acción"
+ *         description: Género de la película.
+ *       - in: query
+ *         name: rating
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: "+12"
+ *         description: Clasificación por edad.
+ *       - in: query
+ *         name: language
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: "Doblada"
+ *         description: Idioma (Doblada/Subtitulada).
+ *       - in: query
+ *         name: format
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: "2D"
+ *         description: Formato de sala (2D, 3D, IMAX, VIP).
+ *       - in: query
+ *         name: cinemaId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Complejo/cine específico.
+ *       - in: query
+ *         name: available
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: "true"
+ *         description: "Filtro 'Disponible' para ocultar agotados (true/false)."
+ *     responses:
+ *       200:
+ *         description: Cartelera filtrada exitosamente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/filter', movieController.getMoviesByFilter);
+
+/**
+ * @swagger
+ * /movies/{id}:
+ *   get:
+ *     summary: Obtener el detalle completo de una película por su ID
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la película.
+ *     responses:
+ *       200:
+ *         description: Detalle de película obtenido correctamente.
+ *       404:
+ *         description: Película no encontrada.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/:id', movieController.getMovieDetail);
+
+/**
+ * @swagger
+ * /movies/{id}/functions:
+ *   get:
+ *     summary: Obtener las funciones activas y futuras para una película
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la película.
+ *       - in: query
+ *         name: cityId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la ciudad para filtrar funciones.
+ *     responses:
+ *       200:
+ *         description: Funciones futuras obtenidas correctamente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/:id/functions', movieController.getMovieFunctions);
+
+/**
+ * @swagger
+ * /movies/{id}/recommendations:
+ *   get:
+ *     summary: Obtener recomendaciones de películas similares
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID de la película de referencia.
+ *     responses:
+ *       200:
+ *         description: Recomendaciones de películas obtenidas exitosamente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/:id/recommendations', movieController.getMovieRecommendations);
+
+export default router;

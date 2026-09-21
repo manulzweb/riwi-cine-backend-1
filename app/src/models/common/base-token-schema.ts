@@ -1,0 +1,84 @@
+// app/src/models/common/base-token-schema.ts
+
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../../config/database.js';
+
+export interface BaseTokenAttributes {
+  id: number;
+  userId: number;
+  tokenHash: string;
+  expiresAt: Date;
+  usedAt: Date | null;
+}
+
+export type BaseTokenCreationAttributes = Optional<BaseTokenAttributes, 'id' | 'usedAt'>;
+
+const baseTokenFields = {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'user_id',
+  },
+  tokenHash: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    field: 'token_hash',
+  },
+  expiresAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'expires_at',
+  },
+  usedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null,
+    field: 'used_at',
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'created_at',
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'updated_at',
+  },
+} as const;
+
+export function createTokenModel(tableName: string) {
+  class TokenModel
+    extends Model<BaseTokenAttributes, BaseTokenCreationAttributes>
+    implements BaseTokenAttributes
+  {
+    declare id: number;
+    declare userId: number;
+    declare tokenHash: string;
+    declare expiresAt: Date;
+    declare usedAt: Date | null;
+
+    declare readonly createdAt: Date;
+    declare readonly updatedAt: Date;
+  }
+
+  TokenModel.init(baseTokenFields, {
+    sequelize,
+    modelName: tableName
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .replace(/ /g, ''),
+    tableName,
+    timestamps: true,
+    underscored: true,
+  });
+
+  return TokenModel;
+}

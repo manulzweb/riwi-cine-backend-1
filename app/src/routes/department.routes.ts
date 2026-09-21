@@ -1,0 +1,43 @@
+// app/src/routes/department.routes.ts
+
+import { Router } from 'express';
+import { departmentController } from '../containers/department.container.js';
+
+const router = Router();
+
+/**
+ * @swagger
+ * /departments/{countryId}:
+ *   get:
+ *     summary: Obtener departamentos por país
+ *     tags: [Departments]
+ *     parameters:
+ *       - in: path
+ *         name: countryId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID del país
+ *     responses:
+ *       200:
+ *         description: Lista de departamentos obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id: 1
+ *                 name: "Antioquia"
+ *                 countryId: 1
+ *               - id: 2
+ *                 name: "Cundinamarca"
+ *                 countryId: 1
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Error al obtener los departamentos"
+ */
+router.get('/:countryId', departmentController.getDepartments);
+
+export default router;
