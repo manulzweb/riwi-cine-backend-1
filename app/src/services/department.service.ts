@@ -25,9 +25,7 @@ import { IDepartmentRepository } from '../repositories/interfaces/department.rep
  * (`País → Departamento → Ciudad`).
  */
 class DepartmentService implements IDepartmentService {
-  constructor(private readonly departmentRepository: IDepartmentRepository) {
-    this.departmentRepository = departmentRepository;
-  }
+  constructor(private readonly departmentRepository: IDepartmentRepository) {}
   /**
    * Obtiene todos los departamentos pertenecientes a un país.
    *

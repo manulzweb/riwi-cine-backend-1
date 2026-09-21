@@ -49,13 +49,7 @@ export class MembershipService implements IMembershipService {
     private readonly membershipStatusRepository: IMembershipStatusRepository,
     private readonly bonusWalletRepository: IBonusWalletRepository,
     private readonly userRepository: IUserRepository,
-  ) {
-    this.membershipRepository = membershipRepository;
-    this.membershipLevelRepository = membershipLevelRepository;
-    this.membershipStatusRepository = membershipStatusRepository;
-    this.bonusWalletRepository = bonusWalletRepository;
-    this.userRepository = userRepository;
-  }
+  ) {}
 
   /**
    * Crea manualmente una membresía para un usuario.

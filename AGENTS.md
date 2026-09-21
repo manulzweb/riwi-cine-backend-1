@@ -38,9 +38,7 @@ import { ICityService } from './interfaces/city.service.interface.js';
 import { ICityRepository } from '../repositories/interfaces/city.repository.interface.js';
 
 class CityService implements ICityService {
-  constructor(private readonly cityRepository: ICityRepository) {
-    this.cityRepository = cityRepository; // estilo explícito de user.service.ts:50-56
-  }
+  constructor(private readonly cityRepository: ICityRepository) {}
   async findByDepartmentId(id: number): Promise<City[]> {
     return this.cityRepository.findByDepartmentId(id); // delega, no hace SQL directo
   }

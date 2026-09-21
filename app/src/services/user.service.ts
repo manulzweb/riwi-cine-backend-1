@@ -47,14 +47,7 @@ class UserService implements IUserService {
     private readonly cityRepository: ICityRepository,
     private readonly cinemaRepository: ICinemaRepository,
     private readonly profileRepository: IProfileRepository,
-  ) {
-    this.userRepository = userRepository;
-    this.countryRepository = countryRepository;
-    this.departmentRepository = departmentRepository;
-    this.cityRepository = cityRepository;
-    this.cinemaRepository = cinemaRepository;
-    this.profileRepository = profileRepository;
-  }
+  ) {}
   /**
    * Obtiene todos los usuarios registrados.
    *

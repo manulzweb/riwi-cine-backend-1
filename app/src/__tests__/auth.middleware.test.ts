@@ -1,7 +1,7 @@
 // app/src/__tests__/auth.middleware.test.ts
 
 import { Request, Response, NextFunction } from 'express';
-import { authMiddleware, requireAuth, optionalAuth } from '../middleware/auth.middleware.js';
+import { authMiddleware, requireAuth } from '../middleware/auth.middleware.js';
 import { TokenService } from '../services/auth-token.service.js';
 
 describe('Auth Middleware (Control de Autenticación y Roles)', () => {
@@ -118,25 +118,6 @@ describe('Auth Middleware (Control de Autenticación y Roles)', () => {
 
       expect(mockNext).toHaveBeenCalled();
       expect(mockReq.userId).toBe(99);
-    });
-  });
-
-  describe('optionalAuth', () => {
-    it('debe llamar next() sin error si no hay header de autorización', () => {
-      optionalAuth(mockReq as Request, mockRes as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockReq.userId).toBeUndefined();
-    });
-
-    it('debe extraer req.userId si se proporciona un token válido', () => {
-      const token = tokenService.generateAccessToken(77, 1);
-      mockReq.headers = { authorization: `Bearer ${token}` };
-
-      optionalAuth(mockReq as Request, mockRes as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockReq.userId).toBe(77);
     });
   });
 });

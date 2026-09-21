@@ -42,15 +42,7 @@ export class ProfileService implements IProfileService {
     private readonly bonusWalletRepository: IBonusWalletRepository,
     private readonly cityRepository: ICityRepository,
     private readonly cinemaRepository: ICinemaRepository,
-  ) {
-    this.userRepository = userRepository;
-    this.profileRepository = profileRepository;
-    this.membershipRepository = membershipRepository;
-    this.notificationPreferenceRepository = notificationPreferenceRepository;
-    this.bonusWalletRepository = bonusWalletRepository;
-    this.cityRepository = cityRepository;
-    this.cinemaRepository = cinemaRepository;
-  }
+  ) {}
 
   /**
    * Obtiene el perfil completo del usuario autenticado.

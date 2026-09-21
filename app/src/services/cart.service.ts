@@ -68,12 +68,7 @@ export class CartService implements ICartService {
     private readonly snackRepository: ICartSnackRepository,
     private readonly reservationService: IReservationService,
     private readonly bonusWalletRepository: IBonusWalletRepository,
-  ) {
-    this.cartRepository = cartRepository;
-    this.snackRepository = snackRepository;
-    this.reservationService = reservationService;
-    this.bonusWalletRepository = bonusWalletRepository;
-  }
+  ) {}
 
   private expiryMs(): number {
     return envConfig.CART.EXPIRY_MINUTES * 60 * 1000;

@@ -37,10 +37,7 @@ export class FunctionService implements IFunctionService {
   constructor(
     private readonly functionRepository: IFunctionRepository,
     private readonly movieRepository: IMovieRepository,
-  ) {
-    this.functionRepository = functionRepository;
-    this.movieRepository = movieRepository;
-  }
+  ) {}
 
   /**
    * GET /functions/{id}

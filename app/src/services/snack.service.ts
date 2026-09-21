@@ -66,13 +66,7 @@ class SnackService implements ISnackService {
     private readonly cartRepository: ICartRepository,
     private readonly cartItemRepository: ICartItemRepository,
     private readonly userRepository: IUserRepository,
-  ) {
-    this.snackRepository = snackRepository;
-    this.promotionRepository = promotionRepository;
-    this.cartRepository = cartRepository;
-    this.cartItemRepository = cartItemRepository;
-    this.userRepository = userRepository;
-  }
+  ) {}
 
   /**
    * Consulta el catálogo de productos de confitería.

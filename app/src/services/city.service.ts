@@ -25,9 +25,7 @@ import { ICityRepository } from '../repositories/interfaces/city.repository.inte
  * (`País → Departamento → Ciudad`).
  */
 class CityService implements ICityService {
-  constructor(private readonly cityRepository: ICityRepository) {
-    this.cityRepository = cityRepository;
-  }
+  constructor(private readonly cityRepository: ICityRepository) {}
   /**
    * Obtiene todas las ciudades pertenecientes a un departamento.
    *

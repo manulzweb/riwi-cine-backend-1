@@ -44,11 +44,7 @@ class UpcomingNotificationService implements IUpcomingNotificationService {
     private readonly notificationRepository: IUpcomingNotificationRepository,
     private readonly userRepository: IUserRepository,
     private readonly movieRepository: IMovieRepository,
-  ) {
-    this.notificationRepository = notificationRepository;
-    this.userRepository = userRepository;
-    this.movieRepository = movieRepository;
-  }
+  ) {}
 
   /**
    * Registra una solicitud de notificación para un próximo estreno.

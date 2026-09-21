@@ -83,26 +83,7 @@ export class AuthService implements IAuthService {
     private readonly passwordService: IPasswordService,
     private readonly tokenService: ITokenService,
     private readonly emailVerificationTokenService: IEmailVerificationTokenService,
-  ) {
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.profileRepository = profileRepository;
-    this.membershipRepository = membershipRepository;
-    this.membershipLevelRepository = membershipLevelRepository;
-    this.membershipStatusRepository = membershipStatusRepository;
-    this.bonusWalletRepository = bonusWalletRepository;
-    this.purchaseHistoryRepository = purchaseHistoryRepository;
-    this.notificationPreferenceRepository = notificationPreferenceRepository;
-    this.cityRepository = cityRepository;
-    this.cinemaRepository = cinemaRepository;
-    this.emailVerificationTokenRepository = emailVerificationTokenRepository;
-    this.refreshTokenRepository = refreshTokenRepository;
-    this.loginAuditRepository = loginAuditRepository;
-    this.passwordResetTokenRepository = passwordResetTokenRepository;
-    this.passwordService = passwordService;
-    this.tokenService = tokenService;
-    this.emailVerificationTokenService = emailVerificationTokenService;
-  }
+  ) {}
 
   // ==========================================================================
   // --- HU-006: Registro de Usuario y Membresía Digital ---

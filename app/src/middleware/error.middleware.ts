@@ -15,7 +15,15 @@ export function errorHandler(error: unknown, req: Request, res: Response, _next:
   if (error instanceof DomainError) {
     // Log 4xx como warn, 5xx como error
     if (error.status >= 500) {
-      console.error(`[DomainError] ${req.method} ${req.path} -> ${error.code}:`, error);
+      const sanitizedMethod = (req.method || '').replace(/[\r\n]/g, '');
+      const sanitizedPath = (req.path || '').replace(/[\r\n]/g, '');
+      console.error(
+        '[DomainError] %s %s -> %s:',
+        sanitizedMethod,
+        sanitizedPath,
+        error.code,
+        error,
+      );
     }
     return res.status(error.status).json({
       error: error.code,
@@ -50,7 +58,9 @@ export function errorHandler(error: unknown, req: Request, res: Response, _next:
   }
 
   // 4) Fallback no operacional → 500, no filtrar stack en prod
-  console.error(`[Unhandled] ${req.method} ${req.path}:`, error);
+  const sanitizedMethod = (req.method || '').replace(/[\r\n]/g, '');
+  const sanitizedPath = (req.path || '').replace(/[\r\n]/g, '');
+  console.error('[Unhandled] %s %s:', sanitizedMethod, sanitizedPath, error);
 
   const isProd = envConfig.NODE_ENV === 'production';
 

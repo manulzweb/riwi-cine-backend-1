@@ -48,9 +48,7 @@ import { MOVIE_LIMITS, ISO_DATE_REGEX } from '../constant/index.js';
  * - RN-015: una función se considera agotada cuando no dispone de sillas disponibles.
  */
 class MovieService implements IMovieService {
-  constructor(private readonly movieRepository: IMovieRepository) {
-    this.movieRepository = movieRepository;
-  }
+  constructor(private readonly movieRepository: IMovieRepository) {}
 
   // ==========================================================================
   // --- Métodos de HU-003 (Cartelera y Filtros) ---

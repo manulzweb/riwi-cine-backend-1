@@ -56,11 +56,7 @@ export class ReservationService implements IReservationService {
     private readonly reservationRepository: IReservationRepository,
     private readonly seatRepository: ISeatRepository,
     private readonly functionRepository: IFunctionRepository,
-  ) {
-    this.reservationRepository = reservationRepository;
-    this.seatRepository = seatRepository;
-    this.functionRepository = functionRepository;
-  }
+  ) {}
 
   /**
    * Obtiene el mapa interactivo de sillas para una función (HU-010).

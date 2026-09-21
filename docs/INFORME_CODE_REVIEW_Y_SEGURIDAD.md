@@ -199,7 +199,7 @@ Time:        0.727 s
 | Suite de Pruebas | Archivo | Casos Evaluados | Estado |
 |---|---|:---:|:---:|
 | **Auth Token Service** | [`auth-token.service.test.ts`](./app/src/__tests__/auth-token.service.test.ts) | 22 tests: Emisión de JWT con rol, decodificación, rechazo por expiración, firma adulterada, malformados, refresh tokens. | ✅ **PASS** |
-| **Auth Middleware & RBAC** | [`auth.middleware.test.ts`](./app/src/__tests__/auth.middleware.test.ts) | 10 tests: 401 por token ausente/inválido, 403 por rol no autorizado, 200 con `req.user`, `requireAuth` y `optionalAuth`. | ✅ **PASS** |
+| **Auth Middleware & RBAC** | [`auth.middleware.test.ts`](./app/src/__tests__/auth.middleware.test.ts) | 8 tests: 401 por token ausente/inválido, 403 por rol no autorizado, 200 con `req.user` y `requireAuth` (`optionalAuth` retirado por mitigación IDOR). | ✅ **PASS** |
 | **Reservas & Concurrencia** | [`reservation.service.test.ts`](./app/src/__tests__/reservation.service.test.ts) | 19 tests: Bloqueo de sillas, rechazo de asientos `'SOLD'` y `'LOCKED'`, batch availability sin N+1, cálculo de precios por tipo, liberación voluntaria. | ✅ **PASS** |
 | **Carrito & Giftcards** | [`cart.service.test.ts`](./app/src/__tests__/cart.service.test.ts) | 12 tests: Aplicación de bonos con saldo suficiente, rechazo por saldo insuficiente (`InsufficientBalanceError`), rechazo por exceder total (`InvalidAmountError`), reembolso al expirar. | ✅ **PASS** |
 | **Catálogo de Confitería** | [`snack.service.test.ts`](./app/src/__tests__/snack.service.test.ts) | 9 tests: Precios dinámicos, promociones más favorables, catálogo por categorías, validación de stock. | ✅ **PASS** |

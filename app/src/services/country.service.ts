@@ -25,9 +25,7 @@ import { ICountryRepository } from '../repositories/interfaces/country.repositor
  * (`País → Departamento → Ciudad`).
  */
 class CountryService implements ICountryService {
-  constructor(private readonly countryRepository: ICountryRepository) {
-    this.countryRepository = countryRepository;
-  }
+  constructor(private readonly countryRepository: ICountryRepository) {}
   /**
    * Obtiene todos los países registrados.
    *
